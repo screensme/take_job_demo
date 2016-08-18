@@ -9,7 +9,7 @@ from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
 from database import Action
-define("port", default=8888, help="run on the given port", type=int)
+define("port", default=8889, help="run on the given port", type=int)
 
 # def main():
 #     tornado.options.parse_command_line()
