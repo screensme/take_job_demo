@@ -5,7 +5,7 @@ import json
 import configparser
 from api.base_handler import BaseHandler
 import logging
-import motor
+# import motor
 import tornado
 from common.tools import args404, ObjectToString
 # from api import base_handler, company_handler, resume_handler, user_handler
