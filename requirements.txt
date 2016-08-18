@@ -1,7 +1,7 @@
 alembic==0.8.6
 arrow==0.8.0
 backports-abc==0.4
-backports.ssl-match-hostname=
+backports.ssl-match-hostname==3.5.0.1
 bcrypt==2.0.0
 beautifulsoup4==4.4.1
 blinker==1.4
