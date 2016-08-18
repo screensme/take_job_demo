@@ -1,0 +1,42 @@
+[		
+	{
+	 'job_id': '职位id',
+	 'image': '公司logo',
+	 'company_name': '公司名称',
+	 'company_address': '公司地址(只城市)',
+	 'job_name': '职位名称',
+	 'money': '薪资',
+	 'feedback': '2016-04-26 16:33:19',
+	 'resume_status': 'viewed',
+	},
+	{
+	 'job_id': '职位id2',
+	 'image': '公司logo2',
+	 'company_name': '公司名称2',
+	 'company_address': '公司地址(只城市)2',
+	 'job_name': '职位名称2',
+	 'money': '薪资2',
+	 'feedback': '2016-04-26 16:33:19',
+	 'resume_status': 'communicated',
+	},
+	{
+	 'job_id': '职位id3',
+	 'image': '公司logo3',
+	 'company_name': '公司名称3',
+	 'company_address': '公司地址(只城市)3',
+	 'job_name': '职位名称3',
+	 'money': '薪资3',
+	 'feedback': '2016-04-26 16:33:19',
+	 'resume_status': 'passed',
+	},
+	{
+	 'job_id': '职位id4',
+	 'image': '公司logo4',
+	 'company_name': '公司名称4',
+	 'company_address': '公司地址(只城市)4',
+	 'job_name': '职位名称4',
+	 'money': '薪资4',
+	 'feedback': '2016-04-26 16:33:19',
+	 'resume_status': 'improper',
+	}			
+]

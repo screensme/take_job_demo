@@ -1,0 +1,15 @@
+{
+ 'token': '登陆用户id',
+ 'user_id': '个人id',
+ 'user_image': '头像',
+ 'name': '用户名',
+ 'sex': '性别',
+ 'education': '学历',
+ 'marriage': '婚姻',
+ 'polity_face': '政治面貌',
+ 'email': '邮箱',
+ 'birth_year': '出生年月',
+ 'mobile': '手机号',
+ 'place': '现居住地',
+ 
+}

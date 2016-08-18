@@ -1,0 +1,9 @@
+{
+'school': '学校名称',
+'major': '专业',
+'start_year': '开始时间年',
+'start_month': '开始时间月',
+'end_year': '毕业时间年',
+'end_month': '毕业时间月',
+'education2': '学历',
+}
