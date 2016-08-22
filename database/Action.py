@@ -26,27 +26,24 @@ from common.tools import args404, ObjectToString
 
 # 用户注册
 @tornado.gen.coroutine
-def Register_user(mobile=str, pwd=str, cache_flag=int):
+def Register_user(mobile=str,filepath=str, pwd=str, cache_flag=int):
     data = dict()
     images = ['http://7xlo2h.com1.z0.glb.clouddn.com/avatar/default_avatar.png']
     data['image'] = images[0]  # [random.randint(0, len(images) - 1)]
     # data['name'] = '用户%s' % (mobile[-6:],)
-    data['uuid'] = '8626fa72-4275-11e6-92c4-c81f664404a0'
+    data['uuid'] = '123123'
     data['mobile'] = mobile
     data['pwd'] = pwd
     # name = '用户%s%s' % (mobile[:3],mobile[-3:])# test账号
-    user_info = open('D:\\demo\\json_txt\\user.txt','r+')
+    user_info = open('%s/user.txt'%filepath,'r+')
     write_user = user_info.write(str(data))
-    read_user = user_info.read().decode('gbk')
-    ev_user = eval(read_user)
-    print ev_user
     user_info.close()
 
     result = dict()
     result['status'] = 'sucess'
     result['msg'] = ''
-    result['token'] = ev_user['uuid']
-    result['data'] = ev_user
+    result['token'] = data['uuid']
+    result['data'] = data
 
     raise tornado.gen.Return(result)
 
@@ -57,6 +54,7 @@ def User_login(mobile=str,filepath=str,
                   # umengid=str,
                   # mobibuild=str,
                   # mobitype=str,
+                  isweb=int,
                   cache_flag=int):
     user_info = open('%s/user.txt'%filepath,'r+')
     read_user = user_info.read().decode('gbk')
@@ -65,7 +63,7 @@ def User_login(mobile=str,filepath=str,
     user_info.close()
 
     result = dict()
-    if (ev_user['basic']['mobile'] != mobile) or (ev_user['basic']['pwd'] != pwd):
+    if (ev_user['mobile'] != mobile) or (ev_user['pwd'] != pwd):
             result['status'] = 'fail'
             result['token'] = ''
             result['msg'] = '没有此用户!'
@@ -74,7 +72,7 @@ def User_login(mobile=str,filepath=str,
     else:
         result['status'] = 'success'
         result['msg'] = ''
-        result['token'] = ev_user['basic']['uuid']
+        result['token'] = ev_user['uuid']
         result['data'] = ev_user
     raise tornado.gen.Return(result)
 
@@ -82,14 +80,14 @@ def User_login(mobile=str,filepath=str,
 @tornado.gen.coroutine
 def User_logout(token=str,filepath=str):
     # result = {}
-    user_info = open('%s/resume.txt'%filepath,'r+')
+    user_info = open('%s/user.txt'%filepath,'r+')
     read_user = user_info.read().decode('gbk')
     ev_user = eval(read_user)
     print ev_user
     user_info.close()
 
     result = dict()
-    if (ev_user['basic']['uuid'] != token):
+    if (ev_user['uuid'] != token):
             result['status'] = 'fail'
             result['token'] = ''
             result['msg'] = '没有此用户!'
