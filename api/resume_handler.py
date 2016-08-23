@@ -12,8 +12,8 @@ from database import Action
 class ResumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
-        token = self.get_argument('token')
+    def get(self, token):
+        # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Resume_view(token, cache_flag)
 

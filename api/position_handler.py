@@ -14,10 +14,10 @@ from database import Action
 class HomeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
+    def get(self, token):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
+        # token = self.get_argument('token')
         result = yield self.db.Home(token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -62,10 +62,10 @@ class FeedbackHandler(BaseHandler):
 class PositionHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
+    def get(self, token):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
+        # token = self.get_argument('token')
         company_id = self.get_argument('company_id')
         result = yield self.db.Position(token, cache_flag)
 

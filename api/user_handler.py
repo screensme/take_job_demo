@@ -241,11 +241,11 @@ class UpdatePwdHandler(BaseHandler):
 class UserHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
+    def get(self, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user info')
-        token = self.get_argument('token')
+        # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Home_user(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -256,10 +256,10 @@ class UserHandler(BaseHandler):
 class MessageHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
+    def get(self, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        token = self.get_argument('token')
+        # token = self.get_argument('token')
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Job_message(token, cache_flag=cache_flag)
@@ -271,11 +271,11 @@ class MessageHandler(BaseHandler):
 class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self):
+    def get(self, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('get resume all')
-        token = self.get_argument('token')
+        # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_all(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
