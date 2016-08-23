@@ -48,7 +48,7 @@ urls = [
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看
-    url(r"/message/resume-communicated/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get待沟通
+    url(r"/message/resume-communicated/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get已通知
     url(r"/message/resume-passed/token-(\w+)", MessagePassedHandler),    # 消息(简历状态查看)get面试通过
     url(r"/message/resume-improper/token-(\w+)", MessageImproperHandler),    # 消息(简历状态查看)get不合适
     url(r"/position-full/token-(\w+)", PositionHandler),    # 职位详情get

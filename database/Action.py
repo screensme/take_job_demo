@@ -247,7 +247,7 @@ class Action(object):
         # print ev_user
         # user_info.close()
         boss_profile = self.db.query(
-            "select * from candidate_post as p left join company_jd as j on p.job_id = j.es_id left join jobs_hot_es_test as k on k.id = j.es_id where j.es_id =%s group by k.id"
+            "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s"
             % token)
         result = dict()
         result['status'] = 'success'
@@ -260,126 +260,61 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_viewed(self, token=str, cache_flag=int):
 
-        user_info = open('%s/message.txt'%filepath,'r+')
-        read_user = user_info.read().decode('gbk')
-        ev_user = eval(read_user)
-        print ev_user
-        user_info.close()
-
-        indexs = []
-        for index in ev_user:
-            try:
-                if index['resume_status'] == 'viewed':
-                    indexs.append(index)
-            except Exception, e:
-                pass
-            #     result = {'status': 'failed',
-            #               'token': token,
-            #               'msg': '服务器错误',
-            #               'data': {}}
-            #     raise tornado.gen.Return(result)
-
+        search_status = self.db.get(
+            "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='viewed'"
+        % token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = indexs
+        result['data'] = search_status
         raise tornado.gen.Return(result)
 
-    # 简历状态查看get待沟通
+    # 简历状态查看get已通知
     @tornado.gen.coroutine
     def Message_communicated(self, token=str, cache_flag=int):
 
-        user_info = open('%s/message.txt'%filepath,'r+')
-        read_user = user_info.read().decode('gbk')
-        ev_user = eval(read_user)
-        print ev_user
-        user_info.close()
-
-        indexs = []
-        for index in ev_user:
-            try:
-                if index['resume_status'] == 'communicated':
-                    indexs.append(index)
-            except Exception, e:
-                pass
-            #     result = {'status': 'failed',
-            #               'token': token,
-            #               'msg': '服务器错误',
-            #               'data': {}}
-            #     raise tornado.gen.Return(result)
-
+        search_status = self.db.get(
+                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='notify'"
+                % token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = indexs
+        result['data'] = search_status
         raise tornado.gen.Return(result)
 
     # 简历状态查看get面试通过
     @tornado.gen.coroutine
     def Message_passed(self, token=str, cache_flag=int):
 
-        user_info = open('%s/message.txt'%filepath,'r+')
-        read_user = user_info.read().decode('gbk')
-        ev_user = eval(read_user)
-        print ev_user
-        user_info.close()
-
-        indexs = []
-        for index in ev_user:
-            try:
-                if index['resume_status'] == 'passed':
-                    indexs.append(index)
-            except Exception, e:
-                pass
-            #     result = {'status': 'failed',
-            #               'token': token,
-            #               'msg': '服务器错误',
-            #               'data': {}}
-            #     raise tornado.gen.Return(result)
-
+        search_status = self.db.get(
+                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status in ('pass', 'info')"
+                % token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = indexs
+        result['data'] = search_status
         raise tornado.gen.Return(result)
 
     # 简历状态查看get不合适
     @tornado.gen.coroutine
     def Message_improper(self, token=str, cache_flag=int):
 
-        user_info = open('%s/message.txt'%filepath,'r+')
-        read_user = user_info.read().decode('gbk')
-        ev_user = eval(read_user)
-        print ev_user
-        user_info.close()
-
-        indexs = []
-        for index in ev_user:
-            try:
-                if index['resume_status'] == 'improper':
-                    indexs.append(index)
-            except Exception, e:
-                pass
-            #     result = {'status': 'failed',
-            #               'token': token,
-            #               'msg': '服务器错误',
-            #               'data': {}}
-            #     raise tornado.gen.Return(result)
-
+        search_status = self.db.get(
+                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='deny'"
+                % token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = indexs
+        result['data'] = search_status
         raise tornado.gen.Return(result)
 
     # 职位详情
     @tornado.gen.coroutine
     def Position(self, token=str, company_id=str, cache_flag=int):
-
 
         search_job = self.db.get("select site_name,job_name from jobs_hot_es_test where id ='%s'" % company_id)
         result = dict()

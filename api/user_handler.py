@@ -288,25 +288,25 @@ class MessageViewedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('user view resume stutas viewed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_viewed(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_viewed(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
 
-# 简历状态查看get待沟通
+# 简历状态查看get已通知
 class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('user view resume stutas communicated')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_communicated(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_communicated(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -316,11 +316,11 @@ class MessagePassedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('user view resume stutas passed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_passed(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_passed(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -330,11 +330,11 @@ class MessageImproperHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('user view resume stutas improper')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_improper(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_improper(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
