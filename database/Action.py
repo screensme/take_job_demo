@@ -102,7 +102,7 @@ class Action(object):
         else:
             result['status'] = 'success'
             result['msg'] = '登陆成功'
-            result['token'] = search_mobile_pwd['user_uuid']
+            result['token'] = search_mobile_pwd['id']
             result['data'] = {}
         raise tornado.gen.Return(result)
 
@@ -110,10 +110,10 @@ class Action(object):
     @tornado.gen.coroutine
     def User_logout(self, token=str):
         # result = {}
-        search_user = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE user_uuid=%s"
+        search_user = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE id=%s"
                                  % token)
         result = dict()
-        if (search_user['user_uuid'] != token):
+        if (search_user['id'] != token):
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
@@ -158,7 +158,7 @@ class Action(object):
 
             result = dict()
             result['status'] = 'success'
-            result['token'] = ''
+            result['token'] = update_pwd['id']
             result['msg'] = '修改密码成功'
             result['data'] = {}
         raise tornado.gen.Return(result)
