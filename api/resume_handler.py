@@ -12,10 +12,10 @@ from database import Action
 class ResumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
-        filepath = self.settings['file_path']
+    def post(self):
+        token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Resume_view(token,filepath, cache_flag)
+        result = yield self.db.Resume_view(token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -41,7 +41,7 @@ class ResumeBasicHandler(BaseHandler):
         data['birth_year'] = self.get_argument('birth_year')
         data['mobile'] = self.get_argument('mobile')
         data['place'] = self.get_argument('place')
-        result = yield Action.Resume_Basic(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Basic(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -63,7 +63,7 @@ class ResumeEducationHandler(BaseHandler):
         data['end_year'] = self.get_argument('end_year')
         data['end_month'] = self.get_argument('end_month')
         data['education2'] = self.get_argument('education2')
-        result = yield Action.Resume_Education(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Education(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -83,7 +83,7 @@ class ResumeExpectHandler(BaseHandler):
         data['expect_city'] = self.get_argument('expect_city')
         data['expect_salary'] = self.get_argument('expect_salary')
         data['expect_trade'] = self.get_argument('expect_trade')
-        result = yield Action.Resume_Expect(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Expect(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -107,7 +107,7 @@ class ResumeExperienceHandler(BaseHandler):
         data['end_year2'] = self.get_argument('end_year2')
         data['end_month2'] = self.get_argument('end_month2')
         data['job_duty'] = self.get_argument('job_duty')
-        result = yield Action.Resume_Experience(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Experience(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -129,7 +129,7 @@ class ResumeItemHandler(BaseHandler):
         data['end_year3'] = self.get_argument('end_year3')
         data['end_month3'] = self.get_argument('end_month3')
         data['item_des'] = self.get_argument('item_des')
-        result = yield Action.Resume_Item(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Item(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -151,7 +151,7 @@ class ResumeEvaluationHandler(BaseHandler):
         data['end_year'] = self.get_argument('end_year')
         data['end_month'] = self.get_argument('end_month')
         data['education2'] = self.get_argument('education2')
-        result = yield Action.Resume_Evaluation(token,filepath, cache_flag)
+        result = yield self.db.Resume_Evaluation(token,filepath, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

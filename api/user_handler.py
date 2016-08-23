@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from tornado import gen,web
+from tornado import gen
 import json
 from api.base_handler import BaseHandler
 import logging
@@ -30,7 +30,7 @@ class RegisterHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user register')
         data = dict()
@@ -69,7 +69,7 @@ class RegisterHandler(BaseHandler):
 
         else:
             if isweb == 0:
-                result = yield Action.Register_user(data['mobile'],filepath,
+                result = yield self.db.Register_user(data['mobile'],
                                                      data['pwd'],
                                                      cache_flag=cache_flag)
             self.write(ObjectToString().encode(result))
@@ -82,7 +82,7 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user login')
         data = dict()
@@ -92,7 +92,6 @@ class LoginHandler(BaseHandler):
             #
             # data['mobibuild'] = self.get_argument('mobibuild')
             # data['mobitype'] = self.get_argument('mobitype')
-            isweb = 0
         except Exception, e:
             result = dict()
             result['status'] = 'fail'
@@ -106,12 +105,6 @@ class LoginHandler(BaseHandler):
         #     data['umengid'] = self.get_argument('umengid')
         # except Exception, e:
         #     data['umengid'] = 'umengid/%s' % (self.get_argument('mobile'), )
-        try:
-            type = self.get_argument('get_type')
-            if type == 'web':
-                isweb = 1
-        except Exception, e:
-            isweb = 0
         cache_flag = self.get_cache_flag()
 
         if len(data['mobile']) != 11:
@@ -125,14 +118,13 @@ class LoginHandler(BaseHandler):
             return
 
         else:
-            result = yield Action.User_login(mobile=data['mobile'],
-                                             filepath=filepath,
+            result = yield self.db.User_login(mobile=data['mobile'],
                                               pwd=data['pwd'],
                                               # umengid=data['umengid'],
                                               # mobibuild=data['mobibuild'],
                                               # mobitype=data['mobitype'],
                                               cache_flag=cache_flag,
-                                              isweb=int(isweb))
+                                              )
             self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -142,8 +134,8 @@ class LogoutHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token=str):
-        filepath = self.settings['file_path']
-        result = yield Action.User_logout(token,filepath)
+        # filepath = self.settings['file_path']
+        result = yield self.db.User_logout(token)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -173,7 +165,7 @@ class ForgetpwdHandler(BaseHandler):
             self.finish()
             return
         cache_flag = self.get_cache_flag()
-        result = yield Action.User_forgetpwd(data['mobile'],filepath,
+        result = yield self.db.User_forgetpwd(data['mobile'],filepath,
                                               data['pwd'],
                                               cache_flag=cache_flag
                                               )
@@ -185,11 +177,22 @@ class ForgetpwdHandler(BaseHandler):
 class UpdatePwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self, mobile=str):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user update password')
         data = dict()
+        try:
+            data['mobile'] = self.get_argument('mobile')
+        except Exception,e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = "缺少'mobile'"
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
         try:
             data['oldpwd'] = self.get_argument('oldpwd')
         except Exception,e:
@@ -225,8 +228,7 @@ class UpdatePwdHandler(BaseHandler):
             logger.info('user update false,pwd is None')
             return
         else:
-            result = yield Action.User_updatepwd(mobile=mobile,
-                                                 filepath=filepath,
+            result = yield self.db.User_updatepwd(mobile=data['mobile'],
                                                   oldpwd=data['oldpwd'],
                                                   pwd=data['pwd'],
                                                   cache_flag=cache_flag
@@ -239,12 +241,13 @@ class UpdatePwdHandler(BaseHandler):
 class UserHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('user info')
+        token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Home_user(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Home_user(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -253,12 +256,13 @@ class UserHandler(BaseHandler):
 class MessageHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
+        token = self.get_argument('token')
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Job_message(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Job_message(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -267,12 +271,13 @@ class MessageHandler(BaseHandler):
 class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user forget password')
+        logger.info('get resume all')
+        token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Message_all(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_all(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -287,7 +292,7 @@ class MessageViewedHandler(BaseHandler):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Message_viewed(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_viewed(token,filepath, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -301,7 +306,7 @@ class MessageCommunicatedHandler(BaseHandler):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Message_communicated(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_communicated(token,filepath, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -315,7 +320,7 @@ class MessagePassedHandler(BaseHandler):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Message_passed(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_passed(token,filepath, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -329,7 +334,7 @@ class MessageImproperHandler(BaseHandler):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user forget password')
         cache_flag = self.get_cache_flag()
-        result = yield Action.Message_improper(token,filepath, cache_flag=cache_flag)
+        result = yield self.db.Message_improper(token,filepath, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return

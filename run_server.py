@@ -8,8 +8,11 @@ from settings import settings
 from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
+from common import web_log
+from common.web_config import MY_SQL
 from database import Action
 define("port", default=8889, help="run on the given port", type=int)
+define("mysql", default='neiwang', help="run on the test or pro")
 
 # def main():
 #     tornado.options.parse_command_line()
@@ -29,6 +32,8 @@ define("port", default=8889, help="run on the given port", type=int)
 #         self.db = Action.Action(dbhost='123.57.33.133', dbport=27017, dbname='worry1613', dbuser='xSD6!nw1U*SqNfC4', dbpwd='huoban')
 # if __name__ == "__main__":
 #     main()
+
+
 abp = os.path.abspath(sys.argv[0])
 file_path = os.path.dirname(abp) + '/json_txt'
 
@@ -55,22 +60,26 @@ settings = {
 
 class Application(tornado.web.Application):
     def __init__(self):
-        handlers = urls,
-        self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
         settings = dict()
-        # self.db = Action.Action(dbhost='123.57.33.133',dbport=3306,dbname='huoban',dbuser='worry1613',dbpwd='xSD6!nw1U*SqNfC4')
-        tornado.web.Application.__init__(self, handlers, **settings)
+        tornado.web.Application.__init__(self, urls, **settings)
+        self.log = web_log.debugf("")
+        self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
+        mysqlstr = 'mysql-%s' % options.mysql
+        self.db = Action.Action(dbhost=MY_SQL[mysqlstr]['host'],
+                                # dbport=MY_SQL[mysqlstr]['port'],
+                                dbname=MY_SQL[mysqlstr]['db'],
+                                dbuser=MY_SQL[mysqlstr]['user'],
+                                dbpwd=MY_SQL[mysqlstr]['pwd'],
+                                log=self.log
+                                )
+
 
 def creator_server():
-
-    app = tornado.web.Application(
-        handlers=urls,
-        **settings
-        )
-    http_server = tornado.httpserver.HTTPServer(app, xheaders=True)
-    http_server.listen(options.port)
+    tornado.options.parse_command_line()
+    app = Application()
+    app.listen(options.port, '0.0.0.0')
+    app.log.debug("load finished! listening on %s:%s" % ('127.0.0.1', options.port))
     tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":
     creator_server()
-    print('init')

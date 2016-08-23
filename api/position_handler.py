@@ -14,10 +14,11 @@ from database import Action
 class HomeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token=str):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
-        result = yield Action.Home(token,filepath, cache_flag)
+        token = self.get_argument('token')
+        result = yield self.db.Home(token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
 
@@ -28,10 +29,11 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        result = yield Action.Search_job(token,filepath, cache_flag)
+        last = self.get_arguments()
+        result = yield self.db.Search_job(last, token, cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -49,7 +51,7 @@ class FeedbackHandler(BaseHandler):
         data = dict()
         data['email'] = self.get_argument('email')
         data['info'] = self.get_argument('info')
-        result = yield Action.Feed_back(token,filepath, data, cache_flag)
+        result = yield self.db.Feed_back(token,filepath, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -60,10 +62,12 @@ class FeedbackHandler(BaseHandler):
 class PositionHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token=str):
-        filepath = self.settings['file_path']
+    def post(self):
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
-        result = yield Action.Position(token,filepath, cache_flag)
+        token = self.get_argument('token')
+        company_id = self.get_argument('company_id')
+        result = yield self.db.Position(token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
