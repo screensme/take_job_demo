@@ -9,10 +9,11 @@ from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
 from common import web_log
-from common.web_config import MY_SQL
+from common.web_config import MY_SQL, ES_API
 from database import Action
 define("port", default=8889, help="run on the given port", type=int)
 define("mysql", default='neiwang', help="run on the test or pro")
+define("esapi", default='neiwang', help="run on the test or pro")
 
 # def main():
 #     tornado.options.parse_command_line()
@@ -65,12 +66,14 @@ class Application(tornado.web.Application):
         self.log = web_log.debugf("")
         self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
         mysqlstr = 'mysql-%s' % options.mysql
+        esapistr = 'esapi-%s' % options.esapi
         self.db = Action.Action(dbhost=MY_SQL[mysqlstr]['host'],
                                 # dbport=MY_SQL[mysqlstr]['port'],
                                 dbname=MY_SQL[mysqlstr]['db'],
                                 dbuser=MY_SQL[mysqlstr]['user'],
                                 dbpwd=MY_SQL[mysqlstr]['pwd'],
-                                log=self.log
+                                log=self.log,
+                                esapi=ES_API[esapistr]['url']
                                 )
 
 

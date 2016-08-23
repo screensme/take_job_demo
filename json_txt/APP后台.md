@@ -16,7 +16,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		<td>新建基本接口，post有可能不可用</td>
       </tr>
 	<tr>
-		<td>我</td>
+        <td>2016-8-23</td>
+        <td>修改</td>
+		<td>接口连接数据库，返回的json会有变化</td>
 	</tr>
     </table>
 </div>
@@ -31,7 +33,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 7.消息页get：/message/resume/token-{token}  
 8.简历状态get(全部)：/message/resume-allstatus/token-{token}  
 9.简历状态get(被查看)：/message/resume-viewed/token-{token}  
-10.简历状态get(待沟通)：/message/resume-communicated/token-{token}  
+10.简历状态get(已通知)：/message/resume-communicated/token-{token}  
 11.简历状态get(面试通过)：/message/resume-passed/token-{token}  
 12.简历状态get(不合适)：/message/resume-improper/token-{token}  
 13.职位详情get：/position-full/token-{token}  
@@ -48,10 +50,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 
 ##接口介绍
 ####1.首页get：/home/token-{token}  
+每页显示10个（忘了写成动态的了，之后再改）
 参数：
 		
 	参数名称	必填	类型		描述
-	token	  必填	  string	用户id
+	token	  Y	  string	用户id
 返回结果：
 ```
 {
@@ -60,49 +63,128 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": [
     {
-      "company_station": "公司状态（合资、民营、国企）",
-      "money": "薪资",
-      "image": "公司logo",
-      "company_type": "公司类型（游戏、互联网、硬件）",
-      "seniority": "工龄",
-      "education": "学历",
-      "job_id": "职位id",
-      "company_scale": "公司规模",
-      "company_name": "公司名称",
-      "company_address": "公司地址",
-      "release_time": "发布时间",
-      "job_name": "职位名称"
+      "salary_str": "6000-7999/月",
+      "scale_str": "500-1000人",
+      "trade": "教育/培训/院校",
+      "job_city": "北京",
+      "company_name": "文新教育集团",
+      "boon": "员工旅游,专业培训,绩效奖金,年终奖金",
+      "education_str": "中专",
+      "job_name": "课程顾问/咨询师/咨询顾问（北京就近分配）",
+      "work_years_str": "1年经验",
+      "dt_update": "2016-08-19T19:04:29"
     },
     {
-      "company_station": "公司状态（合资、民营、国企）2",
-      "money": "薪资2",
-      "image": "公司logo2",
-      "company_type": "公司类型（游戏、互联网、硬件）2",
-      "seniority": "工龄2",
-      "education": "学历2",
-      "job_id": "职位id2",
-      "company_scale": "公司规模2",
-      "company_name": "公司名称2",
-      "company_address": "公司地址2",
-      "release_time": "发布时间2",
-      "job_name": "职位名称2"
+      "salary_str": "11000-12000",
+      "scale_str": "1000-5000人",
+      "trade": "",
+      "job_city": "北京",
+      "company_name": "文新教育集团",
+      "boon": "五险一金,补充保险,年奖季奖",
+      "education_str": "不限",
+      "job_name": "测试职位",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:15:38"
     },
     {
-      "company_station": "公司状态（合资、民营、国企）3",
-      "money": "薪资3",
-      "image": "公司logo3",
-      "company_type": "公司类型（游戏、互联网、硬件）3",
-      "seniority": "工龄3",
-      "education": "学历3",
-      "job_id": "职位id3",
-      "company_scale": "公司规模3",
-      "company_name": "公司名称3",
-      "company_address": "公司地址3",
-      "release_time": "发布时间3",
-      "job_name": "职位名称3"
+      "salary_str": "6000-7000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "归途如虹",
+      "boon": "五险一金,餐饮补助,通讯补贴,弹性工作",
+      "education_str": "硕士",
+      "job_name": "市场经理",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T18:55:29"
+    },
+    {
+      "salary_str": "11000-12000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "归途如虹",
+      "boon": "五险一金,餐饮补助",
+      "education_str": "本科",
+      "job_name": "前端工程师",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T18:56:53"
+    },
+    {
+      "salary_str": "12000-15000",
+      "scale_str": "1000-5000人",
+      "trade": "",
+      "job_city": "北京",
+      "company_name": "文新教育集团",
+      "boon": "五险一金",
+      "education_str": "不限",
+      "job_name": "rust",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:04:26"
+    },
+    {
+      "salary_str": "7000-9000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "上海",
+      "company_name": "归途如虹",
+      "boon": "五险一金,补充保险,年奖季奖,弹性工作,通讯补贴,餐饮补助,员工旅游",
+      "education_str": "本科",
+      "job_name": "后端工程师",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T18:59:04"
+    },
+    {
+      "salary_str": "7000-12000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "归途如虹",
+      "boon": "五险一金",
+      "education_str": "不限",
+      "job_name": "g4g",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:02:41"
+    },
+    {
+      "salary_str": "12000-13000",
+      "scale_str": "20人以下",
+      "trade": "媒体/出版/文化传播",
+      "job_city": "北京",
+      "company_name": "wakaka",
+      "boon": "五险一金,餐饮补助,通讯补贴,补充保险",
+      "education_str": "不限",
+      "job_name": "hhh",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:33:41"
+    },
+    {
+      "salary_str": "9000-11000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "归途如虹",
+      "boon": "五险一金,补充保险,年奖季奖,绩效奖金",
+      "education_str": "不限",
+      "job_name": "发单员",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:50:16"
+    },
+    {
+      "salary_str": "11000-14000",
+      "scale_str": "20人以下",
+      "trade": "互联网/电子商务",
+      "job_city": "北京",
+      "company_name": "测试",
+      "boon": "五险一金,补充保险,年奖季奖",
+      "education_str": "不限",
+      "job_name": "php",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-23T13:08:37"
     }
   ]
-}```
+}
+```  
 ####2.登录post：/auth/login
 参数：
 		
@@ -127,7 +209,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "uuid": "8626fa72-4275-11e6-92c4-c81f664404a0",
     "image": "http://images.huoban.io/th_21111.jpg"
   }
-}```
+}```  
 ####3.登出get：/auth/logout/token-{token}
 参数：
 		
@@ -139,7 +221,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "成功退出登录",
   "token": "123456",
   "data": {}
-}```
+}```  
 返回失败：
 ```{
   "status": "fail",
@@ -170,9 +252,176 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "登录手机号有误，请重新输入",
   "token": "",
   "data": {}
-}``` 
+}```  
 ####5.修改密码post：/auth/editpwd  
+参数：
+		
+	参数名称	必填	类型		描述
+	mobile		Y	string		手机号
+	oldpwd		Y	string		旧密码
+	pwd			Y	string		密码
+返回成功：
+```{
+  "status": "success",
+  "msg": "修改密码成功",
+  "token": "",
+  "data": {}
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "输入的密码不能为空",
+  "token": "",
+  "data": {}
+}```  
 ####6.搜索页post：/search
+每页显示10个（忘了写成动态的了，之后再改）  
+参数：(可传很多参数，根据参数查询，至少写一个条件)
+		
+	参数名称	必填	类型		描述
+	token	  Y	  string	用户id
+	job_name	N	string		职位名称
+	trade		N	string		行业
+	work_years_start(0)	N	string	工作年限
+	Work_year_end(50)	N	string	工作年限
+	job_city(全国)	N	string	城市
+	area		N	string		区域
+	education_str	N	string	教育背景
+	scale_start(0)	N	string	企业规模
+	Scale_end(20000)	N	string	企业规模
+	company_type(0)	N	string 	企业性质
+	salary_start(0)	N	string	薪资范围
+	Salary_end(200000)	N	string	薪资范围
+返回结果：
+```
+{
+  "status": "success",
+  "msg": "",
+  "token": "1111",
+  "data": [
+    {
+      "salary_str": "10000-14999/月",
+      "scale_str": "少于50人",
+      "trade": "计算机软件",
+      "job_city": "北京-西城区",
+      "company_name": "冷蜘蛛供应链管理（北京）有限公司",
+      "boon": "五险一金,餐饮补贴,年终奖金,交通补贴",
+      "education_str": "大专",
+      "job_name": "PHP软件工程师",
+      "work_years_str": "3-4年经验",
+      "dt_update": "2016-04-26T00:00:00"
+    },
+    {
+      "salary_str": "8000-9999/月",
+      "scale_str": "50-150人",
+      "trade": "农/林/牧/渔,快速消费品(食品、饮料、化妆品)",
+      "job_city": "北京-昌平区",
+      "company_name": "北京中特聚品农业科技有限公司",
+      "boon": "",
+      "education_str": "中专",
+      "job_name": "软件工程师/PHP工程师",
+      "work_years_str": "",
+      "dt_update": "2016-04-26T00:00:00"
+    },
+    {
+      "salary_str": "8000-9999/月",
+      "scale_str": "150-500人",
+      "trade": "互联网/电子商务,计算机软件",
+      "job_city": "北京",
+      "company_name": "指点无限（北京）科技有限公司",
+      "boon": "五险一金,定期体检,年终奖金,通讯补贴,绩效奖金",
+      "education_str": "大专",
+      "job_name": "php高级软件工程师 (职位编号：15)",
+      "work_years_str": "1年经验",
+      "dt_update": "2016-04-26T00:00:00"
+    },
+    {
+      "salary_str": "10000-50000",
+      "scale_str": "10000人以上",
+      "trade": "网络游戏/动漫",
+      "job_city": "北京",
+      "company_name": "郭路路的公司",
+      "boon": "年奖季奖,补充保险,年奖季奖",
+      "education_str": "中专",
+      "job_name": "php大牛1",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-17T10:59:51"
+    },
+    {
+      "salary_str": "2000-3000",
+      "scale_str": "20-99人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "CCC_&lt;script&gt;",
+      "boon": "五险一金,补充保险,节日福利",
+      "education_str": "本科",
+      "job_name": "测试职位PHP",
+      "work_years_str": "不限",
+      "dt_update": "2016-07-25T14:58:07"
+    },
+    {
+      "salary_str": "0-0",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "上海",
+      "company_name": "归途如虹",
+      "boon": "五险一金",
+      "education_str": "不限",
+      "job_name": "php",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-17T18:11:27"
+    },
+    {
+      "salary_str": "5000-6000",
+      "scale_str": "500-999人",
+      "trade": "移动互联网/O2O/数据服务",
+      "job_city": "北京",
+      "company_name": "归途如虹",
+      "boon": "补充保险,年奖季奖",
+      "education_str": "大专",
+      "job_name": "php",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-17T18:11:25"
+    },
+    {
+      "salary_str": null,
+      "scale_str": "250",
+      "trade": null,
+      "job_city": "深圳",
+      "company_name": "八九八创新空间（北京）科技有限公司",
+      "boon": null,
+      "education_str": null,
+      "job_name": "php",
+      "work_years_str": "1 - 1年",
+      "dt_update": "2016-08-16T00:00:00"
+    },
+    {
+      "salary_str": null,
+      "scale_str": "100",
+      "trade": null,
+      "job_city": "深圳",
+      "company_name": "八九八创新空间（北京）科技有限公司",
+      "boon": null,
+      "education_str": null,
+      "job_name": "php",
+      "work_years_str": "1 - 1年",
+      "dt_update": "2016-08-16T00:00:00"
+    },
+    {
+      "salary_str": "11000-13000",
+      "scale_str": "少于50人",
+      "trade": "",
+      "job_city": "北京",
+      "company_name": "八九八创新空间（北京）科技有限公司",
+      "boon": "五险一金,补充保险,年奖季奖",
+      "education_str": "本科",
+      "job_name": "php",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-16T17:38:01"
+    }
+  ]
+}
+```  
 ####7.消息页get：/message/resume/token-{token}  
 参数：
 		

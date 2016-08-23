@@ -19,7 +19,14 @@ MY_SQL = {
                       'user': 'probie_test',
                       'pwd': 'tt_probie'
                       }}
-
+ES_API = {
+    'esapi-neiwang': {
+        'url': 'http://192.168.12.146:8000/'
+    },
+    'esapi-waiwang': {
+        'url': 'http://182.92.99.38:8000/'
+    }
+}
 FCGI_SETTIGNS = {
     'fcgi_port': 1024,
 }

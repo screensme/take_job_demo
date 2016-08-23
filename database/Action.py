@@ -17,13 +17,14 @@ import uuid
 # from api import base_handler, company_handler, resume_handler, user_handler
 
 class Action(object):
-    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None):
+    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, esapi=str):
         # pass
         self.db = torndb.Connection(host=dbhost,
                                     database=dbname,
                                     user=dbuser,
                                     password=dbpwd,
                                     )
+        self.esapi = esapi
         self.log = log
         self.log.info('mysql=%s,db=%s' % (dbhost, dbname))
         print('init end')
@@ -183,12 +184,12 @@ class Action(object):
     @tornado.gen.coroutine
     def Home(self, token=str, cache_flag=int):
 
-        uri = 'http://192.168.12.146:8000/query_new_job'
+        uri = '%squery_new_job' % self.esapi
         values = dict()
         values['offset'] = 1
         values['limit'] = 10
         # values['query_new_job'] = '北京'
-        reques = requests.post(url=uri,json=values)
+        reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
         print contect
         contect_id = sorted(eval(contect)['id_list'])
@@ -207,11 +208,11 @@ class Action(object):
     @tornado.gen.coroutine
     def Search_job(self, values=dict, token=str, cache_flag=int,):
 
-        uri = 'http://192.168.12.146:8000/query_job'
+        uri = '%squery_job' % self.esapi
         data = values.pop(u'token')
         values['offset'] = 1
         values['limit'] = 10
-        reques = requests.post(url=uri,json=values)
+        reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
@@ -227,7 +228,7 @@ class Action(object):
     # 消息页，显示数量
     @tornado.gen.coroutine
     def Job_message(self, token=str, cache_flag=int):
-        search_user = self.db.get("SELECT * FROM candidate_user WHERE user_uuid='%s'" % token)
+        search_user = self.db.get("SELECT * FROM candidate_user WHERE id='%s'" % token)
         boss_profile = self.db.execute_rowcount("SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id'])
 
         result = dict()

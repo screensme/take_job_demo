@@ -44,6 +44,7 @@ urls = [
     # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记密码==修改密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post---hash每次生成不一样
     url(r"/search", SearchHandler),  # 搜索页post√
+    # url(r"/search", SearchHandler),  # 热门搜索
     # url(r"/send-resume", SendresumeHandler),     # 发送简历post---
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
