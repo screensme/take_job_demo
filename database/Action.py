@@ -181,12 +181,12 @@ class Action(object):
 
     # 首页
     @tornado.gen.coroutine
-    def Home(self, token=str, cache_flag=int):
+    def Home(self, page=int, num=int, token=str, cache_flag=int):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
-        values['offset'] = 1
-        values['limit'] = 10
+        values['offset'] = page
+        values['limit'] = num
         # values['query_new_job'] = '北京'
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
@@ -205,23 +205,40 @@ class Action(object):
 
     # 首页搜索
     @tornado.gen.coroutine
-    def Search_job(self, values=dict, token=str, cache_flag=int,):
+    def Search_job(self, values=dict, token=str, page=int, num=int, cache_flag=int,):
 
         uri = '%squery_job' % self.esapi
-        data = values.pop(u'token')
-        values['offset'] = 1
-        values['limit'] = 10
-        reques = requests.post(url=uri, json=values)
-        contect = reques.content.decode('utf-8')
-        contect_id = sorted(eval(contect)['id_list'])
-        args = ','.join(str(x) for x in contect_id)
-        search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                 %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
-        result = dict()
-        result['status'] = 'success'
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_job
+        a = values.pop('token')
+        b = values.pop('page')
+        c = values.pop('num')
+        value = values
+        if value == {}:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请传入查找职位或公司'
+            result['data'] = {}
+        else:
+            values['offset'] = page
+            values['limit'] = num
+            reques = requests.post(url=uri, json=values)
+            contect = reques.content.decode('utf-8')
+            try:
+                contect_id = sorted(eval(contect)['id_list'])
+                args = ','.join(str(x) for x in contect_id)
+                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
+                                         %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                result = dict()
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = search_job
+            except KeyError, e:
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '传入参数有误'
+                result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 消息页，显示数量
@@ -417,12 +434,15 @@ class Action(object):
         search_user = self.db.get(sql)
         if search_user is None:
             insert_resume = self.db.insert(
-                "insert into candidate_cv values(%s)", data)
+                "insert into candidate_cv(%s,%s,%s,%s,%s,%s,%s,%s,%s) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                'phonenum', 'password', 'active', 'authenticated', 'post_status', 'tag', 'dt_create', 'dt_update', 'user_uuid',
+                data['phonenum'], data['birthday'], data['politics_status'], data['gender'], data['current_area'], data['name'],
+            data['education'], data['email'], data['marital_status'])
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = insert_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-教育经历post

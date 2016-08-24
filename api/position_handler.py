@@ -14,11 +14,11 @@ from database import Action
 class HomeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
-        result = yield self.db.Home(token, cache_flag)
+        result = yield self.db.Home(page, num, token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
 
@@ -32,8 +32,10 @@ class SearchHandler(BaseHandler):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
         last = self.get_arguments()
-        result = yield self.db.Search_job(last, token, cache_flag,)
+        result = yield self.db.Search_job(last, token, page, num, cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()

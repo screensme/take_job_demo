@@ -37,7 +37,7 @@ from api.resume_handler import \
     ResumeEvaluationHandler
 
 urls = [
-    url(r"/home/token-(\w+)", HomeHandler),     # 首页get
+    url(r"/home/page-(\d+)/num-(\d+)/token-(\w+)", HomeHandler),     # 首页get
     url(r"/auth/login", LoginHandler),  # 登录post
     url(r"/auth/logout/token-(\w+)", LogoutHandler),    # 登出get
     url(r"/auth/register", RegisterHandler),    # 注册post
@@ -60,7 +60,7 @@ urls = [
     url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post
     url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post
     url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-实习经历post
-    url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post
+    # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/.*", better404)

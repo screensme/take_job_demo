@@ -38,7 +38,7 @@ class ResumeBasicHandler(BaseHandler):
         data['name'] = self.get_argument('name')
         data['phonenum'] = self.get_argument('phonenum')
         data['email'] = self.get_argument('email')
-        data['avatar'] = self.get_argument('avatar')
+        # data['avatar'] = self.get_argument('avatar')
         data['marital_status'] = self.get_argument('marital_status')
         result = yield self.db.Resume_Basic(token, data, cache_flag)
 
