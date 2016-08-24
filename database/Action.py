@@ -62,13 +62,13 @@ class Action(object):
                 result = dict()
                 result['status'] = 'sucess'
                 result['msg'] = ''
-                result['token'] = _id
+                result['token'] = '%s' % _id
                 result['data'] = {}
             except Exception, e:
                 result = dict()
                 result['status'] = 'fail'
                 result['msg'] = e.log_message
-                result['token'] = _id
+                result['token'] = '%s' % _id
                 result['data'] = {}
 
         raise tornado.gen.Return(result)
