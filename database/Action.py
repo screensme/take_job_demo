@@ -41,7 +41,7 @@ class Action(object):
             result = dict()
             result['status'] = 'fail'
             result['msg'] = '手机号已经被注册'
-            result['token'] = user_info['user_uuid']
+            result['token'] = user_info['id']
             result['data'] = user_info
             raise tornado.gen.Return(result)
         else:
@@ -413,11 +413,11 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_Basic(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-basic.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
-
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        if search_user is None:
+            insert_resume = self.db.insert(
+                "insert into candidate_cv values(%s)", data)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
