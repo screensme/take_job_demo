@@ -685,18 +685,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "123",
   "data": {
-    "user_image": "头像",
-    "sex": "性别",
-    "polity_face": "政治面貌",
-    "education": "学历",
-    "user_id": "个人id",
-    "name": "用户名",
-    "mobile": "手机号",
-    "token": "登陆用户id",
-    "marriage": "婚姻",
-    "place": "现居住地",
-    "email": "邮箱",
-    "birth_year": "出生年月"
+    "username": "邵固",
+    "school": "长春教育学院",
+    "user_id": 123,
+    "age": "26",
+    "major": "城乡规划学",
+    "sex": "男",
+    "edu": "本科",
+    "id": 116
   }
 }```  
 ####16.简历查看get：/resume-view/token-{token}

@@ -167,16 +167,14 @@ class Action(object):
     @tornado.gen.coroutine
     def Home_user(self, token=str, cache_flag=int):
 
-        search_user = self.db.get("SELECT * FROM candidate_cv WHERE user_id='%s'" % token)
-        try:
-            search_us = json.loads(search_user['candidate_cv'])
-        except Exception,e :
-            pass
+        sql = "SELECT %s FROM candidate_cv WHERE user_id='%s'" \
+            % ("id, user_id, username, sex, age, edu, school, major", token)
+        search_user = self.db.get(sql)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = search_us
+        result['data'] = search_user
         raise tornado.gen.Return(result)
 
     # 首页
