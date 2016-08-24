@@ -194,13 +194,51 @@ class Action(object):
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                 %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                 %('id,job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
 
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_job
+        raise tornado.gen.Return(result)
+
+    # 首页搜索
+    @tornado.gen.coroutine
+    def Search_job(self, values=dict, token=str, page=int, num=int, cache_flag=int,):
+
+        uri = '%squery_job' % self.esapi
+        a = values.pop('token')
+        b = values.pop('page')
+        c = values.pop('num')
+        value = values
+        if value == {}:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请传入查找职位或公司'
+            result['data'] = {}
+        else:
+            values['offset'] = page
+            values['limit'] = num
+            reques = requests.post(url=uri, json=values)
+            contect = reques.content.decode('utf-8')
+            try:
+                contect_id = sorted(eval(contect)['id_list'])
+                args = ','.join(str(x) for x in contect_id)
+                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
+                                         %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                result = dict()
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = search_job
+            except KeyError, e:
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '传入参数有误'
+                result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 首页搜索

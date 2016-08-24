@@ -22,7 +22,8 @@ from api.position_handler import \
     HomeHandler, \
     SearchHandler, \
     PositionHandler, \
-    FeedbackHandler
+    FeedbackHandler, \
+    HostsearchlistHandler
 
 from api.company_handler import \
     CompanyHandler
@@ -44,7 +45,7 @@ urls = [
     # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 找回密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/search", SearchHandler),  # 搜索页post√
-    # url(r"/search", SearchHandler),  # 热门搜索list表
+    url(r"/hot-search-list", HostsearchlistHandler),  # 热门搜索list表
     # url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
     # url(r"/view_collect", ViewcollectHandler),     # 查看收藏get
     # url(r"/add_collect", AddcollectHandler),     # 增加收藏post

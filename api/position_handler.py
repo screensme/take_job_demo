@@ -15,7 +15,6 @@ class HomeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
         result = yield self.db.Home(page, num, token, cache_flag)
@@ -29,7 +28,6 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         page = self.get_argument('page')
@@ -47,7 +45,6 @@ class FeedbackHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
@@ -65,11 +62,27 @@ class PositionHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, job_id, token):
-        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
         # company_id = self.get_argument('company_id')
         result = yield self.db.Position(job_id, token, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+
+        return
+
+# 首页搜索
+class HostsearchlistHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self):
+        cache_flag = self.get_cache_flag()
+        # token = self.get_argument('token')
+        # page = self.get_argument('page')
+        # num = self.get_argument('num')
+        # last = self.get_arguments()
+        result = yield self.db.Host_search_list(cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()
