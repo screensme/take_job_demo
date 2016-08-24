@@ -144,23 +144,23 @@ class Action(object):
     @tornado.gen.coroutine
     def User_updatepwd(self, mobile=str, oldpwd=str, pwd=str, cache_flag=int):
 
-        hash_oldpwd = bcrypt.hashpw(oldpwd.encode('utf-8'), bcrypt.gensalt())
-        hash_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
         sql = "SELECT * FROM rcat_test.candidate_user WHERE phonenum='%s'" % mobile
         search_user = self.db.get(sql)
-        checkpw = isinstance(hash_oldpwd, search_user['password'])
-        if search_user is None:
+        if (search_user['password'] != bcrypt.hashpw(oldpwd.encode('utf-8'), search_user['password'].encode('utf-8'))) \
+                or (search_user is None):
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
             result['msg'] = '旧密码输入有误'
             result['data'] = {}
         else:
-            update_pwd = self.db.update("UPDATE rcat_test.candidate_user set password=%s where mobile=%s",hash_pwd, mobile)
+            hash_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+            update_pwd = self.db.update("update candidate_user set password=%s where phonenum=%s", hash_pwd, mobile)
 
+            self.log.info("user edit password %s (1 mean yes,0 nean no)")
             result = dict()
             result['status'] = 'success'
-            result['token'] = update_pwd['id']
+            result['token'] = search_user['id']
             result['msg'] = '修改密码成功'
             result['data'] = {}
         raise tornado.gen.Return(result)
