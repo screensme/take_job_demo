@@ -42,7 +42,7 @@ class Action(object):
             result['status'] = 'fail'
             result['msg'] = '手机号已经被注册'
             result['token'] = user_info['id']
-            result['data'] = user_info
+            result['data'] = {}
             raise tornado.gen.Return(result)
         else:
             try:
@@ -529,14 +529,10 @@ class Action(object):
     @tornado.gen.coroutine
     def Feed_back(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-feedback.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
 
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = {}
         raise tornado.gen.Return(result)

@@ -47,13 +47,13 @@ class FeedbackHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
         data['email'] = self.get_argument('email')
         data['info'] = self.get_argument('info')
-        result = yield self.db.Feed_back(token,filepath, data, cache_flag)
+        result = yield self.db.Feed_back(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

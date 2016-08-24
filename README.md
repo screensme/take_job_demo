@@ -23,7 +23,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-24</td>
         <td>修改</td>
-		<td>消息(简历状态)-待沟通-->改为-已通知;消息页和消息通知接口修改，数据变更;职位详情，url改变，需要传职位id；公司详情，url改变，需要传公司id</td>
+		<td>消息(简历状态)-待沟通-->改为-已通知;消息页和消息通知接口修改，数据变更;职位详情，url改变，需要传职位id；公司详情，url改变，需要传公司id。首页和搜索页url改变，都需要增加两个参数页数page和每页显示数量num</td>
 	</tr>
     </table>
 </div>
@@ -54,12 +54,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 23.意见反馈post：/feedback
 
 ##接口介绍
-####1.首页get：/home/token-{token}  
-每页显示10个（忘了写成动态的了，之后再改）
+####1.首页get：/home/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token	  Y	  string	用户id
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 返回结果：
 ```
 {
@@ -81,30 +82,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     },
     {
       "salary_str": "11000-12000",
-      "scale_str": "1000-5000人",
-      "trade": "",
-      "job_city": "北京",
-      "company_name": "文新教育集团",
-      "boon": "五险一金,补充保险,年奖季奖",
-      "education_str": "不限",
-      "job_name": "测试职位",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:15:38"
-    },
-    {
-      "salary_str": "6000-7000",
-      "scale_str": "500-999人",
-      "trade": "移动互联网/O2O/数据服务",
-      "job_city": "北京",
-      "company_name": "归途如虹",
-      "boon": "五险一金,餐饮补助,通讯补贴,弹性工作",
-      "education_str": "硕士",
-      "job_name": "市场经理",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T18:55:29"
-    },
-    {
-      "salary_str": "11000-12000",
       "scale_str": "500-999人",
       "trade": "移动互联网/O2O/数据服务",
       "job_city": "北京",
@@ -114,66 +91,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "前端工程师",
       "work_years_str": "不限",
       "dt_update": "2016-08-19T18:56:53"
-    },
-    {
-      "salary_str": "12000-15000",
-      "scale_str": "1000-5000人",
-      "trade": "",
-      "job_city": "北京",
-      "company_name": "文新教育集团",
-      "boon": "五险一金",
-      "education_str": "不限",
-      "job_name": "rust",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:04:26"
-    },
-    {
-      "salary_str": "7000-9000",
-      "scale_str": "500-999人",
-      "trade": "移动互联网/O2O/数据服务",
-      "job_city": "上海",
-      "company_name": "归途如虹",
-      "boon": "五险一金,补充保险,年奖季奖,弹性工作,通讯补贴,餐饮补助,员工旅游",
-      "education_str": "本科",
-      "job_name": "后端工程师",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T18:59:04"
-    },
-    {
-      "salary_str": "7000-12000",
-      "scale_str": "500-999人",
-      "trade": "移动互联网/O2O/数据服务",
-      "job_city": "北京",
-      "company_name": "归途如虹",
-      "boon": "五险一金",
-      "education_str": "不限",
-      "job_name": "g4g",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:02:41"
-    },
-    {
-      "salary_str": "12000-13000",
-      "scale_str": "20人以下",
-      "trade": "媒体/出版/文化传播",
-      "job_city": "北京",
-      "company_name": "wakaka",
-      "boon": "五险一金,餐饮补助,通讯补贴,补充保险",
-      "education_str": "不限",
-      "job_name": "hhh",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:33:41"
-    },
-    {
-      "salary_str": "9000-11000",
-      "scale_str": "500-999人",
-      "trade": "移动互联网/O2O/数据服务",
-      "job_city": "北京",
-      "company_name": "归途如虹",
-      "boon": "五险一金,补充保险,年奖季奖,绩效奖金",
-      "education_str": "不限",
-      "job_name": "发单员",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:50:16"
     },
     {
       "salary_str": "11000-14000",
@@ -207,7 +124,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "8626fa72-4275-11e6-92c4-c81f664404a0",
+  "token": "120",
   "data": {
     "mobile": "13333333333",
     "pwd": "111111",
@@ -243,12 +160,18 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "sucess",
   "msg": "",
-  "token": "123123",
+  "token": "123",
   "data": {
-    "mobile": "13333333333",
-    "image": "http://7xlo2h.com1.z0.glb.clouddn.com/avatar/default_avatar.png",
-    "pwd": "111111",
-    "uuid": "123123"
+    "authenticated": 1,
+    "post_status": "allow",
+    "phonenum": "15801616013",
+    "tag": "test",
+    "dt_update": "2016-08-18T18:44:31",
+    "dt_create": "2016-08-18T18:44:31",
+    "active": 1,
+    "password": "$2b$12$MK8CVHw3nfGEyqup.vCe2OUu06E/go9paz4HNGr8qTbkh1klxhGbW",
+    "user_uuid": "be747a98-6530-11e6-8327-a41f72641111",
+    "id": 170
   }
 }```  
 返回失败：
@@ -284,7 +207,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 参数：(可传很多参数，根据参数查询，至少写一个条件)
 		
 	参数名称	必填	类型		描述
-	token	  Y	  string	用户id
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 	job_name	N	string		职位名称
 	trade		N	string		行业
 	work_years_start(0)	N	string	工作年限

@@ -51,18 +51,16 @@ class ResumeEducationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
         data['school'] = self.get_argument('school')
         data['major'] = self.get_argument('major')
-        data['start_year'] = self.get_argument('start_year')
-        data['start_month'] = self.get_argument('start_month')
-        data['end_year'] = self.get_argument('end_year')
-        data['end_month'] = self.get_argument('end_month')
-        data['education2'] = self.get_argument('education2')
-        result = yield self.db.Resume_Education(token,filepath, data, cache_flag)
+        data['start_time'] = self.get_argument('start_time')
+        data['end_time'] = self.get_argument('end_time')
+        data['degree'] = self.get_argument('degree')
+        result = yield self.db.Resume_Education(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -73,16 +71,16 @@ class ResumeExpectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
-        data['expect_job'] = self.get_argument('expect_job')
-        data['work_state'] = self.get_argument('work_state')
-        data['expect_city'] = self.get_argument('expect_city')
+        data['area'] = self.get_argument('area')
+        data['title'] = self.get_argument('title')
+        data['status'] = self.get_argument('status')
+        data['trade'] = self.get_argument('trade')
         data['expect_salary'] = self.get_argument('expect_salary')
-        data['expect_trade'] = self.get_argument('expect_trade')
-        result = yield self.db.Resume_Expect(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Expect(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -93,20 +91,17 @@ class ResumeExperienceHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
         data['gs'] = self.get_argument('gs')
-        data['gs_trade'] = self.get_argument('gs_trade')
-        data['gs_job'] = self.get_argument('gs_job')
-        data['gs_address'] = self.get_argument('gs_address')
-        data['start_year2'] = self.get_argument('start_year2')
-        data['start_month2'] = self.get_argument('start_month2')
-        data['end_year2'] = self.get_argument('end_year2')
-        data['end_month2'] = self.get_argument('end_month2')
-        data['job_duty'] = self.get_argument('job_duty')
-        result = yield self.db.Resume_Experience(token,filepath, data, cache_flag)
+        data['end_time'] = self.get_argument('end_time')
+        data['start_time'] = self.get_argument('start_time')
+        data['school_name'] = self.get_argument('school_name')
+        data['job_info'] = self.get_argument('job_info')
+        data['job_name'] = self.get_argument('job_name')
+        result = yield self.db.Resume_Experience(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -117,7 +112,7 @@ class ResumeItemHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
@@ -128,7 +123,7 @@ class ResumeItemHandler(BaseHandler):
         data['end_year3'] = self.get_argument('end_year3')
         data['end_month3'] = self.get_argument('end_month3')
         data['item_des'] = self.get_argument('item_des')
-        result = yield self.db.Resume_Item(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Item(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
