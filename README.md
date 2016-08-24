@@ -23,7 +23,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-24</td>
         <td>修改</td>
-		<td>消息(简历状态)-待沟通-->改为-已通知;消息页和消息通知接口修改，数据变更</td>
+		<td>消息(简历状态)-待沟通-->改为-已通知;消息页和消息通知接口修改，数据变更;职位详情，url改变，需要传职位id；公司详情，url改变，需要传公司id</td>
 	</tr>
     </table>
 </div>
@@ -647,11 +647,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "priority": 0
   }
 }```  
-####14.公司详情get：/company-full/token-{token}
+####14.公司详情get：/company-full/company-{company_id}/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
+	company_id	Y	string		公司id
 返回成功：
 ```{
   "status": "success",

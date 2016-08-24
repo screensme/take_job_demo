@@ -400,7 +400,8 @@ class Action(object):
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
         except Exception,e :
             pass
-
+        if search_resume == None:
+            search_resume = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token

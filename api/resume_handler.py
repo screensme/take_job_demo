@@ -26,7 +26,7 @@ class ResumeBasicHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         data = dict()
         token = self.get_argument('token')
@@ -41,7 +41,7 @@ class ResumeBasicHandler(BaseHandler):
         data['birth_year'] = self.get_argument('birth_year')
         data['mobile'] = self.get_argument('mobile')
         data['place'] = self.get_argument('place')
-        result = yield self.db.Resume_Basic(token,filepath, data, cache_flag)
+        result = yield self.db.Resume_Basic(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

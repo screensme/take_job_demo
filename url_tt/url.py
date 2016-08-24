@@ -41,7 +41,7 @@ urls = [
     url(r"/auth/login", LoginHandler),  # 登录post
     url(r"/auth/logout/token-(\w+)", LogoutHandler),    # 登出get
     url(r"/auth/register", RegisterHandler),    # 注册post
-    # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记密码==修改密码
+    # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post---hash每次生成不一样
     url(r"/search", SearchHandler),  # 搜索页post√
     # url(r"/search", SearchHandler),  # 热门搜索list表
