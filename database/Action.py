@@ -62,13 +62,13 @@ class Action(object):
                 result = dict()
                 result['status'] = 'sucess'
                 result['msg'] = ''
-                result['token'] = foo_uuid
+                result['token'] = _id
                 result['data'] = {}
             except Exception, e:
                 result = dict()
                 result['status'] = 'fail'
                 result['msg'] = e.log_message
-                result['token'] = foo_uuid
+                result['token'] = _id
                 result['data'] = {}
 
         raise tornado.gen.Return(result)
@@ -92,10 +92,12 @@ class Action(object):
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
-                       % ("id, user_id, username, sex, age, edu, school, major", search_mobile['id'])
+                       % ("user_id, username, sex, age, edu, school, major", search_mobile['id'])
                 user_basic = self.db.get(sqll)
                 if user_basic == None:
                     user_basic = {}
+                else:
+                    user_basic['id'] = search_mobile['id']
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
