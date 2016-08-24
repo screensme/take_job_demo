@@ -12,11 +12,11 @@ from database import Action
 class CompanyHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, company_id, token):
         # filepath = self.settings['file_path']
         # token = self.get_argument('token')
-        company_id = self.get_argument('company_id')
-        result = yield self.db.Company_full(token,company_id)
+        # company_id = self.get_argument('company_id')
+        result = yield self.db.Company_full(company_id, token)
 
         self.write(ObjectToString().encode(result))
         self.finish()

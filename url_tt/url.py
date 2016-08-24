@@ -44,7 +44,7 @@ urls = [
     # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记密码==修改密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post---hash每次生成不一样
     url(r"/search", SearchHandler),  # 搜索页post√
-    # url(r"/search", SearchHandler),  # 热门搜索
+    # url(r"/search", SearchHandler),  # 热门搜索list表
     # url(r"/send-resume", SendresumeHandler),     # 发送简历post---
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
@@ -52,8 +52,8 @@ urls = [
     url(r"/message/resume-communicated/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get已通知
     url(r"/message/resume-passed/token-(\w+)", MessagePassedHandler),    # 消息(简历状态查看)get面试通过
     url(r"/message/resume-improper/token-(\w+)", MessageImproperHandler),    # 消息(简历状态查看)get不合适
-    url(r"/position-full/token-(\w+)", PositionHandler),    # 职位详情get
-    url(r"/company-full/token-(\w+)", CompanyHandler),    # 公司详情get
+    url(r"/position-full/job-(\w+)/token-(\w+)", PositionHandler),    # 职位详情get
+    url(r"/company-full/company-(\w+)/token-(\w+)", CompanyHandler),    # 公司详情get
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
     url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-基本信息post

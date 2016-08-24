@@ -62,12 +62,12 @@ class FeedbackHandler(BaseHandler):
 class PositionHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, job_id, token):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
-        company_id = self.get_argument('company_id')
-        result = yield self.db.Position(token, cache_flag)
+        # company_id = self.get_argument('company_id')
+        result = yield self.db.Position(job_id, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

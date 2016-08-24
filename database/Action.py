@@ -81,7 +81,6 @@ class Action(object):
                       # mobibuild=str,
                       # mobitype=str,
                       cache_flag=int):
-
         result = dict()
         search_mobile = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE phonenum=%s"
                                  % mobile)
@@ -89,22 +88,22 @@ class Action(object):
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
-                raise tornado.gen.Return(result)
-        passwd = '\''+pwd + '\''
 
-        search_mobile_pwd = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE phonenum=%s and password=%s"
-                                 % (mobile,passwd))
-        if search_mobile_pwd is None:
+        else:
+            if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
+                sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
+                       % ("id, user_id, username, sex, age, edu, school, major", search_mobile['id'])
+                user_basic = self.db.get(sqll)
+                if user_basic == None:
+                    user_basic = {}
+                result['status'] = 'success'
+                result['msg'] = '登陆成功'
+                result['token'] = search_mobile['id']
+                result['data'] = user_basic
+            else:
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '密码错误!'
-                raise tornado.gen.Return(result)
-
-        else:
-            result['status'] = 'success'
-            result['msg'] = '登陆成功'
-            result['token'] = search_mobile_pwd['id']
-            result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 用户登出
@@ -357,9 +356,9 @@ class Action(object):
 
     # 职位详情
     @tornado.gen.coroutine
-    def Position(self, token=str, company_id=str, cache_flag=int):
+    def Position(self, job_id=str, token=str, cache_flag=int):
 
-        search_job = self.db.get("select site_name,job_name from jobs_hot_es_test where id ='%s'" % company_id)
+        search_job = self.db.get("select * from jobs_hot_es_test where id ='%s'" % job_id)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -369,14 +368,27 @@ class Action(object):
 
     # 公司详情get
     @tornado.gen.coroutine
-    def Company_full(self, token=str, company_id=str, cache_flag=int):
+    def Company_full(self, company_id=str, token=str, cache_flag=int):
 
-        search_job = self.db.get("select site_name,job_name from jobs_hot_es_test where id ='%s'" % company_id)
+        sql = "select site_name,company_name from jobs_hot_es_test where id ='%s'" % company_id
+        try:
+            search_job = self.db.get(sql)
+            if search_job['site_name'] == u'智联招聘':
+                sqlll = "select * from spider_company where company_name ='%s'" % search_job['company_name']
+                search_company = self.db.get(sqlll)
+            else:
+                sqll = "select * from company_detail where company_name ='%s'" % search_job['company_name']
+                search_company = self.db.get(sqll)
+            if search_company == None:
+                search_company = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            search_company = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = search_job
+        result['data'] = search_company
         raise tornado.gen.Return(result)
 
     # 简历查看
