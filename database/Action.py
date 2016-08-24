@@ -247,9 +247,15 @@ class Action(object):
         # ev_user = eval(read_user)
         # print ev_user
         # user_info.close()
-        boss_profile = self.db.query(
-            "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s"
-            % token)
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s limit %s,%s"\
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str", token, 0, 2)
+        try:
+            boss_profile = self.db.query(sql)
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            boss_profile = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -261,9 +267,18 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_viewed(self, token=str, cache_flag=int):
 
-        search_status = self.db.get(
-            "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='viewed'"
-        % token)
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' limit %s,%s"\
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+                 token, 0, 2)
+        try:
+            search_status = self.db.query(sql)
+            if search_status == None:
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            search_status = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -275,9 +290,18 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_communicated(self, token=str, cache_flag=int):
 
-        search_status = self.db.get(
-                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='notify'"
-                % token)
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+                 token, 0, 2)
+        try:
+            search_status = self.db.query(sql)
+            if search_status == None:
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            search_status = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -289,9 +313,18 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_passed(self, token=str, cache_flag=int):
 
-        search_status = self.db.get(
-                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status in ('pass', 'info')"
-                % token)
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+                 token, 0, 2)
+        try:
+            search_status = self.db.query(sql)
+            if search_status == None:
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            search_status = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -303,9 +336,18 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_improper(self, token=str, cache_flag=int):
 
-        search_status = self.db.get(
-                    "select * from jobs_hot_es_test as k left join candidate_post as p on k.id = p.job_id where k.id =%s and p.status='deny'"
-                % token)
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' limit %s,%s"\
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+                 token, 0, 2)
+        try:
+            search_status = self.db.query(sql)
+            if search_status == None:
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            search_status = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token

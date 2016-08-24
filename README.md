@@ -20,6 +20,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         <td>修改</td>
 		<td>接口连接数据库，返回的json会有变化</td>
 	</tr>
+	<tr>
+        <td>2016-8-24</td>
+        <td>修改</td>
+		<td>消息(简历状态)-待沟通-->改为-已通知</td>
+	</tr>
     </table>
 </div>
 
@@ -434,7 +439,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "123",
   "data": 4
 }```  
-####8.简历状态get(全部)：/message/resume-allstatus/token-{token} 
+####8.消息(简历状态)get(全部)：/message/resume-allstatus/token-{token} 
 参数：
 		
 	参数名称	必填	类型		描述
@@ -443,139 +448,150 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "123",
+  "token": "22",
   "data": [
     {
-      "job_id": "职位id",
-      "company_address": "公司地址(只城市)",
-      "money": "薪资",
-      "image": "公司logo",
-      "resume_status": "viewed",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称",
-      "company_name": "公司名称"
+      "salary_str": "面议",
+      "scale_str": "20-99人",
+      "job_id": 1764,
+      "post_status": "allow",
+      "company_type": "民营",
+      "job_city": "北京",
+      "company_name": "北京宠知道科技有限公司",
+      "boon": "年底双薪,绩效奖金,年终分红,股票期权,弹性工作,补充医疗保险,定期体检,员工旅游",
+      "education_str": "本科",
+      "job_name": "产品经理",
+      "work_years_str": "1-3年"
     },
     {
-      "job_id": "职位id2",
-      "company_address": "公司地址(只城市)2",
-      "money": "薪资2",
-      "image": "公司logo2",
-      "resume_status": "communicated",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称2",
-      "company_name": "公司名称2"
+      "salary_str": "面议",
+      "scale_str": "100-499人",
+      "job_id": 27872,
+      "post_status": "allow",
+      "company_type": "上市公司",
+      "job_city": "北京",
+      "company_name": "嘉网股份",
+      "boon": "",
+      "education_str": "本科",
+      "job_name": "C#软件工程师",
+      "work_years_str": "1-3年"
+    }
+  ]
+}```  
+####9.消息(简历状态)get(被查看)：/message/resume-viewed/token-{token}
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "18",
+  "data": [
+    {
+      "salary_str": "0-0",
+      "scale_str": "20-99人",
+      "job_id": 214400,
+      "post_status": "allow",
+      "company_type": "民营企业/私营公司",
+      "job_city": "北京",
+      "company_name": "联创锐峰科技有限公司",
+      "boon": "",
+      "education_str": "大专",
+      "job_name": "策划专员",
+      "work_years_str": "不限"
+    }
+  ]
+}```  
+####10.消息(简历状态)get(已通知)：/message/resume-communicated/token-{token} 
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "22",
+  "data": [
+    {
+      "salary_str": "15564-1968498",
+      "scale_str": "20-99人",
+      "job_id": 214116,
+      "post_status": "allow",
+      "company_type": "国有企业",
+      "job_city": "上海",
+      "company_name": "归途如虹",
+      "boon": "周末双休",
+      "education_str": "中专",
+      "job_name": "..111",
+      "work_years_str": "不限"
+    }
+  ]
+}```  
+####11.消息(简历状态)get(面试通过)：/message/resume-passed/token-{token}
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "19",
+  "data": [
+    {
+      "salary_str": "15564-1968498",
+      "scale_str": "20-99人",
+      "job_id": 214116,
+      "post_status": "allow",
+      "company_type": "国有企业",
+      "job_city": "上海",
+      "company_name": "归途如虹",
+      "boon": "周末双休",
+      "education_str": "中专",
+      "job_name": "..111",
+      "work_years_str": "不限"
+    }
+  ]
+}```  
+####12.消息(简历状态)get(不合适)：/message/resume-improper/token-{token} 
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "68",
+  "data": [
+    {
+      "salary_str": "0-0",
+      "scale_str": "20-99人",
+      "job_id": 214404,
+      "post_status": "allow",
+      "company_type": "民营企业/私营公司",
+      "job_city": "北京",
+      "company_name": "联创锐峰科技有限公司",
+      "boon": "",
+      "education_str": "不限",
+      "job_name": "双11发单员",
+      "work_years_str": "不限"
     },
     {
-      "job_id": "职位id3",
-      "company_address": "公司地址(只城市)3",
-      "money": "薪资3",
-      "image": "公司logo3",
-      "resume_status": "passed",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称3",
-      "company_name": "公司名称3"
-    },
-    {
-      "job_id": "职位id4",
-      "company_address": "公司地址(只城市)4",
-      "money": "薪资4",
-      "image": "公司logo4",
-      "resume_status": "improper",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称4",
-      "company_name": "公司名称4"
-    }
-  ]
-}```  
-####9.简历状态get(被查看)：/message/resume-viewed/token-{token}
-参数：
-		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "123",
-  "data": [
-    {
-      "job_id": "职位id",
-      "company_address": "公司地址(只城市)",
-      "money": "薪资",
-      "image": "公司logo",
-      "resume_status": "viewed",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称",
-      "company_name": "公司名称"
-    }
-  ]
-}```  
-####10.简历状态get(待沟通)：/message/resume-communicated/token-{token} 
-参数：
-		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "123",
-  "data": [
-    {
-      "job_id": "职位id2",
-      "company_address": "公司地址(只城市)2",
-      "money": "薪资2",
-      "image": "公司logo2",
-      "resume_status": "communicated",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称2",
-      "company_name": "公司名称2"
-    }
-  ]
-}```  
-####11.简历状态get(面试通过)：/message/resume-passed/token-{token}
-参数：
-		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "123",
-  "data": [
-    {
-      "job_id": "职位id3",
-      "company_address": "公司地址(只城市)3",
-      "money": "薪资3",
-      "image": "公司logo3",
-      "resume_status": "passed",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称3",
-      "company_name": "公司名称3"
-    }
-  ]
-}```  
-####12.简历状态get(不合适)：/message/resume-improper/token-{token} 
-参数：
-		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "123",
-  "data": [
-    {
-      "job_id": "职位id4",
-      "company_address": "公司地址(只城市)4",
-      "money": "薪资4",
-      "image": "公司logo4",
-      "resume_status": "improper",
-      "feedback": "2016-04-26 16:33:19",
-      "job_name": "职位名称4",
-      "company_name": "公司名称4"
+      "salary_str": "0-0",
+      "scale_str": "20-99人",
+      "job_id": 214405,
+      "post_status": "allow",
+      "company_type": "民营企业/私营公司",
+      "job_city": "北京",
+      "company_name": "联创锐峰科技有限公司",
+      "boon": "",
+      "education_str": "不限",
+      "job_name": "国贸发单员",
+      "work_years_str": "不限"
     }
   ]
 }```  
