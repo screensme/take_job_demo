@@ -82,8 +82,8 @@ class Action(object):
                       # mobitype=str,
                       cache_flag=int):
         result = dict()
-        search_mobile = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE phonenum=%s"
-                                 % mobile)
+        sql = "SELECT * FROM candidate_user WHERE phonenum=%s" % mobile
+        search_mobile = self.db.get(sql)
         if search_mobile is None:
                 result['status'] = 'fail'
                 result['token'] = ''
@@ -92,10 +92,11 @@ class Action(object):
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
-                       % ("user_id, username, sex, age, edu, school, major", search_mobile['id'])
+                       % ("user_id", search_mobile['id'])
+                # user_id, username, sex, age, edu, school, major
                 user_basic = self.db.get(sqll)
                 if user_basic == None:
-                    user_basic = {}
+                    user_basic = {'id': search_mobile['id']}
                 else:
                     user_basic['id'] = search_mobile['id']
                 result['status'] = 'success'
@@ -247,9 +248,9 @@ class Action(object):
 
         data = ['测试工程师', '运维工程师', '产品专员', '产品设计师', '运营专员', '电商专员','java', 'PHP', 'C++', 'python']
         result = dict()
-        result['status'] = 'fail'
+        result['status'] = 'success'
         result['token'] = token
-        result['msg'] = '传入参数有误'
+        result['msg'] = ''
         result['data'] = data
         raise tornado.gen.Return(result)
 
@@ -450,6 +451,9 @@ class Action(object):
                 'phonenum', 'password', 'active', 'authenticated', 'post_status', 'tag', 'dt_create', 'dt_update', 'user_uuid',
                 data['phonenum'], data['birthday'], data['politics_status'], data['gender'], data['current_area'], data['name'],
             data['education'], data['email'], data['marital_status'])
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+
         result = dict()
         result['status'] = 'success'
         result['token'] = token
