@@ -27,7 +27,7 @@ class Action(object):
                                     )
         self.esapi = esapi
         self.log = log
-        self.log.info('mysql=%s,db=%s' % (dbhost, dbname))
+        self.log.info('mysql=%s, db=%s, esapi=%s' % (dbhost, dbname, esapi))
         print('init end')
 
     # 用户注册
@@ -191,11 +191,11 @@ class Action(object):
         # values['query_new_job'] = '北京'
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
-        print contect
+        self.log.info('id_list = %s'% contect)
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                 %('id,job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
 
         result = dict()
         result['status'] = 'success'
@@ -228,7 +228,7 @@ class Action(object):
                 contect_id = sorted(eval(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                         %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                         %('job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
                 result = dict()
                 result['status'] = 'success'
                 result['token'] = token
@@ -675,19 +675,21 @@ class Action(object):
     def user_add_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        sql = "select count(id) from view_user_collections where userid =%s and job_id=%s " % (token, job_id)
+        sql = "select count(userid) from view_user_collections where userid =%s and jobid=%s " % (token, job_id)
         sql_ins = "INSERT INTO rcat_test.candidate_collection " \
-                  "VALUES (%s,%s,%s,%s,%s)" % (token, job_id, 'favorite', dt, dt)
+                  "VALUES (%s,%s,%s,%s,%s)"
         sql_up = "update candidate_collection set status='favorite', dt_update=%s" \
-                 " where user_id=%s and job_id=%s" % (dt,token, job_id)
+                 " where userid=%s and job_id=%s"
 
         try:
             result_sql = dict()
-            search_status = self.db.query(sql)
-            if search_status is 0:
-                result_sql = self.db.insert(sql_ins)
+            search_status = self.db.get(sql)
+            if search_status['count(userid)'] == long(0):
+                result_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
+                print ('insert')
             else:
-                result_sql = self.db.update(sql_up)
+                result_sql = self.db.update(sql_up, dt, token, job_id)
+                print ('update')
                 search_status = {}
         except Exception, e:
             self.log.info('ERROR is %s' % e)

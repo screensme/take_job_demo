@@ -54,6 +54,7 @@ urls = [
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get
     url(r"/add_collect", AddcollectHandler),     # 增加收藏post
     url(r"/cut_collect", CutcollectHandler),     # 取消收藏post
+    # url(r"/cut_collect", CutcollectHandler),     # 简历投递post
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/page-(\d+)/num-(\d+)/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/page-(\d+)/num-(\d+)/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看
