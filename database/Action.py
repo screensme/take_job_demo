@@ -14,6 +14,7 @@ import torndb
 import tornado
 from common.tools import args404, ObjectToString
 import uuid
+from common.resume_default import cv_dict_default
 # from api import base_handler, company_handler, resume_handler, user_handler
 
 class Action(object):
@@ -46,30 +47,29 @@ class Action(object):
             raise tornado.gen.Return(result)
         else:
             try:
-                user_info = self.db.get('SELECT * FROM rcat_test.candidate_user order by id DESC limit 1')
-                _id = user_info['id'] + 1
                 active = '1'
                 authenticated = '1'
                 post_status = 'allow'
                 tag = 'test'
-                dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 # dd = dt_create.strftime("%Y-%m-%d %H:%M:%S")
-                dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                user_write = self.db.insert(
-                    "INSERT INTO rcat_test.candidate_user VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                _id, mobile, hash_pass, active, authenticated, post_status, tag, dt_create, dt_update, foo_uuid)
+                dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                user_write = self.db.insert(sqll,
+                                            mobile, hash_pass, active, authenticated,
+                                            post_status, tag, dt_created, dt_updated, foo_uuid)
 
                 result = dict()
                 result['status'] = 'sucess'
                 result['msg'] = ''
-                result['token'] = '%s' % _id
-                result['data'] = {}
+                result['token'] = user_write
+                result['data'] = {'token': user_write}
             except Exception, e:
                 result = dict()
                 result['status'] = 'fail'
-                result['msg'] = e.log_message
-                result['token'] = '%s' % _id
-                result['data'] = {}
+                result['msg'] = e.message
+                result['token'] = user_write
+                result['data'] = {'token': user_write}
 
         raise tornado.gen.Return(result)
 
@@ -96,9 +96,9 @@ class Action(object):
                 # user_id, username, sex, age, edu, school, major
                 user_basic = self.db.get(sqll)
                 if user_basic == None:
-                    user_basic = {'id': search_mobile['id']}
+                    user_basic = {'id': str(search_mobile['id'])}
                 else:
-                    user_basic['id'] = search_mobile['id']
+                    user_basic['id'] = str(search_mobile['id'])
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
@@ -445,20 +445,37 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        # 新建
         if search_user is None:
-            insert_resume = self.db.insert(
-                "insert into candidate_cv(%s,%s,%s,%s,%s,%s,%s,%s,%s) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                'phonenum', 'password', 'active', 'authenticated', 'post_status', 'tag', 'dt_create', 'dt_update', 'user_uuid',
-                data['phonenum'], data['birthday'], data['politics_status'], data['gender'], data['current_area'], data['name'],
-            data['education'], data['email'], data['marital_status'])
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            nowyear = datetime.datetime.now().strftime("%Y")
+            age = int(nowyear) - int(data['birthday'])
+            degree = ""
+            school = ""
+            major = ""
+            data['avatar'] = ""
+            cv_dict_default['basic'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         int(token), data['name'], 'public', data['name'], data['gender'],
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+        # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
-
+            # data = basic_resume['basic']
+            data['avatar'] = basic_resume['basic']['avatar']
+            basic_resume['basic'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = insert_resume
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-教育经历post

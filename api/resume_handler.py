@@ -30,6 +30,7 @@ class ResumeBasicHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         data = dict()
         token = self.get_argument('token')
+        cao = self.get_arguments()
         data['education'] = self.get_argument('education')
         data['birthday'] = self.get_argument('birthday')
         data['politics_status'] = self.get_argument('politics_status')
@@ -40,6 +41,7 @@ class ResumeBasicHandler(BaseHandler):
         data['email'] = self.get_argument('email')
         # data['avatar'] = self.get_argument('avatar')
         data['marital_status'] = self.get_argument('marital_status')
+
         result = yield self.db.Resume_Basic(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
