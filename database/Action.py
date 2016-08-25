@@ -548,3 +548,74 @@ class Action(object):
         result['msg'] = ''
         result['data'] = {}
         raise tornado.gen.Return(result)
+
+    # 查看收藏
+    @tornado.gen.coroutine
+    def view_user_collections(self, token=str, cache_flag=int):
+
+        sql = "select * from view_user_collections where userid =%s  limit %s,%s" % (token, 0, 2)
+        try:
+            search_status = self.db.get(sql)
+            if search_status == None:
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            search_status = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        raise tornado.gen.Return(result)
+
+    # 收藏职位
+    @tornado.gen.coroutine
+    def user_add_collections(self, token=str, jd=str, cache_flag=int):
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        sql = "select count(id) from view_user_collections where userid =%s and job_id=%s " % (token, jd)
+        sql_ins = "INSERT INTO rcat_test.candidate_collection " \
+                  "VALUES (%s,%s,%s,%s,%s)" % (token, jd, 'favorite', dt, dt)
+        sql_up = "update rcat_test.candidate_collection set status='favorite', dt_update=%s" \
+                 " where user_id=%s and job_id=%s" % (dt,token, jd)
+
+        try:
+            result_sql = dict()
+            search_status = self.db.query(sql)
+            if search_status is 0:
+                result_sql = self.db.insert(sql_ins)
+            else:
+                result_sql = self.db.update(sql_up)
+                search_status = {}
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            search_status = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = result_sql
+        raise tornado.gen.Return(result)
+
+    # 取消收藏职位
+    @tornado.gen.coroutine
+    def user_cancel_collections(self, token=str, jd=str, cache_flag=int):
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        sql = "update rcat_test.candidate_collection set status='delete', dt_update=%s" \
+                 " where user_id=%s and job_id=%s" % (dt,token, jd)
+
+        try:
+            result_sql = dict()
+            search_status = self.db.update(sql)
+
+
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            search_status = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        raise tornado.gen.Return(result)

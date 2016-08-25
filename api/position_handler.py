@@ -97,3 +97,22 @@ class HostsearchlistHandler(BaseHandler):
         self.finish()
 
         return
+
+# 热门搜索城市列表(先写4个)get
+class HotcityHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        cache_flag = self.get_cache_flag()
+        data = dict()
+        data['hotcity'] = ['北京','上海','广州','深圳']
+        result = dict()
+        result['status'] = 'fail'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = data
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+
+        return
