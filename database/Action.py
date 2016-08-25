@@ -241,42 +241,16 @@ class Action(object):
                 result['data'] = {}
         raise tornado.gen.Return(result)
 
-    # 首页搜索
+    # 热门搜索
     @tornado.gen.coroutine
-    def Search_job(self, values=dict, token=str, page=int, num=int, cache_flag=int,):
+    def Host_search_list(self, token=str, cache_flag=int,):
 
-        uri = '%squery_job' % self.esapi
-        a = values.pop('token')
-        b = values.pop('page')
-        c = values.pop('num')
-        value = values
-        if value == {}:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '请传入查找职位或公司'
-            result['data'] = {}
-        else:
-            values['offset'] = page
-            values['limit'] = num
-            reques = requests.post(url=uri, json=values)
-            contect = reques.content.decode('utf-8')
-            try:
-                contect_id = sorted(eval(contect)['id_list'])
-                args = ','.join(str(x) for x in contect_id)
-                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                         %('job_name,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
-                result = dict()
-                result['status'] = 'success'
-                result['token'] = token
-                result['msg'] = ''
-                result['data'] = search_job
-            except KeyError, e:
-                result = dict()
-                result['status'] = 'fail'
-                result['token'] = token
-                result['msg'] = '传入参数有误'
-                result['data'] = {}
+        data = ['测试工程师', '运维工程师', '产品专员', '产品设计师', '运营专员', '电商专员','java', 'PHP', 'C++', 'python']
+        result = dict()
+        result['status'] = 'fail'
+        result['token'] = token
+        result['msg'] = '传入参数有误'
+        result['data'] = data
         raise tornado.gen.Return(result)
 
     # 消息页，显示数量

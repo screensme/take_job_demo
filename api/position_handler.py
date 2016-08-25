@@ -33,6 +33,15 @@ class SearchHandler(BaseHandler):
         page = self.get_argument('page')
         num = self.get_argument('num')
         last = self.get_arguments()
+        if 'job_name' not in last:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请输入搜索内容!'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
         result = yield self.db.Search_job(last, token, page, num, cache_flag,)
 
         self.write(ObjectToString().encode(result))
@@ -76,7 +85,7 @@ class PositionHandler(BaseHandler):
 class HostsearchlistHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self):
+    def get(self, token):
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
         # page = self.get_argument('page')

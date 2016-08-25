@@ -29,7 +29,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 </div>
 
 ##url
-1.首页get：/home/token-{token}  
+1.首页get：/home/page-{page}/num-{num}/token-{token}  
 2.登录post：/auth/login  
 3.登出get：/auth/logout/token-{token}  
 4.注册post：/auth/register  
@@ -41,8 +41,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 10.简历状态get(已通知)：/message/resume-communicated/token-{token}  
 11.简历状态get(面试通过)：/message/resume-passed/token-{token}  
 12.简历状态get(不合适)：/message/resume-improper/token-{token}  
-13.职位详情get：/position-full/token-{token}  
-14.公司详情get：/company-full/token-{token}    
+13.职位详情get：/position-full/job-{job_id}/token-{token}  
+14.公司详情get：/company-full/company-{company_id}/token-{token}    
 15.个人信息页get(基本信息)：/me/token-{token}  
 16.简历查看get：/resume-view/token-{token}  
 17.简历编辑-基本信息post：/resume-edit-basic  
