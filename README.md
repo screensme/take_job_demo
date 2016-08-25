@@ -28,7 +28,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-25</td>
         <td>修改</td>
-		<td>查看简历的数据json的字段有变化，修改简历基本信息</td>
+		<td>查看简历的数据json的字段有变化，修改简历基本信息，所有简历状态的接口，都加了两个参数page，和num，修改简历完成，注意查看要传的数据的格式；简历编辑的url有变化；查看收藏，增加取消收藏</td>
 	</tr>
     </table>
 </div>
@@ -41,11 +41,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 5.修改密码post：/auth/editpwd  
 6.搜索页post：/search  
 7.消息页get：/message/resume/token-{token}  
-8.简历状态get(全部)：/message/resume-allstatus/token-{token}  
-9.简历状态get(被查看)：/message/resume-viewed/token-{token}  
-10.简历状态get(已通知)：/message/resume-communicated/token-{token}  
-11.简历状态get(面试通过)：/message/resume-passed/token-{token}  
-12.简历状态get(不合适)：/message/resume-improper/token-{token}  
+8.消息(简历状态)get(全部)：/message/resume-allstatus/page-{page}/num-{num}/token-{token}  
+9.消息(简历状态)get(被查看)：/message/resume-viewed/page-{page}/num-{num}/token-{token}  
+10.消息(简历状态)get(已通知)：/message/resume-communicated/page-{page}/num-{num}/token-{token}  
+11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
+12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 13.职位详情get：/position-full/job-{job_id}/token-{token}  
 14.公司详情get：/company-full/company-{company_id}/token-{token}    
 15.个人信息页get(基本信息)：/me/token-{token}  
@@ -53,10 +53,15 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 17.简历编辑-基本信息post：/resume-edit-basic  
 18.简历编辑-教育经历post：/resume-edit-education  
 19.简历编辑-职业意向post：/resume-edit-expect  
-20.简历编辑-实习经历post：/resume-edit-experience  
-21.简历编辑-项目实践post：/resume-edit-item  
+20.简历编辑-实习经历post：/resume-edit-career  
+××21.简历编辑-项目实践post：/resume-edit-item（这个先不做了）  
 22.简历编辑-自我评价post：/resume-edit-evaluation  
-23.意见反馈post：/feedback
+23.意见反馈post：/feedback  
+24.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
+25.增加收藏post：/add_collect  
+26.取消收藏post：/cut_collect  
+27.热门搜索职位列表get：/hot_job/token-{token}  
+28.热门搜索城市列表get：/hot_city/token-{token}  
 
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -271,11 +276,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "123",
   "data": 4
 }```  
-####8.消息(简历状态)get(全部)：/message/resume-allstatus/token-{token} 
+####8.消息(简历状态)get(全部)：/message/resume-allstatus/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量	
 返回成功：
 ```{
   "status": "success",
@@ -310,11 +317,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
-####9.消息(简历状态)get(被查看)：/message/resume-viewed/token-{token}
+####9.消息(简历状态)get(被查看)：/message/resume-viewed/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 返回成功：
 ```{
   "status": "success",
@@ -336,11 +345,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
-####10.消息(简历状态)get(已通知)：/message/resume-communicated/token-{token} 
+####10.消息(简历状态)get(已通知)：/message/resume-communicated/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 返回成功：
 ```{
   "status": "success",
@@ -362,11 +373,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
-####11.消息(简历状态)get(面试通过)：/message/resume-passed/token-{token}
+####11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 返回成功：
 ```{
   "status": "success",
@@ -388,11 +401,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
-####12.消息(简历状态)get(不合适)：/message/resume-improper/token-{token} 
+####12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
 返回成功：
 ```{
   "status": "success",
@@ -702,13 +717,143 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "id": 161
   }
 }```  
-####17.简历编辑-基本信息post：/resume-edit-basic 
-####18.简历编辑-教育经历post：/resume-edit-education 
-####19.简历编辑-职业意向post：/resume-edit-expect 
-####20.简历编辑-实习经历post：/resume-edit-experience
-####21.简历编辑-项目实践post：/resume-edit-item
-####22.简历编辑-自我评价post：/resume-edit-evaluation 
-####23.意见反馈post：/feedback
+####17.简历编辑-基本信息post：/resume-edit-basic  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	basic		Y	string		用户的基本信息，注意格式如下
+<font color=blue>（basic本身是dict格式，将这个dict转换为string格式传过来）如下</font>   
+```{
+        "education":"中专",
+        "birthday":"2010",
+        "politics_status":"团员",
+        "gender":"男",
+        "current_area":"石家庄",
+        "name":"赵先生",
+        "phonenum":"15638367126",
+        "email":"15638367126@163.com",
+        "avatar":"avatar_7.png",
+        "marital_status":"未婚"
+    }```
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```
+####18.简历编辑-教育经历post：/resume-edit-education  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	education	Y	string		用户的教育经历，注意格式如下
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>
+```[
+    {
+        "school":"是对的",
+        "start_time":"2015.02",
+        "major":"是的",
+        "degree":"博士以上",
+        "end_time":"2016.02"
+    }
+]```
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
+####19.简历编辑-职业意向post：/resume-edit-expect  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	expect		Y	string		用户的职业意向，注意格式如下
+<font color=blue>（expect本身是dict格式，将这个dict转换为string格式传过来）如下</font>
+```{
+        "trade":"公路/桥梁/铁路/市政/园林景观",
+        "title":"结算",
+        "area":"朔州",
+        "status":"全职",
+        "expect_salary":"500000"
+    }```
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```
+####20.简历编辑-实习经历post：/resume-edit-career  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	career		Y	string		用户的实习经历，注意格式如下
+<font color=blue>（career本身是list格式，将这个list转换为string格式传过来）如下</font>
+```[
+    {
+        "duty":"进入渣打银行总部参观实习",
+        "area":"北京",
+        "start_time":"2013.03",
+        "title":"实习生",
+        "trade":"不限",
+        "end_time":"2013.04",
+        "company":"渣打银行"
+    },
+    {
+        "duty":"总部前台接待",
+        "area":"北京",
+        "start_time":"2015.01",
+        "title":"前台",
+        "trade":"房地产",
+        "end_time":"2015.02",
+        "company":"万科"
+    }
+]```
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```
+####21.简历编辑-项目实践post：/resume-edit-item(先不做)  
 
-
+####22.简历编辑-自我评价post：/resume-edit-evaluation  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	description	Y	string		用户的自我评价
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```
+####23.意见反馈post：/feedback  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回成功：  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```
+####24.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页显示数量
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "1",
+  "data": {
+    "status": "favorite",
+    "scale_str": "",
+    "company_type": "国企",
+    "userid": 1,
+    "jobid": 163742,
+    "job_city": "北京",
+    "job_type": "unclear",
+    "m1": "2000-2999/月",
+    "company_name": "四川长虹电器股份有限公司",
+    "boon": "",
+    "collection_id": 1,
+    "trade": "家具/家电/玩具/礼品",
+    "job_name": "客户经理",
+    "work_years_str": "应届毕业生经验"
+  }
+}```
+####25.增加收藏post：/add_collect
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	jd			Y	string		页数
+####26.取消收藏post：/cut_collect  
+####27.热门搜索职位列表get：/hot_job/token-{token}  
+####28.热门搜索城市列表get：/hot_city/token-{token}  
 

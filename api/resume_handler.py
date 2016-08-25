@@ -31,18 +31,19 @@ class ResumeBasicHandler(BaseHandler):
         data = dict()
         token = self.get_argument('token')
         cao = self.get_arguments()
-        data['education'] = self.get_argument('education')
-        data['birthday'] = self.get_argument('birthday')
-        data['politics_status'] = self.get_argument('politics_status')
-        data['gender'] = self.get_argument('gender')
-        data['current_area'] = self.get_argument('current_area')
-        data['name'] = self.get_argument('name')
-        data['phonenum'] = self.get_argument('phonenum')
-        data['email'] = self.get_argument('email')
-        # data['avatar'] = self.get_argument('avatar')
-        data['marital_status'] = self.get_argument('marital_status')
+        basic = self.get_argument('basic')
+        # data['education'] = self.get_argument('education')
+        # data['birthday'] = self.get_argument('birthday')
+        # data['politics_status'] = self.get_argument('politics_status')
+        # data['gender'] = self.get_argument('gender')
+        # data['current_area'] = self.get_argument('current_area')
+        # data['name'] = self.get_argument('name')
+        # data['phonenum'] = self.get_argument('phonenum')
+        # data['email'] = self.get_argument('email')
+        # # data['avatar'] = self.get_argument('avatar')
+        # data['marital_status'] = self.get_argument('marital_status')
 
-        result = yield self.db.Resume_Basic(token, data, cache_flag)
+        result = yield self.db.Resume_Basic(token, basic, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -56,14 +57,15 @@ class ResumeEducationHandler(BaseHandler):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        data = dict()
-        data['school'] = self.get_argument('school')
-        data['major'] = self.get_argument('major')
-        data['start_time'] = self.get_argument('start_time')
-        data['end_time'] = self.get_argument('end_time')
-        data['degree'] = self.get_argument('degree')
+        # data = dict()
+        education = self.get_argument('education')
+        # data['school'] = self.get_argument('school')
+        # data['major'] = self.get_argument('major')
+        # data['start_time'] = self.get_argument('start_time')
+        # data['end_time'] = self.get_argument('end_time')
+        # data['degree'] = self.get_argument('degree')
 
-        result = yield self.db.Resume_Education(token, data, cache_flag)
+        result = yield self.db.Resume_Education(token, education, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -77,21 +79,22 @@ class ResumeExpectHandler(BaseHandler):
         # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        data = dict()
-        data['area'] = self.get_argument('area')
-        data['title'] = self.get_argument('title')
-        data['status'] = self.get_argument('status')
-        data['trade'] = self.get_argument('trade')
-        data['expect_salary'] = self.get_argument('expect_salary')
+        # data = dict()
+        expect = self.get_argument('expect')
+        # data['area'] = self.get_argument('area')
+        # data['title'] = self.get_argument('title')
+        # data['status'] = self.get_argument('status')
+        # data['trade'] = self.get_argument('trade')
+        # data['expect_salary'] = self.get_argument('expect_salary')
 
-        result = yield self.db.Resume_Expect(token, data, cache_flag)
+        result = yield self.db.Resume_Expect(token, expect, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
         return
 
 # 简历编辑-实习经历post
-class ResumeExperienceHandler(BaseHandler):
+class ResumeCareerHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
@@ -99,13 +102,15 @@ class ResumeExperienceHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
-        data['gs'] = self.get_argument('gs')
-        data['end_time'] = self.get_argument('end_time')
-        data['start_time'] = self.get_argument('start_time')
-        data['school_name'] = self.get_argument('school_name')
-        data['job_info'] = self.get_argument('job_info')
-        data['job_name'] = self.get_argument('job_name')
-        result = yield self.db.Resume_Experience(token, data, cache_flag)
+        career = self.get_argument('career')
+        # data['duty'] = self.get_argument('duty')
+        # data['area'] = self.get_argument('area')
+        # data['start_time'] = self.get_argument('start_time')
+        # data['title'] = self.get_argument('title')
+        # data['trade'] = self.get_argument('trade')
+        # data['end_time'] = self.get_argument('end_time')
+        # data['company'] = self.get_argument('company')
+        result = yield self.db.Resume_Career(token, career, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

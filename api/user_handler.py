@@ -271,13 +271,13 @@ class MessageHandler(BaseHandler):
 class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('get resume all')
         # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_all(token, cache_flag=cache_flag)
+        result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -287,12 +287,12 @@ class MessageAllHandler(BaseHandler):
 class MessageViewedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view resume stutas viewed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_viewed(token, cache_flag=cache_flag)
+        result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -301,12 +301,12 @@ class MessageViewedHandler(BaseHandler):
 class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view resume stutas communicated')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_communicated(token, cache_flag=cache_flag)
+        result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -315,12 +315,12 @@ class MessageCommunicatedHandler(BaseHandler):
 class MessagePassedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view resume stutas passed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_passed(token, cache_flag=cache_flag)
+        result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -329,12 +329,12 @@ class MessagePassedHandler(BaseHandler):
 class MessageImproperHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view resume stutas improper')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_improper(token, cache_flag=cache_flag)
+        result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -343,12 +343,12 @@ class MessageImproperHandler(BaseHandler):
 class ViewcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         # filepath = self.settings['file_path']
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view collection jd')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.view_user_collections(token, cache_flag=cache_flag)
+        result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -357,12 +357,13 @@ class ViewcollectHandler(BaseHandler):
 class AddcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self, token):
+    def post(self):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user add collections')
         data = dict()
         try:
-            data['jd'] = self.get_argument('jd')
+            token = self.get_argument('token')
+            data['job_id'] = self.get_argument('job_id')
 
             isweb = 0
         except Exception, e:
@@ -380,7 +381,7 @@ class AddcollectHandler(BaseHandler):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user view collection jd')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.user_add_collections(token, data['jd'],cache_flag=cache_flag)
+        result = yield self.db.user_add_collections(token, data['job_id'],cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -389,12 +390,13 @@ class AddcollectHandler(BaseHandler):
 class CutcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self, token):
+    def post(self):
         logger.info(json.dumps(self.get_arguments(), indent=4))
         logger.info('user cancel collections')
         data = dict()
         try:
-            data['jd'] = self.get_argument('jd')
+            token = self.get_argument('token')
+            data['job_id'] = self.get_argument('job_id')
 
             isweb = 0
         except Exception, e:
@@ -409,7 +411,7 @@ class CutcollectHandler(BaseHandler):
 
         cache_flag = self.get_cache_flag()
         cache_flag = self.get_cache_flag()
-        result = yield self.db.user_cancel_collections(token, data['jd'],cache_flag=cache_flag)
+        result = yield self.db.user_cancel_collections(token, data['job_id'], cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return

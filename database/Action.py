@@ -269,7 +269,7 @@ class Action(object):
 
     # 简历状态查看get全部
     @tornado.gen.coroutine
-    def Message_all(self, token=str,  cache_flag=int):
+    def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
 
         # user_info = open('%s/message.txt'%filepath,'r+')
         # read_user = user_info.read().decode('gbk')
@@ -279,7 +279,8 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str", token, 0, 2)
+              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+                 token, page, num)
         try:
             boss_profile = self.db.query(sql)
         except Exception, e:
@@ -294,13 +295,13 @@ class Action(object):
 
     # 简历状态查看get被查看
     @tornado.gen.coroutine
-    def Message_viewed(self, token=str, cache_flag=int):
+    def Message_viewed(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' limit %s,%s"\
               % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
-                 token, 0, 2)
+                 token, page, num)
         try:
             search_status = self.db.query(sql)
             if search_status == None:
@@ -317,13 +318,13 @@ class Action(object):
 
     # 简历状态查看get已通知
     @tornado.gen.coroutine
-    def Message_communicated(self, token=str, cache_flag=int):
+    def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
               % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
-                 token, 0, 2)
+                 token, page, num)
         try:
             search_status = self.db.query(sql)
             if search_status == None:
@@ -340,13 +341,13 @@ class Action(object):
 
     # 简历状态查看get面试通过
     @tornado.gen.coroutine
-    def Message_passed(self, token=str, cache_flag=int):
+    def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
               % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
-                 token, 0, 2)
+                 token, page, num)
         try:
             search_status = self.db.query(sql)
             if search_status == None:
@@ -363,13 +364,13 @@ class Action(object):
 
     # 简历状态查看get不合适
     @tornado.gen.coroutine
-    def Message_improper(self, token=str, cache_flag=int):
+    def Message_improper(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' limit %s,%s"\
               % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
-                 token, 0, 2)
+                 token, page, num)
         try:
             search_status = self.db.query(sql)
             if search_status == None:
@@ -441,12 +442,13 @@ class Action(object):
 
     # 简历编辑-基本信息post
     @tornado.gen.coroutine
-    def Resume_Basic(self, token=str, data=dict, cache_flag=int):
+    def Resume_Basic(self, token=str, basic=str, cache_flag=int):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
         # 新建
         if search_user is None:
+            data = eval(basic)
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             nowyear = datetime.datetime.now().strftime("%Y")
@@ -465,7 +467,7 @@ class Action(object):
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
-            # data = basic_resume['basic']
+            data = eval(basic)
             data['avatar'] = basic_resume['basic']['avatar']
             basic_resume['basic'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -474,57 +476,56 @@ class Action(object):
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '基本信息修改成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-教育经历post
     @tornado.gen.coroutine
-    def Resume_Education(self, token=str, data=dict, cache_flag=int):
+    def Resume_Education(self, token=str, education=str, cache_flag=int):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
-        # 新建--
+        # 新建
         if search_user is None:
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            nowyear = datetime.datetime.now().strftime("%Y")
-            age = int(nowyear) - int(data['birthday'])
+            age = ""
             degree = ""
             school = ""
             major = ""
-            data['avatar'] = ""
-            cv_dict_default['basic'] = data
+            data = eval(education)
+            cv_dict_default['education'] = data
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), data['name'], 'public', data['name'], data['gender'],
+                                         int(token), "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
-        # 修改--
+        # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
-            # data = basic_resume['basic']
-            data['avatar'] = basic_resume['basic']['avatar']
-            basic_resume['basic'] = data
+            data = eval(education)
+            basic_resume['education'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '教育信息修改成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-职业意向post
     @tornado.gen.coroutine
-    def Resume_Expect(self, token=str, data=dict, cache_flag=int):
+    def Resume_Expect(self, token=str, expect=str, cache_flag=int):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
         # 新建
         if search_user is None:
+            data = eval(expect)
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             age = ""
@@ -541,7 +542,7 @@ class Action(object):
         # 修改
         else:
             expect_resume = json.loads(search_user['candidate_cv'])
-            # data = basic_resume['basic']
+            data = eval(expect)
             expect_resume['intension'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
@@ -549,17 +550,17 @@ class Action(object):
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '职业意向修改成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-实习经历post
     @tornado.gen.coroutine
-    def Resume_Experience(self, token=str, data=dict, cache_flag=int):
+    def Resume_Career(self, token=str, career=str, cache_flag=int):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
-        # 新建--
+        # 新建
         if search_user is None:
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -567,25 +568,26 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
-            cv_dict_default['intension'] = data
+            data = eval(career)
+            cv_dict_default['career'] = data
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
                                          int(token), "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
-        # 修改--
+        # 修改
         else:
-            expect_resume = json.loads(search_user['candidate_cv'])
-            # data = basic_resume['basic']
-            expect_resume['intension'] = data
+            basic_resume = json.loads(search_user['candidate_cv'])
+            data = eval(career)
+            basic_resume['career'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '实习经历修改成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
@@ -593,16 +595,12 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_Item(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-item.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
 
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
-        result['data'] = ev_user
+        result['msg'] = '这个接口不用了'
+        result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 简历编辑-自我评价post
@@ -637,7 +635,7 @@ class Action(object):
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '自我评价修改成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
@@ -655,9 +653,9 @@ class Action(object):
 
     # 查看收藏
     @tornado.gen.coroutine
-    def view_user_collections(self, token=str, cache_flag=int):
+    def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
-        sql = "select * from view_user_collections where userid =%s  limit %s,%s" % (token, 0, 2)
+        sql = "select * from view_user_collections where userid =%s  limit %s,%s" % (token, page, num)
         try:
             search_status = self.db.get(sql)
             if search_status == None:
@@ -674,14 +672,14 @@ class Action(object):
 
     # 收藏职位
     @tornado.gen.coroutine
-    def user_add_collections(self, token=str, jd=str, cache_flag=int):
+    def user_add_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        sql = "select count(id) from view_user_collections where userid =%s and job_id=%s " % (token, jd)
+        sql = "select count(id) from view_user_collections where userid =%s and job_id=%s " % (token, job_id)
         sql_ins = "INSERT INTO rcat_test.candidate_collection " \
-                  "VALUES (%s,%s,%s,%s,%s)" % (token, jd, 'favorite', dt, dt)
-        sql_up = "update rcat_test.candidate_collection set status='favorite', dt_update=%s" \
-                 " where user_id=%s and job_id=%s" % (dt,token, jd)
+                  "VALUES (%s,%s,%s,%s,%s)" % (token, job_id, 'favorite', dt, dt)
+        sql_up = "update candidate_collection set status='favorite', dt_update=%s" \
+                 " where user_id=%s and job_id=%s" % (dt,token, job_id)
 
         try:
             result_sql = dict()
@@ -703,16 +701,15 @@ class Action(object):
 
     # 取消收藏职位
     @tornado.gen.coroutine
-    def user_cancel_collections(self, token=str, jd=str, cache_flag=int):
+    def user_cancel_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         sql = "update rcat_test.candidate_collection set status='delete', dt_update=%s" \
-                 " where user_id=%s and job_id=%s" % (dt,token, jd)
+                 " where user_id=%s and job_id=%s" % (dt, token, job_id)
 
         try:
             result_sql = dict()
             search_status = self.db.update(sql)
-
 
         except Exception, e:
             self.log.info('ERROR is %s' % e)
