@@ -16,14 +16,18 @@ from api.user_handler import \
     MessageViewedHandler, \
     MessageCommunicatedHandler,\
     MessagePassedHandler, \
-    MessageImproperHandler
+    MessageImproperHandler, \
+    ViewcollectHandler, \
+    AddcollectHandler, \
+    CutcollectHandler
 
 from api.position_handler import \
     HomeHandler, \
     SearchHandler, \
     PositionHandler, \
     FeedbackHandler, \
-    HostsearchlistHandler
+    HostsearchlistHandler, \
+    HotcityHandler
 
 from api.company_handler import \
     CompanyHandler
@@ -46,10 +50,10 @@ urls = [
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/search", SearchHandler),  # 搜索页post
     url(r"/hot-search-list/token-(\w+)", HostsearchlistHandler),  # 热门搜索list表(先写死的)
-    # url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
-    # url(r"/view_collect", ViewcollectHandler),     # 查看收藏get
-    # url(r"/add_collect", AddcollectHandler),     # 增加收藏post
-    # url(r"/cut_collect", CutcollectHandler),     # 取消收藏post
+    url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
+    url(r"/view_collect/token-(\w+)", ViewcollectHandler),     # 查看收藏get
+    url(r"/add_collect/token-(\w+)", AddcollectHandler),     # 增加收藏post
+    url(r"/cut_collect/token-(\w+)", CutcollectHandler),     # 取消收藏post
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看

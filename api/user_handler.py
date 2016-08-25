@@ -338,3 +338,78 @@ class MessageImproperHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# 查看收藏get
+class ViewcollectHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        # filepath = self.settings['file_path']
+        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info('user view collection jd')
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.view_user_collections(token, cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 收藏职位post
+class AddcollectHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self, token):
+        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info('user add collections')
+        data = dict()
+        try:
+            data['jd'] = self.get_argument('jd')
+
+            isweb = 0
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '缺少参数'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+
+        cache_flag = self.get_cache_flag()
+        # filepath = self.settings['file_path']
+        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info('user view collection jd')
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.user_add_collections(token, data['jd'],cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 取消收藏职位post
+class CutcollectHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self, token):
+        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info('user cancel collections')
+        data = dict()
+        try:
+            data['jd'] = self.get_argument('jd')
+
+            isweb = 0
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '缺少参数'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+
+        cache_flag = self.get_cache_flag()
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.user_cancel_collections(token, data['jd'],cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
