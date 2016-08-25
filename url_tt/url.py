@@ -61,12 +61,12 @@ urls = [
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
     # url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-修改头像post
-    url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-基本信息post
-    url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post
-    url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post
-    url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-实习经历post
+    url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-基本信息post  1
+    url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post---
+    url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post    2
+    url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-实习经历post--
     # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post(先不做)
-    url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
+    url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    2
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/.*", better404)
     ]

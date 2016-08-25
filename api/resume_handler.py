@@ -62,6 +62,7 @@ class ResumeEducationHandler(BaseHandler):
         data['start_time'] = self.get_argument('start_time')
         data['end_time'] = self.get_argument('end_time')
         data['degree'] = self.get_argument('degree')
+
         result = yield self.db.Resume_Education(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
@@ -82,6 +83,7 @@ class ResumeExpectHandler(BaseHandler):
         data['status'] = self.get_argument('status')
         data['trade'] = self.get_argument('trade')
         data['expect_salary'] = self.get_argument('expect_salary')
+
         result = yield self.db.Resume_Expect(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
@@ -136,18 +138,13 @@ class ResumeEvaluationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
+        # filepath = self.settings['file_path']
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
-        data['school'] = self.get_argument('school')
-        data['major'] = self.get_argument('major')
-        data['start_year'] = self.get_argument('start_year')
-        data['start_month'] = self.get_argument('start_month')
-        data['end_year'] = self.get_argument('end_year')
-        data['end_month'] = self.get_argument('end_month')
-        data['education2'] = self.get_argument('education2')
-        result = yield self.db.Resume_Evaluation(token,filepath, cache_flag)
+        data['description'] = self.get_argument('description')
+
+        result = yield self.db.Resume_Evaluation(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

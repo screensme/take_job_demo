@@ -68,8 +68,8 @@ class Action(object):
                 result = dict()
                 result['status'] = 'fail'
                 result['msg'] = e.message
-                result['token'] = user_write
-                result['data'] = {'token': user_write}
+                result['token'] = ''
+                result['data'] = {'token': ''}
 
         raise tornado.gen.Return(result)
 
@@ -482,48 +482,111 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_Education(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-education.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
-
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        # 新建--
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            nowyear = datetime.datetime.now().strftime("%Y")
+            age = int(nowyear) - int(data['birthday'])
+            degree = ""
+            school = ""
+            major = ""
+            data['avatar'] = ""
+            cv_dict_default['basic'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         int(token), data['name'], 'public', data['name'], data['gender'],
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+        # 修改--
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+            # data = basic_resume['basic']
+            data['avatar'] = basic_resume['basic']['avatar']
+            basic_resume['basic'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-职业意向post
     @tornado.gen.coroutine
     def Resume_Expect(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-expect.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
-
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        # 新建
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            cv_dict_default['intension'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         int(token), "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+        # 修改
+        else:
+            expect_resume = json.loads(search_user['candidate_cv'])
+            # data = basic_resume['basic']
+            expect_resume['intension'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-实习经历post
     @tornado.gen.coroutine
     def Resume_Experience(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-experience.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
-
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        # 新建--
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            cv_dict_default['intension'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         int(token), "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+        # 修改--
+        else:
+            expect_resume = json.loads(search_user['candidate_cv'])
+            # data = basic_resume['basic']
+            expect_resume['intension'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-项目实践post
@@ -546,16 +609,36 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_Evaluation(self, token=str, data=dict, cache_flag=int):
 
-        user_info = open('%s/resume-evaluation.txt'%filepath,'r+')
-        ev_user = user_info.write(str(data))
-        print data
-        user_info.close()
-
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        # 新建--
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            cv_dict_default['extra'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         int(token), "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+        # 修改
+        else:
+            expect_resume = json.loads(search_user['candidate_cv'])
+            # data = basic_resume['basic']
+            expect_resume['extra'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ev_user
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 意见反馈
