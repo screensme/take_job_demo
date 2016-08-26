@@ -189,13 +189,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {}
 }```  
 返回失败2：
-```
-{
+```{
   "status": "fail",
   "msg": "手机号已经被注册",
   "token": 183,
   "data": {}
-}```
+}```  
 ####5.修改密码post：/auth/editpwd  
 参数：
 		
@@ -741,9 +740,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "email":"15638367126@163.com",
         "avatar":"avatar_7.png",
         "marital_status":"未婚"
-    }```
+    }```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####18.简历编辑-教育经历post：/resume-edit-education  
 参数：
 		
@@ -759,9 +758,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "degree":"博士以上",
         "end_time":"2016.02"
     }
-]```
+]```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
+```{"status": "success", "msg": "", "token": "177", "data": 167}```    
 ####19.简历编辑-职业意向post：/resume-edit-expect  
 参数：
 		
@@ -775,9 +774,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "area":"朔州",
         "status":"全职",
         "expect_salary":"500000"
-    }```
+    }```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####20.简历编辑-实习经历post：/resume-edit-career  
 参数：
 		
@@ -804,9 +803,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "end_time":"2015.02",
         "company":"万科"
     }
-]```
+]```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####21.简历编辑-自我评价post：/resume-edit-evaluation  
 参数：
 		
@@ -814,14 +813,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id	
 	description	Y	string		用户的自我评价
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####22.意见反馈post：/feedback  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
 参数：
 		
@@ -884,7 +883,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "work_years_str": "应届毕业生经验"
     }
   ]
-}```
+}```  
 ####24.增加收藏post：/add_collect
 参数：
 		
@@ -897,14 +896,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "已收藏",
   "token": "1",
   "data": 1
-}```
+}```  
 返回取消收藏成功：
 ```{
   "status": "success",
   "msg": "已取消收藏",
   "token": "1",
   "data": 1
-}```
+}```  
 ####25.热门搜索职位列表get：/hot_job/token-{token}
 参数：
 		
@@ -959,11 +958,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "投递成功",
   "token": "1",
   "data": 1399
-}```
+}```  
 返回失败：
 ```{
   "status": "fail",
   "msg": "已投递的职位",
   "token": "1",
   "data": {}
-}```
+}```  

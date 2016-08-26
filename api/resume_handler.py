@@ -6,7 +6,6 @@ from api.base_handler import BaseHandler
 import logging
 import tornado
 from common.tools import args404, ObjectToString
-from database import Action
 
 # 简历查看get
 class ResumeHandler(BaseHandler):

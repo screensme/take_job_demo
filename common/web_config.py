@@ -33,19 +33,19 @@ REDIS = {
         'host': '127.0.0.1',
         'port': 6379,
         'password': '',
-        'db': 0
+        'db': 1
     },
     'redis-neiwang': {
         'host': '192.168.12.146',
         'port': 6379,
         'password': '',
-        'db': 0
+        'db': 1
     },
     'redis-waiwang': {
         'host': '182.92.99.38',
         'port': 6379,
         'password': '',
-        'db': 0
+        'db': 1
     }
 }
 REDIS_URL = 'redis://23fef09bdd5a4810:Rcat123ABCD@23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com/1'

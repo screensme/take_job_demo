@@ -6,7 +6,7 @@ from api.base_handler import BaseHandler
 import logging
 import tornado
 from common.tools import args404, ObjectToString
-from database import Action
+from common.random_str import random_str
 
 logger = logging.getLogger('boilerplate.' + __name__)
 
@@ -30,32 +30,19 @@ class RegisterHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user register')
+        cache_flag = self.get_cache_flag()
         data = dict()
         try:
             data['mobile'] = self.get_argument('mobile')
             data['pwd'] = self.get_argument('pwd')
-        except Exception,e:
+        except Exception, e:
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
-            result['msg'] = e.log_message
+            result['msg'] = '缺少手机号或密码'
             result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
-        isweb = 0
-        id = None
-        try:
-            type = self.get_argument('get_type')
-            id = self.get_argument('_id')
-            if type == 'web':
-                isweb = 1
-        except Exception, e:
-            isweb = 0
-        cache_flag = self.get_cache_flag()
 
         if len(data['mobile']) != 11:
             result = dict()
@@ -63,16 +50,12 @@ class RegisterHandler(BaseHandler):
             result['token'] = ''
             result['msg'] = "登录手机号有误，请重新输入"
             result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
 
         else:
-            if isweb == 0:
-                result = yield self.db.Register_user(data['mobile'],
-                                                     data['pwd'],
-                                                     cache_flag=cache_flag)
-            self.write(ObjectToString().encode(result))
+            result = yield self.db.Register_user(data['mobile'],
+                                                 data['pwd'],
+                                                 cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
         self.finish()
         return
 
@@ -82,9 +65,9 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user login')
+        cache_flag = self.get_cache_flag()
         data = dict()
         try:
             data['mobile'] = self.get_argument('mobile')
@@ -105,7 +88,6 @@ class LoginHandler(BaseHandler):
         #     data['umengid'] = self.get_argument('umengid')
         # except Exception, e:
         #     data['umengid'] = 'umengid/%s' % (self.get_argument('mobile'), )
-        cache_flag = self.get_cache_flag()
 
         if len(data['mobile']) != 11:
             result = dict()
@@ -113,19 +95,12 @@ class LoginHandler(BaseHandler):
             result['token'] = ''
             result['msg'] = "登录手机号有误，请重新输入"
             result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
 
         else:
             result = yield self.db.User_login(mobile=data['mobile'],
                                               pwd=data['pwd'],
-                                              # umengid=data['umengid'],
-                                              # mobibuild=data['mobibuild'],
-                                              # mobitype=data['mobitype'],
-                                              cache_flag=cache_flag,
-                                              )
-            self.write(ObjectToString().encode(result))
+                                              cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
         self.finish()
         return
 
@@ -134,22 +109,18 @@ class LogoutHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token=str):
-        # filepath = self.settings['file_path']
         result = yield self.db.User_logout(token)
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
-
 
 # 忘记密码
 class ForgetpwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user forget password')
         data = dict()
         try:
@@ -165,7 +136,7 @@ class ForgetpwdHandler(BaseHandler):
             self.finish()
             return
         cache_flag = self.get_cache_flag()
-        result = yield self.db.User_forgetpwd(data['mobile'],filepath,
+        result = yield self.db.User_forgetpwd(data['mobile'],
                                               data['pwd'],
                                               cache_flag=cache_flag
                                               )
@@ -178,8 +149,7 @@ class UpdatePwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user update password')
         data = dict()
         try:
@@ -242,8 +212,7 @@ class UserHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user info')
         # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
@@ -257,10 +226,7 @@ class MessageHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        # token = self.get_argument('token')
-        logger.info('user forget password')
+        logger.info('message num')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Job_message(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -272,10 +238,7 @@ class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('get resume all')
-        # token = self.get_argument('token')
+        logger.info('get resume all status')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -288,9 +251,7 @@ class MessageViewedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view resume stutas viewed')
+        logger.info('user view resume status viewed')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -302,9 +263,7 @@ class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view resume stutas communicated')
+        logger.info('user view resume status communicated')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -316,9 +275,7 @@ class MessagePassedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view resume stutas passed')
+        logger.info('user view resume status passed')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -330,9 +287,7 @@ class MessageImproperHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view resume stutas improper')
+        logger.info('user view resume status deny')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -344,9 +299,7 @@ class ViewcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view collection jd')
+        logger.info('user view collection job')
         cache_flag = self.get_cache_flag()
         result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -358,30 +311,21 @@ class AddcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user add collections')
+        logger.info(json.dumps(self.get_arguments()))
+        logger.info('user add or del collections')
+        cache_flag = self.get_cache_flag()
         data = dict()
         try:
             token = self.get_argument('token')
             data['job_id'] = self.get_argument('job_id')
-
-            isweb = 0
+            result = yield self.db.user_add_collections(token, data['job_id'],cache_flag=cache_flag)
         except Exception, e:
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
             result['msg'] = '缺少参数'
             result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
 
-        cache_flag = self.get_cache_flag()
-        # filepath = self.settings['file_path']
-        logger.info(json.dumps(self.get_arguments(), indent=4))
-        logger.info('user view collection jd')
-        cache_flag = self.get_cache_flag()
-        result = yield self.db.user_add_collections(token, data['job_id'],cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -391,7 +335,7 @@ class CutcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments(), indent=4))
+        logger.info(json.dumps(self.get_arguments()))
         logger.info('user cancel collections')
         data = dict()
         try:

@@ -4,30 +4,33 @@ from tornado import gen
 import datetime
 import time
 import json
-import requests,bcrypt
-import configparser
+import requests, bcrypt
+from common.random_str import random_str
 from api.base_handler import BaseHandler
-import logging
-# import motor
-import urllib, urllib2
+import random
+import redis
 import torndb
 import tornado
 from common.tools import args404, ObjectToString
 import uuid
 from common.resume_default import cv_dict_default
-# from api import base_handler, company_handler, resume_handler, user_handler
+from common.sms_api import SmsApi
 
 class Action(object):
-    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, esapi=str):
+    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, esapi=str,
+                 cahost=str, caport=str, capassword=str, caseldb=int):
         # pass
         self.db = torndb.Connection(host=dbhost,
                                     database=dbname,
                                     user=dbuser,
                                     password=dbpwd,
                                     )
+        pool = redis.ConnectionPool(host=cahost, port=caport, db=caseldb, password=capassword)
+        self.cacheredis = redis.StrictRedis(connection_pool=pool)
         self.esapi = esapi
         self.log = log
-        self.log.info('mysql=%s, db=%s, esapi=%s' % (dbhost, dbname, esapi))
+        self.sms = sms
+        self.log.info('mysql=%s, db=%s, esapi=%s, cache=%s' % (dbhost, dbname, esapi, cahost))
         print('init end')
 
     # 用户注册
@@ -113,8 +116,7 @@ class Action(object):
     @tornado.gen.coroutine
     def User_logout(self, token=str):
         # result = {}
-        search_user = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE id=%s"
-                                 % token)
+        search_user = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE id=%s" % token)
         result = dict()
         if (search_user['id'] != token):
                 result['status'] = 'fail'
@@ -164,6 +166,57 @@ class Action(object):
             result['token'] = search_user['id']
             result['msg'] = '修改密码成功'
             result['data'] = {}
+        raise tornado.gen.Return(result)
+
+    # 发送短信验证码post
+    @tornado.gen.coroutine
+    def Send_sms(self, mobile=str, cache_flag=int):
+
+        random_number = random_str()
+        result = dict()
+        # sms == '0' 是真实发送
+        if self.sms == '0':
+            ret_info = SmsApi().sms_register(mobile=mobile, rand_num=random_number)
+            if ret_info['code'] == '0':
+                self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
+                result['status'] = 'success'
+                result['token'] = ''
+                result['msg'] = '短信发送成功'
+                result['data'] = random_number
+            else:
+                result['status'] = 'fail'
+                result['token'] = ''
+                result['msg'] = '短信发送失败'
+                result['data'] = {}
+            raise tornado.gen.Return(result)
+        # sms == '1' 不发送，验证码为1111111
+        else:
+            random_number = '111111'
+            result = dict()
+            ret_info = {'code': '0'}
+            if ret_info['code'] == '0':
+                self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
+                result['status'] = 'success'
+                result['token'] = ''
+                result['msg'] = '短信发送成功'
+                result['data'] = random_number
+            else:
+                result['status'] = 'fail'
+                result['token'] = ''
+                result['msg'] = '短信发送失败'
+                result['data'] = {}
+            raise tornado.gen.Return(result)
+
+    # 校验短信验证码get
+    @tornado.gen.coroutine
+    def Verification_sms(self, token=str, code=str, cache_flag=int):
+
+
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_user
         raise tornado.gen.Return(result)
 
     # 个人信息页
@@ -770,7 +823,6 @@ class Action(object):
         try:
             search_status = self.db.get(sql)
             if search_status == None:
-                import random
                 match_rate = random.randint(50, 100)
                 status = 'post'
                 collect_status = ''

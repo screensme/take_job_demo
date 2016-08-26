@@ -18,8 +18,7 @@ from api.user_handler import \
     MessagePassedHandler, \
     MessageImproperHandler, \
     ViewcollectHandler, \
-    AddcollectHandler, \
-    CutcollectHandler
+    AddcollectHandler
 
 from api.position_handler import \
     HomeHandler, \
@@ -28,9 +27,8 @@ from api.position_handler import \
     FeedbackHandler, \
     HostsearchlistHandler, \
     HotcityHandler
-
-from api.company_handler import \
-    CompanyHandler
+from api.sms_handler import SendSmsHandler, VerifySmsHandler
+from api.company_handler import CompanyHandler
 
 from api.resume_handler import \
     ResumeHandler,\
@@ -49,12 +47,14 @@ urls = [
     url(r"/auth/register", RegisterHandler),    # 注册post
     # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 找回密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
+    url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
+    url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码
     url(r"/search", SearchHandler),  # 搜索页post
-    url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写死的)
+    url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
     url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get
-    url(r"/add_or_del_collect", AddcollectHandler),     # 增加收藏post
-    # url(r"/cut_collect", CutcollectHandler),     # 取消收藏post
+    url(r"/add_or_del_collect", AddcollectHandler),     # 增加和取消收藏post
+    # url(r"/cut_collect", CutcollectHandler),     # 取消收藏post(已不用)
     url(r"/post-resume", PostresumeHandler),     # 简历投递post
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/page-(\d+)/num-(\d+)/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部

@@ -6,7 +6,7 @@ from urllib import urlencode
 
 class SmsApi(object):
 
-    def init_app(self):
+    def __init__(self):
         self.headers = {
             'Content-type': 'application/x-www-form-urlencoded',
             'Accept': 'text/plain'
@@ -20,7 +20,7 @@ class SmsApi(object):
         kwargs = {}
         kwargs['apikey'] = self.apikey
         kwargs['mobile'] = mobile
-        text = "【招聘头条】您的验证码为：%s，请在页面中输入以完成注册，上招聘头条找好工作。" % (rand_num)
+        text = "【招聘头条】您的验证码为：%s，请在页面中输入以完成注册，上招聘头条找好工作。" % (rand_num,)
         kwargs['text'] = text
         try:
             r = requests.post(single_url, data=urlencode(kwargs),
@@ -38,7 +38,7 @@ class SmsApi(object):
         kwargs['apikey'] = self.apikey
         kwargs['mobile'] = mobile
 
-        text = "【招聘头条】您的验证码为：%s，请在页面中输入以找回密码，上招聘头条找好工作。" % (rand_num)
+        text = "【招聘头条】您的验证码为：%s，请在页面中输入以找回密码，上招聘头条找好工作。" % (rand_num,)
         kwargs['text'] = text
         try:
             r = requests.post(single_url, data=urlencode(kwargs),

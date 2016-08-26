@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
 import tornado
 import tornado.web, tornado.ioloop
 import tornado.httpserver
@@ -9,31 +8,13 @@ from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
 from common import web_log
-from common.web_config import MY_SQL, ES_API
+from common.web_config import MY_SQL, ES_API, REDIS
 from database import Action
 define("port", default=8889, help="run on the given port", type=int)
 define("mysql", default='neiwang', help="run on the test or pro")
 define("esapi", default='neiwang', help="run on the test or pro")
-
-# def main():
-#     tornado.options.parse_command_line()
-#     app = Application()
-#     app.listen(options.port, '0.0.0.0')
-#
-#     try:
-#         tornado.ioloop.IOLoop.instance().start()
-#         print("\nstart server.")
-#     except KeyboardInterrupt:
-#         print("\nStopping server.")
-#
-# class Application(tornado.web.Application):
-#     def __init__(self):
-#         debug = 1
-#         tornado.web.Application.__init__(self, urls, **settings)
-#         self.db = Action.Action(dbhost='123.57.33.133', dbport=27017, dbname='worry1613', dbuser='xSD6!nw1U*SqNfC4', dbpwd='huoban')
-# if __name__ == "__main__":
-#     main()
-
+define("redis", default='local', help="run on the test or pro")
+define("sms", default='1', help="true=0,false=1(send:111111)")
 
 abp = os.path.abspath(sys.argv[0])
 file_path = os.path.dirname(abp) + '/json_txt'
@@ -65,15 +46,21 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, urls, **settings)
         self.log = web_log.debugf("")
         self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
+        sms = int(options.sms)
         mysqlstr = 'mysql-%s' % options.mysql
         esapistr = 'esapi-%s' % options.esapi
+        redisstr = 'redis-%s' % options.redis
         self.db = Action.Action(dbhost=MY_SQL[mysqlstr]['host'],
-                                # dbport=MY_SQL[mysqlstr]['port'],
                                 dbname=MY_SQL[mysqlstr]['db'],
                                 dbuser=MY_SQL[mysqlstr]['user'],
                                 dbpwd=MY_SQL[mysqlstr]['pwd'],
                                 log=self.log,
-                                esapi=ES_API[esapistr]['url']
+                                sms=sms,
+                                esapi=ES_API[esapistr]['url'],
+                                cahost=REDIS[redisstr]['host'],
+                                caport=REDIS[redisstr]['port'],
+                                capassword=REDIS[redisstr]['password'],
+                                caseldb=REDIS[redisstr]['db']
                                 )
 
 
