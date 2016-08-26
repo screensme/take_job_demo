@@ -8,7 +8,7 @@ import tornado
 from common.tools import args404, ObjectToString
 from database import Action
 
-# 职位详情get
+# 简历查看get
 class ResumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
@@ -16,6 +16,20 @@ class ResumeHandler(BaseHandler):
         # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Resume_view(token, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历投递post
+class PostresumeHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        token = self.get_argument('token')
+        job_id = self.get_argument('job_id')
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.Post_resume(token, job_id, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

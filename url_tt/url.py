@@ -39,7 +39,8 @@ from api.resume_handler import \
     ResumeExpectHandler,\
     ResumeCareerHandler,\
     ResumeItemHandler,\
-    ResumeEvaluationHandler
+    ResumeEvaluationHandler, \
+    PostresumeHandler
 
 urls = [
     url(r"/home/page-(\d+)/num-(\d+)/token-(\w+)", HomeHandler),     # 首页get
@@ -54,7 +55,7 @@ urls = [
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get
     url(r"/add_or_del_collect", AddcollectHandler),     # 增加收藏post
     # url(r"/cut_collect", CutcollectHandler),     # 取消收藏post
-    # url(r"/post-resume", CutcollectHandler),     # 简历投递post
+    url(r"/post-resume", PostresumeHandler),     # 简历投递post
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/page-(\d+)/num-(\d+)/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/page-(\d+)/num-(\d+)/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看

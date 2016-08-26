@@ -1,5 +1,7 @@
 ###APP后端API接口文档  
 OPEN API接口地址:http://xxx.xxx.xxx:8889/  
+测试内网:192.168.12.146  
+测试外网:182.92.99.38  
 支持格式:json
 
 ##操作记录：
@@ -33,7 +35,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-26</td>
         <td>增-改</td>
-		<td>增加接口查看收藏，收藏取消收藏，在首页和搜索，增加了字段，公司company_logo，显示职位状态(全职，兼职，实习，不限)</td>
+		<td>增加接口查看收藏，收藏取消收藏，在首页和搜索，增加了字段，公司company_logo，显示职位状态(全职，兼职，实习，不限);简历投递接口完成</td>
 	</tr>
     </table>
 </div>
@@ -52,20 +54,20 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 13.职位详情get：/position-full/job-{job_id}/token-{token}  
-14.公司详情get：/company-full/company-{company_id}/token-{token}    
+14.公司详情get：/company-full/company-{company_id}/token-{token}  
 15.个人信息页get(基本信息)：/me/token-{token}  
 16.简历查看get：/resume-view/token-{token}  
 17.简历编辑-基本信息post：/resume-edit-basic  
 18.简历编辑-教育经历post：/resume-edit-education  
 19.简历编辑-职业意向post：/resume-edit-expect  
 20.简历编辑-实习经历post：/resume-edit-career  
-××21.简历编辑-项目实践post：/resume-edit-item（这个先不做了）  
-22.简历编辑-自我评价post：/resume-edit-evaluation  
-23.意见反馈post：/feedback  
-24.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
-25.增加收藏post：/add_or_del_collect   
-27.热门搜索职位列表get：/hot_job/token-{token}  
-28.热门搜索城市列表get：/hot_city/token-{token}  
+21.简历编辑-自我评价post：/resume-edit-evaluation  
+22.意见反馈post：/feedback  
+23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
+24.增加和删除收藏post：/add_or_del_collect   
+25.热门搜索职位列表get：/hot_job/token-{token}  
+26.热门搜索城市列表get：/hot_city/token-{token}  
+27.简历投递post：/post-resume  
 
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -805,9 +807,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ]```
 返回成功：  
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```
-####21.简历编辑-项目实践post：/resume-edit-item(先不做)  
-
-####22.简历编辑-自我评价post：/resume-edit-evaluation  
+####21.简历编辑-自我评价post：/resume-edit-evaluation  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -815,14 +815,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	description	Y	string		用户的自我评价
 返回成功：  
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```
-####23.意见反馈post：/feedback  
+####22.意见反馈post：/feedback  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 返回成功：  
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```
-####24.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
+####23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -885,7 +885,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```
-####25.增加收藏post：/add_collect
+####24.增加收藏post：/add_collect
 参数：
 		
 	参数名称	必填	类型		描述
@@ -905,7 +905,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "1",
   "data": 1
 }```
-####26.热门搜索职位列表get：/hot_job/token-{token}
+####25.热门搜索职位列表get：/hot_job/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -928,7 +928,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "python"
   ]
 }```  
-####27.热门搜索城市列表get：/hot_city/token-{token}  
+####26.热门搜索城市列表get：/hot_city/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -947,3 +947,23 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     ]
   }
 }```  
+####27.简历投递post：/post-resume  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	job_id		Y	string		职位id
+返回成功：
+```{
+  "status": "success",
+  "msg": "投递成功",
+  "token": "1",
+  "data": 1399
+}```
+返回失败：
+```{
+  "status": "fail",
+  "msg": "已投递的职位",
+  "token": "1",
+  "data": {}
+}```

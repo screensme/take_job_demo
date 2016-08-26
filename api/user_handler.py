@@ -386,7 +386,7 @@ class AddcollectHandler(BaseHandler):
         self.finish()
         return
 
-# 取消收藏职位post
+# 取消收藏职位post(已不用)
 class CutcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous

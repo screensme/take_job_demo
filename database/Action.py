@@ -738,7 +738,7 @@ class Action(object):
         result['data'] = result_sql
         raise tornado.gen.Return(result)
 
-    # 取消收藏职位
+    # 取消收藏职位(已不用)
     @tornado.gen.coroutine
     def user_cancel_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -758,4 +758,38 @@ class Action(object):
         result['token'] = token
         result['msg'] = '成功取消收藏'
         result['data'] = search_status
+        raise tornado.gen.Return(result)
+
+    # 简历投递post
+    @tornado.gen.coroutine
+    def Post_resume(self, token=str, job_id=str, cache_flag=int):
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        sql = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
+
+        try:
+            search_status = self.db.get(sql)
+            if search_status == None:
+                import random
+                match_rate = random.randint(50, 100)
+                status = 'post'
+                collect_status = ''
+                sql_post = "insert into candidate_post(user_id, job_id, match_rate," \
+                           " status, collect_status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s)"
+                post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt)
+                status = 'success'
+                msg = '投递成功'
+            else:
+                status = 'fail'
+                msg = '已投递的职位'
+                post_resume = {}
+        except Exception, e:
+            post_resume = self.log.info('ERROR is %s' % e)
+            status = 'fail'
+            msg = '服务器出错'
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = msg
+        result['data'] = post_resume
         raise tornado.gen.Return(result)
