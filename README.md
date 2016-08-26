@@ -219,22 +219,22 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ####6.搜索页post：/search  
 参数：(可传很多参数，根据参数查询，至少写一个条件)
 		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id
-	page		Y	string		页数
-	num			Y	string		每页显示数量
-	job_name	Y	string		职位名称
-	trade		N	string		行业
-	work_years_start(0)	N	string	工作年限
-	Work_year_end(50)	N	string	工作年限
-	job_city(全国)	N	string	城市
-	area		N	string		区域
-	education_str	N	string	教育背景
-	scale_start(0)	N	string	企业规模
-	Scale_end(20000)	N	string	企业规模
-	company_type(0)	N	string 	企业性质
-	salary_start(0)	N	string	薪资范围
-	Salary_end(200000)	N	string	薪资范围
+	参数名称			必填	类型			描述
+	token				Y	string		用户id
+	page				Y	string		页数
+	num					Y	string		每页显示数量
+	job_name			Y	string		职位名称
+	trade				N	string		行业
+	work_years_start(0)	N	string		工作年限
+	Work_year_end(50)	N	string		工作年限
+	job_city(全国)		N	string		城市
+	area				N	string		区域
+	education_str		N	string		教育背景
+	scale_start(0)		N	string		企业规模
+	Scale_end(20000)	N	string		企业规模
+	company_type(0)		N	string 		企业性质
+	salary_start(0)		N	string		薪资范围
+	Salary_end(200000)	N	string		薪资范围
 返回结果：
 ```
 {
