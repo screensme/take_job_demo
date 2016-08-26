@@ -191,12 +191,26 @@ class Action(object):
         # values['query_new_job'] = '北京'
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
-        self.log.info('id_list = %s'% contect)
+        self.log.info('id_list = %s' % contect)
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
                                  %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
 
+        # Type = {'fulltime': '全职',
+        #         'parttime': '兼职',
+        #         'intern': '实习',
+        #         'unclear': '不限'}
+        for index in search_job:
+            index['company_logo'] = ''
+            if index['job_type'] == 'fulltime':
+                index['job_type'] = '全职'
+            elif index['job_type'] == 'parttime':
+                index['job_type'] = '兼职'
+            elif index['job_type'] == 'intern':
+                index['job_type'] = '实习'
+            elif index['job_type'] == 'unclear':
+                index['job_type'] = '不限'
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -229,6 +243,16 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
                                          %('job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                for index in search_job:
+                    index['company_logo'] = ''
+                    if index['job_type'] == 'fulltime':
+                        index['job_type'] = '全职'
+                    elif index['job_type'] == 'parttime':
+                        index['job_type'] = '兼职'
+                    elif index['job_type'] == 'intern':
+                        index['job_type'] = '实习'
+                    elif index['job_type'] == 'unclear':
+                        index['job_type'] = '不限'
                 result = dict()
                 result['status'] = 'success'
                 result['token'] = token
@@ -244,9 +268,9 @@ class Action(object):
 
     # 热门搜索
     @tornado.gen.coroutine
-    def Host_search_list(self, token=str, cache_flag=int,):
+    def Host_search_list(self, token=str, cache_flag=int):
 
-        data = ['测试工程师', '运维工程师', '产品专员', '产品设计师', '运营专员', '电商专员','java', 'PHP', 'C++', 'python']
+        data = ['产品设计师', 'java', '测试工程师', '运营专员','运维工程师', '产品专员', '电商专员', 'PHP', 'C++', 'python']
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -655,16 +679,19 @@ class Action(object):
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
-        sql = "select * from view_user_collections where userid =%s  limit %s,%s" % (token, page, num)
+        sql = "select * from view_user_collections where userid =%s and status='favorite' limit %s,%s"\
+              % (token, page, num)
         try:
-            search_status = self.db.get(sql)
+            search_status = self.db.query(sql)
+            status = 'success'
             if search_status == None:
                 search_status = {}
         except Exception, e:
             self.log.info('ERROR is %s' % e)
+            status = 'fail'
             search_status = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
@@ -676,28 +703,38 @@ class Action(object):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         sql = "select count(userid) from view_user_collections where userid =%s and jobid=%s " % (token, job_id)
-        sql_ins = "INSERT INTO rcat_test.candidate_collection " \
-                  "VALUES (%s,%s,%s,%s,%s)"
-        sql_up = "update candidate_collection set status='favorite', dt_update=%s" \
-                 " where userid=%s and job_id=%s"
+        sql_ins = "INSERT INTO candidate_collection(user_id, job_id, status, dt_create, dt_update) VALUES (%s,%s,%s,%s,%s)"
+        sql_up = "update candidate_collection set status=%s, dt_update=%s" \
+                 " where user_id=%s and job_id=%s"
 
         try:
-            result_sql = dict()
-            search_status = self.db.get(sql)
-            if search_status['count(userid)'] == long(0):
+            # 查找是否收藏
+            search_if = self.db.get(sql)
+            if search_if['count(userid)'] == 0:
                 result_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
-                print ('insert')
+                result_sql['collect_id'] = result_sql
+                msg = '已收藏'
             else:
-                result_sql = self.db.update(sql_up, dt, token, job_id)
-                print ('update')
-                search_status = {}
+                # 判断收藏状态（收藏或删除）
+                sql_update = "select * from candidate_collection where user_id=%s and job_id=%s" % (token, job_id)
+                search_status = self.db.get(sql_update)
+                if search_status['status'] == "delete":
+                    sta = 'favorite'
+                    msg = '已收藏'
+                    result_sql = self.db.update(sql_up, sta, dt, token, job_id)
+                else:
+                    sta = 'favorite'
+                    msg = '已取消收藏'
+                    result_sql = self.db.update(sql_up, sta, dt, token, job_id)
+            status = 'success'
         except Exception, e:
-            self.log.info('ERROR is %s' % e)
-            search_status = {}
+            result_sql = self.log.info('ERROR is %s' % e)
+            status = 'fail'
+            msg = '收藏失败'
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = msg
         result['data'] = result_sql
         raise tornado.gen.Return(result)
 
@@ -707,18 +744,18 @@ class Action(object):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         sql = "update rcat_test.candidate_collection set status='delete', dt_update=%s" \
-                 " where user_id=%s and job_id=%s" % (dt, token, job_id)
+                 " where user_id=%s and job_id=%s"
 
         try:
-            result_sql = dict()
-            search_status = self.db.update(sql)
+            search_status = self.db.update(sql, dt, token, job_id)
+            status = 'success'
 
         except Exception, e:
-            self.log.info('ERROR is %s' % e)
-            search_status = {}
+            search_status = self.log.info('ERROR is %s' % e)
+            status = 'fail'
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '成功取消收藏'
         result['data'] = search_status
         raise tornado.gen.Return(result)

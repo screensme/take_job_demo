@@ -353,7 +353,7 @@ class ViewcollectHandler(BaseHandler):
         self.finish()
         return
 
-# 收藏职位post
+# 收藏和取消收藏职位post
 class AddcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
@@ -409,7 +409,6 @@ class CutcollectHandler(BaseHandler):
             self.finish()
             return
 
-        cache_flag = self.get_cache_flag()
         cache_flag = self.get_cache_flag()
         result = yield self.db.user_cancel_collections(token, data['job_id'], cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))

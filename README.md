@@ -28,7 +28,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-25</td>
         <td>修改</td>
-		<td>查看简历的数据json的字段有变化，修改简历基本信息，所有简历状态的接口，都加了两个参数page，和num，修改简历完成，注意查看要传的数据的格式；简历编辑的url有变化；查看收藏，增加取消收藏</td>
+		<td>修改简历基本信息，所有简历状态的接口，都加了两个参数page，和num，修改简历完成，注意查看要传的数据的格式；简历编辑（实习经历）的url有变化；查看收藏，增加取消收藏</td>
+	</tr>
+	<tr>
+        <td>2016-8-26</td>
+        <td>增-改</td>
+		<td>增加接口查看收藏，收藏取消收藏，在首页和搜索，增加了字段，公司company_logo，显示职位状态(全职，兼职，实习，不限)</td>
 	</tr>
     </table>
 </div>
@@ -58,8 +63,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 22.简历编辑-自我评价post：/resume-edit-evaluation  
 23.意见反馈post：/feedback  
 24.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
-25.增加收藏post：/add_collect  
-26.取消收藏post：/cut_collect  
+25.增加收藏post：/add_or_del_collect   
 27.热门搜索职位列表get：/hot_job/token-{token}  
 28.热门搜索城市列表get：/hot_city/token-{token}  
 
@@ -830,30 +834,116 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "status": "success",
   "msg": "",
   "token": "1",
-  "data": {
-    "status": "favorite",
-    "scale_str": "",
-    "company_type": "国企",
-    "userid": 1,
-    "jobid": 163742,
-    "job_city": "北京",
-    "job_type": "unclear",
-    "m1": "2000-2999/月",
-    "company_name": "四川长虹电器股份有限公司",
-    "boon": "",
-    "collection_id": 1,
-    "trade": "家具/家电/玩具/礼品",
-    "job_name": "客户经理",
-    "work_years_str": "应届毕业生经验"
-  }
+  "data": [
+    {
+      "status": "favorite",
+      "scale_str": "100-499人",
+      "company_type": "合资",
+      "userid": 1,
+      "jobid": 3,
+      "job_city": "北京",
+      "job_type": "fulltime",
+      "m1": "6001-8000元/月",
+      "company_name": "北京领创鑫业商贸有限公司",
+      "boon": "五险一金,年底双薪,交通补助,房补,全勤奖,带薪年假,节日福利,员工旅游",
+      "collection_id": 378,
+      "trade": "贸易/进出口",
+      "job_name": "财务助理\\会计专员   （月薪8000、朝九晚六、周末双休）",
+      "work_years_str": "不限"
+    },
+    {
+      "status": "favorite",
+      "scale_str": "100-499人",
+      "company_type": "民营",
+      "userid": 1,
+      "jobid": 23,
+      "job_city": "北京",
+      "job_type": "fulltime",
+      "m1": "4001-6000元/月",
+      "company_name": "上海交大昂立国际教育北京首都机场分校",
+      "boon": "五险一金,绩效奖金,包吃,包住,带薪年假,员工旅游,节日福利,加班补助",
+      "collection_id": 377,
+      "trade": "教育/培训/院校",
+      "job_name": "课程顾问",
+      "work_years_str": "不限"
+    },
+    {
+      "status": "favorite",
+      "scale_str": "",
+      "company_type": "国企",
+      "userid": 1,
+      "jobid": 163742,
+      "job_city": "北京",
+      "job_type": "unclear",
+      "m1": "2000-2999/月",
+      "company_name": "四川长虹电器股份有限公司",
+      "boon": "",
+      "collection_id": 1,
+      "trade": "家具/家电/玩具/礼品",
+      "job_name": "客户经理",
+      "work_years_str": "应届毕业生经验"
+    }
+  ]
 }```
 ####25.增加收藏post：/add_collect
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id
-	jd			Y	string		页数
-####26.取消收藏post：/cut_collect  
-####27.热门搜索职位列表get：/hot_job/token-{token}  
-####28.热门搜索城市列表get：/hot_city/token-{token}  
-
+	job_id		Y	string		职位id
+返回收藏成功：
+```{
+  "status": "success",
+  "msg": "已收藏",
+  "token": "1",
+  "data": 1
+}```
+返回取消收藏成功：
+```{
+  "status": "success",
+  "msg": "已取消收藏",
+  "token": "1",
+  "data": 1
+}```
+####26.热门搜索职位列表get：/hot_job/token-{token}
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": 1,
+  "data": [
+    "产品设计师",
+    "java",
+    "测试工程师",
+    "运营专员",
+    "运维工程师",
+    "产品专员",
+    "电商专员",
+    "PHP",
+    "C++",
+    "python"
+  ]
+}```  
+####27.热门搜索城市列表get：/hot_city/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "11",
+  "data": {
+    "hotcity": [
+      "北京",
+      "上海",
+      "广州",
+      "深圳"
+    ]
+  }
+}```  

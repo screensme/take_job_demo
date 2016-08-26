@@ -107,7 +107,7 @@ class HotcityHandler(BaseHandler):
         data = dict()
         data['hotcity'] = ['北京','上海','广州','深圳']
         result = dict()
-        result['status'] = 'fail'
+        result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
         result['data'] = data
