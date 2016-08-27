@@ -94,7 +94,7 @@ class Action(object):
     @tornado.gen.coroutine
     def User_login(self, mobile=str, pwd=str, cache_flag=int):
         result = dict()
-        sql = "SELECT * FROM candidate_user WHERE phonenum=%s" % mobile
+        sql = "select id,password from candidate_user where phonenum=%s" % mobile
         search_mobile = self.db.get(sql)
         if search_mobile is None:
                 result['status'] = 'fail'
@@ -105,11 +105,15 @@ class Action(object):
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查找用户基本信息
-                sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
+                sqll = "SELECT %s FROM candidate_cv  where user_id=%s" \
                        % ("user_id,username,sex,edu,school,major", search_mobile['id'])
                 user_basic = self.db.get(sqll)
 
-                user_basic['id'] = str(search_mobile['id'])
+                if user_basic is None:
+                    user_basic = dict()
+                    user_basic['id'] = str(search_mobile['id'])
+                else:
+                    user_basic['id'] = str(search_mobile['id'])
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
