@@ -105,7 +105,7 @@ class HotcityHandler(BaseHandler):
     def get(self, token):
         cache_flag = self.get_cache_flag()
         data = dict()
-        data['hotcity'] = ['北京','上海','广州','深圳']
+        data['hotcity'] = ['不限', '北京', '上海', '广州','深圳']
         result = dict()
         result['status'] = 'success'
         result['token'] = token

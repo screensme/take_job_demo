@@ -13,8 +13,9 @@ class SendSmsHandler(BaseHandler):
     @tornado.web.asynchronous
     def post(self):
         mobile = self.get_argument('mobile')
+        key = self.get_argument('key')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Send_sms(mobile, cache_flag)
+        result = yield self.db.Send_sms(mobile, key, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

@@ -14,7 +14,7 @@ define("port", default=8889, help="run on the given port", type=int)
 define("mysql", default='neiwang', help="run on the test or pro")
 define("esapi", default='neiwang', help="run on the test or pro")
 define("redis", default='local', help="run on the test or pro")
-define("sms", default='1', help="true=0,false=1(send:111111)")
+define("sms", default='no', help="true=yes,false=no(send:111111)")
 
 abp = os.path.abspath(sys.argv[0])
 file_path = os.path.dirname(abp) + '/json_txt'

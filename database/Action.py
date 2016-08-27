@@ -35,44 +35,57 @@ class Action(object):
 
     # 用户注册
     @tornado.gen.coroutine
-    def Register_user(self, mobile=str, pwd=str, cache_flag=int):
+    def Register_user(self, mobile=str, pwd=str, code=str, cache_flag=int):
 
+        result = dict()
         foo_uuid = str(uuid.uuid1())
         hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
 
         user_info = self.db.get('SELECT * FROM rcat_test.candidate_user where phonenum=%s' % mobile)
         if user_info != None:
-            result = dict()
             result['status'] = 'fail'
             result['msg'] = '手机号已经被注册'
             result['token'] = user_info['id']
             result['data'] = {}
             raise tornado.gen.Return(result)
         else:
-            try:
-                active = '1'
-                authenticated = '1'
-                post_status = 'allow'
-                tag = 'test'
-                dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                # dd = dt_create.strftime("%Y-%m-%d %H:%M:%S")
-                dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                user_write = self.db.insert(sqll,
-                                            mobile, hash_pass, active, authenticated,
-                                            post_status, tag, dt_created, dt_updated, foo_uuid)
-
-                result = dict()
-                result['status'] = 'sucess'
-                result['msg'] = ''
-                result['token'] = user_write
-                result['data'] = {'token': user_write}
-            except Exception, e:
-                result = dict()
+            # 验证手机验证码是否正确
+            verify_code = self.cacheredis.get(mobile+"msgcode")
+            if verify_code is None:
                 result['status'] = 'fail'
-                result['msg'] = e.message
+                result['msg'] = '验证码超时，请重新获取'
                 result['token'] = ''
                 result['data'] = {'token': ''}
+                raise tornado.gen.Return(result)
+
+            elif verify_code != code:
+                result['status'] = 'fail'
+                result['msg'] = '验证码错误，请核对输入'
+                result['token'] = ''
+                result['data'] = {'token': ''}
+                raise tornado.gen.Return(result)
+            else:
+                try:
+                    active = '1'
+                    authenticated = '1'
+                    post_status = 'allow'
+                    tag = 'test'
+                    dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    user_write = self.db.insert(sqll,
+                                                mobile, hash_pass, active, authenticated,
+                                                post_status, tag, dt_created, dt_updated, foo_uuid)
+
+                    result['status'] = 'sucess'
+                    result['msg'] = ''
+                    result['token'] = user_write
+                    result['data'] = {'token': user_write}
+                except Exception, e:
+                    result['status'] = 'fail'
+                    result['msg'] = e.message
+                    result['token'] = ''
+                    result['data'] = {'token': ''}
 
         raise tornado.gen.Return(result)
 
@@ -131,23 +144,57 @@ class Action(object):
             result['data'] = {}
         raise tornado.gen.Return(result)
 
-    # 用户忘记密码
-    # @tornado.gen.coroutine
-    # def User_forgetpwd(mobile=str, pwd=str, cache_flag=int):
-    #     pass
-    #     result = dict()
-    #     result['status'] = 'success'
-    #     result['token'] = ''
-    #     result['msg'] = ''
-    #     result['data'] = {}
-    #     # yield self.db["login_history"].insert({'mobile': mobile, 'pwd': pwd, 'act': 'login success'})
-    #     raise tornado.gen.Return(result)
+    # 忘记，找回密码
+    @tornado.gen.coroutine
+    def User_forgetpwd(self, mobile=str, pwd=str, code=str, cache_flag=int):
+
+        result = dict()
+        hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+        dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sql_search = "select * from candidate_user where phonenum=%s" % (mobile,)
+        search_mobile = self.db.get(sql_search)
+        if search_mobile == None:
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '该手机号未注册'
+            result['data'] = {}
+        else:
+            # 验证手机验证码是否正确
+            verify_code = self.cacheredis.get(mobile+"msgcode")
+            if verify_code is None:
+                result['status'] = 'fail'
+                result['msg'] = '验证码超时，请重新获取'
+                result['token'] = ''
+                result['data'] = {'token': ''}
+                raise tornado.gen.Return(result)
+
+            elif verify_code != code:
+                result['status'] = 'fail'
+                result['msg'] = '验证码错误，请核对输入'
+                result['token'] = ''
+                result['data'] = {'token': ''}
+                raise tornado.gen.Return(result)
+            else:
+                try:
+                    sql_update = "update candidate_user set password=%s,dt_update=%s where phonenum=%s"
+                    update_pwd = self.db.update(sql_update, hash_pass, dt_updated, mobile)
+                    self.log.info('user update_pwd,id=%s')
+                    result['status'] = 'success'
+                    result['token'] = search_mobile['id']
+                    result['msg'] = ''
+                    result['data'] = {}
+                except Exception, e:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '服务器出错，请稍后'
+                    result['data'] = {}
+        raise tornado.gen.Return(result)
 
     # 用户修改密码
     @tornado.gen.coroutine
     def User_updatepwd(self, mobile=str, oldpwd=str, pwd=str, cache_flag=int):
 
-        sql = "SELECT * FROM rcat_test.candidate_user WHERE phonenum='%s'" % mobile
+        sql = "SELECT * FROM candidate_user WHERE phonenum='%s'" % mobile
         search_user = self.db.get(sql)
         if (search_user['password'] != bcrypt.hashpw(oldpwd.encode('utf-8'), search_user['password'].encode('utf-8'))) \
                 or (search_user is None):
@@ -170,26 +217,41 @@ class Action(object):
 
     # 发送短信验证码post
     @tornado.gen.coroutine
-    def Send_sms(self, mobile=str, cache_flag=int):
+    def Send_sms(self, mobile=str, key=str, cache_flag=int):
 
         random_number = random_str()
         result = dict()
         # sms == '0' 是真实发送
-        if self.sms == '0':
-            ret_info = SmsApi().sms_register(mobile=mobile, rand_num=random_number)
-            if ret_info['code'] == '0':
-                self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
-                result['status'] = 'success'
-                result['token'] = ''
-                result['msg'] = '短信发送成功'
-                result['data'] = random_number
-            else:
-                result['status'] = 'fail'
-                result['token'] = ''
-                result['msg'] = '短信发送失败'
-                result['data'] = {}
-            raise tornado.gen.Return(result)
-        # sms == '1' 不发送，验证码为1111111
+        if self.sms == 'yes':
+            if key == "register":   # 注册
+                ret_info = SmsApi().sms_register(mobile=mobile, rand_num=random_number)
+                if ret_info['code'] == '0':
+                    self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
+                    result['status'] = 'success'
+                    result['token'] = ''
+                    result['msg'] = '短信发送成功'
+                    result['data'] = random_number
+                else:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '短信发送失败'
+                    result['data'] = {}
+                raise tornado.gen.Return(result)
+            elif key == "forgetpwd":    # 忘记密码
+                ret_info = SmsApi().sms_forget(mobile=mobile, rand_num=random_number)
+                if ret_info['code'] == '0':
+                    self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
+                    result['status'] = 'success'
+                    result['token'] = ''
+                    result['msg'] = '短信发送成功'
+                    result['data'] = random_number
+                else:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '短信发送失败'
+                    result['data'] = {}
+                raise tornado.gen.Return(result)
+        # sms == 'no' 不发送，验证码为1111111
         else:
             random_number = '111111'
             result = dict()
@@ -216,7 +278,7 @@ class Action(object):
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = search_user
+        result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 个人信息页

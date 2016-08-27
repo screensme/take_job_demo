@@ -37,11 +37,12 @@ class RegisterHandler(BaseHandler):
         try:
             data['mobile'] = self.get_argument('mobile')
             data['pwd'] = self.get_argument('pwd')
+            data['code'] = self.get_argument('code')
         except Exception, e:
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
-            result['msg'] = '缺少手机号或密码'
+            result['msg'] = '缺少参数'
             result['data'] = {}
 
         if len(data['mobile']) != 11:
@@ -54,6 +55,7 @@ class RegisterHandler(BaseHandler):
         else:
             result = yield self.db.Register_user(data['mobile'],
                                                  data['pwd'],
+                                                 data['code'],
                                                  cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -115,7 +117,7 @@ class LogoutHandler(BaseHandler):
         self.finish()
         return
 
-# 忘记密码
+# 忘记，找回密码
 class ForgetpwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
@@ -126,6 +128,7 @@ class ForgetpwdHandler(BaseHandler):
         try:
             data['mobile'] = self.get_argument('mobile')
             data['pwd'] = self.get_argument('pwd')
+            data['code'] = self.get_argument('code')
         except Exception,e:
             result = dict()
             result['status'] = 'fail'
@@ -138,6 +141,7 @@ class ForgetpwdHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         result = yield self.db.User_forgetpwd(data['mobile'],
                                               data['pwd'],
+                                              data['code'],
                                               cache_flag=cache_flag
                                               )
         self.write(ObjectToString().encode(result))

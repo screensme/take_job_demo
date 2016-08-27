@@ -45,7 +45,7 @@ urls = [
     url(r"/auth/login", LoginHandler),  # 登录post
     url(r"/auth/logout/token-(\w+)", LogoutHandler),    # 登出get
     url(r"/auth/register", RegisterHandler),    # 注册post
-    # url(r"/auth/forgetpwd", ForgetpwdHandler),  # 找回密码
+    url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记，找回密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
     url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码

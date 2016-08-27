@@ -46,9 +46,16 @@ REDIS = {
         'port': 6379,
         'password': '',
         'db': 1
+    },
+    'redis-online': {
+        'host': '23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs',
+        'port': 6379,
+        'password': 'Rcat123ABCD',
+        'db': 1
     }
 }
 REDIS_URL = 'redis://23fef09bdd5a4810:Rcat123ABCD@23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com/1'
+# user / password @ ip:port / db
 FCGI_SETTIGNS = {
     'fcgi_port': 1024,
 }
