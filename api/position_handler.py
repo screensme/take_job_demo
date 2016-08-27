@@ -27,6 +27,7 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         page = self.get_argument('page')
