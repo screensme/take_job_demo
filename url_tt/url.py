@@ -48,7 +48,7 @@ urls = [
     url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记，找回密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
-    url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码
+    # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码
     url(r"/search", SearchHandler),  # 搜索页post
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
     url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get

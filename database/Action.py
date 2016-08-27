@@ -255,24 +255,17 @@ class Action(object):
         else:
             random_number = '111111'
             result = dict()
-            ret_info = {'code': '0'}
-            if ret_info['code'] == '0':
-                self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
-                result['status'] = 'success'
-                result['token'] = ''
-                result['msg'] = '短信发送成功'
-                result['data'] = random_number
-            else:
-                result['status'] = 'fail'
-                result['token'] = ''
-                result['msg'] = '短信发送失败'
-                result['data'] = {}
+
+            self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
+            result['status'] = 'success'
+            result['token'] = ''
+            result['msg'] = '短信发送成功'
+            result['data'] = random_number
             raise tornado.gen.Return(result)
 
     # 校验短信验证码get
     @tornado.gen.coroutine
     def Verification_sms(self, token=str, code=str, cache_flag=int):
-
 
         result = dict()
         result['status'] = 'success'
@@ -878,8 +871,8 @@ class Action(object):
     # 简历投递post
     @tornado.gen.coroutine
     def Post_resume(self, token=str, job_id=str, cache_flag=int):
-        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         sql = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
 
         try:
@@ -897,6 +890,25 @@ class Action(object):
                 status = 'fail'
                 msg = '已投递的职位'
                 post_resume = {}
+            # 用户投递简历后，公司收到消息
+            sql_company_userid = "select company_user_id from company_jd  where es_id =%s" % (job_id,)
+            search_company_userid = self.db.get(sql_company_userid)
+            if search_company_userid is None:
+                status = 'fail'
+                msg = '公司收消息错误'
+            else:
+                m_info = {'type': 'post',
+                          'info': '您有新投递的简历'}
+                sender = 'system'
+                receiver_type = 'company',
+                message_type = 'system',
+                receiver_user_id = search_company_userid['company_user_id']
+                message = json.dumps(m_info),
+                sql_company = "insert into message(sender, receiver_type, message_type, receiver_user_id, message, status, dt_create, dt_update)" \
+                              " values(%s,%s,%s,%s,%s,%s,%s,%s)"
+                post_company = self.db.insert(sql_company, sender, receiver_type, message_type, receiver_user_id,
+                                              message, 'unread', dt, dt)
+                self.log.info('company receive user resume,message_id=%s' % post_company)
         except Exception, e:
             post_resume = self.log.info('ERROR is %s' % e)
             status = 'fail'

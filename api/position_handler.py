@@ -20,7 +20,6 @@ class HomeHandler(BaseHandler):
         result = yield self.db.Home(page, num, token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
 
 # 首页搜索
@@ -46,7 +45,6 @@ class SearchHandler(BaseHandler):
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
 
 # 意见反馈post
@@ -63,7 +61,6 @@ class FeedbackHandler(BaseHandler):
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
 
 # 职位详情get
@@ -78,7 +75,6 @@ class PositionHandler(BaseHandler):
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
 
 # 首页搜索
@@ -95,7 +91,6 @@ class HostsearchlistHandler(BaseHandler):
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return
 
 # 热门搜索城市列表(先写4个)get
@@ -114,5 +109,4 @@ class HotcityHandler(BaseHandler):
 
         self.write(ObjectToString().encode(result))
         self.finish()
-
         return

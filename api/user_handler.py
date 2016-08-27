@@ -133,7 +133,7 @@ class ForgetpwdHandler(BaseHandler):
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
-            result['msg'] = '缺少用户名或密码！'
+            result['msg'] = '缺少参数！'
             result['data'] = {}
             self.write(ObjectToString().encode(result))
             self.finish()
