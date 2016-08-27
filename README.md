@@ -238,7 +238,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	Work_year_end(50)	N	string		工作年限
 	job_city(全国)		N	string		城市
 	area				N	string		区域
-	education_str		N	string		教育背景
+	education			N	string		'不限': None,'中专': 2,'大专': 3,'本科': 4,'硕士': 5,'博士': 6
 	scale_start(0)		N	string		企业规模
 	Scale_end(20000)	N	string		企业规模
 	company_type(0)		N	string 		企业性质

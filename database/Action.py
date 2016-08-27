@@ -293,7 +293,6 @@ class Action(object):
         values = dict()
         values['offset'] = page
         values['limit'] = num
-        # values['query_new_job'] = '北京'
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
         self.log.info('id_list = %s' % contect)
@@ -302,10 +301,6 @@ class Action(object):
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
                                  %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
 
-        # Type = {'fulltime': '全职',
-        #         'parttime': '兼职',
-        #         'intern': '实习',
-        #         'unclear': '不限'}
         for index in search_job:
             index['company_logo'] = ''
             if index['job_type'] == 'fulltime':
@@ -337,6 +332,11 @@ class Action(object):
                 pass
             else:
                 value['job_type'] = eval(value['job_type'])
+        if 'education' in values:
+            if 'None' in values['education']:
+                value['education'] = None
+            else:
+                value['education'] = int(value['education'])
         if value == {}:
             result = dict()
             result['status'] = 'fail'
