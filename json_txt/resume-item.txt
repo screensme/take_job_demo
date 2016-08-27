@@ -1,9 +1,0 @@
-{
-'item_name': '项目名称',
-'item_duty': '职位名称',
-'start_year3': '开始时间年',
-'start_month3': '开始时间月',
-'end_year3': '结束时间年',
-'end_month3': '结束时间月',
-'item_des': '项目描述',
-}

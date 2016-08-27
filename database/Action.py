@@ -100,17 +100,16 @@ class Action(object):
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
+                result['data'] = {}
 
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查找用户基本信息
                 sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
-                       % ("user_id", search_mobile['id'])
+                       % ("user_id,username,sex,edu,school,major", search_mobile['id'])
                 user_basic = self.db.get(sqll)
-                if user_basic == None:
-                    user_basic = {'id': str(search_mobile['id'])}
-                else:
-                    user_basic['id'] = str(search_mobile['id'])
+
+                user_basic['id'] = str(search_mobile['id'])
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
@@ -119,6 +118,7 @@ class Action(object):
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '密码错误!'
+                result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 用户登出

@@ -1,6 +1,0 @@
-{
-'uuid': '123456',
-'mobile': '13333333333',
-'pwd':'111111',
-'image':'http://images.huoban.io/th_21111.jpg'
-}

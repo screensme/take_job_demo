@@ -1,7 +1,0 @@
-{
-'expect_job': '期望职位',
-'work_state': '求职意向，是否全职',
-'expect_city': '期望地点',
-'expect_salary': '期望薪资',
-'expect_trade': '期望行业',
-}

@@ -39,11 +39,9 @@ class ResumeBasicHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        data = dict()
         token = self.get_argument('token')
-        cao = self.get_arguments()
         basic = self.get_argument('basic')
         # data['education'] = self.get_argument('education')
         # data['birthday'] = self.get_argument('birthday')
@@ -67,7 +65,7 @@ class ResumeEducationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         # data = dict()
@@ -89,7 +87,7 @@ class ResumeExpectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         # data = dict()
@@ -111,10 +109,9 @@ class ResumeCareerHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        data = dict()
         career = self.get_argument('career')
         # data['duty'] = self.get_argument('duty')
         # data['area'] = self.get_argument('area')
@@ -134,7 +131,7 @@ class ResumeItemHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
@@ -156,7 +153,7 @@ class ResumeEvaluationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        # filepath = self.settings['file_path']
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
