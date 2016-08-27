@@ -353,7 +353,7 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                             %('job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
                     for index in search_job:
                         index['company_logo'] = ''
                         if index['job_type'] == 'fulltime':
