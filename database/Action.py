@@ -333,10 +333,11 @@ class Action(object):
             else:
                 value['job_type'] = eval(value['job_type'])
         if 'education' in values:
-            if 'None' in values['education']:
-                value['education'] = None
-            else:
-                value['education'] = int(value['education'])
+            value['education'] = int(value['education'])
+        # if 'work_years_start' in values:
+        #     value['work_years_start'] = int(value['work_years_start'])
+        # if 'work_years_end' in values:
+        #     value['work_years_end'] = int(value['work_years_end'])
         if value == {}:
             result = dict()
             result['status'] = 'fail'
