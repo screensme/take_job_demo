@@ -37,6 +37,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         <td>增-改</td>
 		<td>增加接口查看收藏，收藏取消收藏，在首页和搜索，增加了字段，公司company_logo，显示职位状态(全职，兼职，实习，不限);简历投递接口完成</td>
 	</tr>
+	<tr>
+        <td>2016-8-27</td>
+        <td>增-改</td>
+		<td>增加短信验证接口；注册和忘记密码，需要多传一个参数code；</td>
+	</tr>
     </table>
 </div>
 
@@ -68,6 +73,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 25.热门搜索职位列表get：/hot_job/token-{token}  
 26.热门搜索城市列表get：/hot_city/token-{token}  
 27.简历投递post：/post-resume  
+28.忘记，找回密码post：/auth/forgetpwd  
+29.短信发送接口post：/sendsms  
 
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -172,6 +179,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	mobile		Y	string		手机号
 	pwd			Y	string		密码
+	code		Y	string		验证码
 返回成功：
 ```{
   "status": "sucess",
@@ -742,14 +750,20 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "marital_status":"未婚"
     }```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
+```{
+    "status":"success",
+    "msg":"",
+    "token":"177",
+    "data":167
+}
+```  
 ####18.简历编辑-教育经历post：/resume-edit-education  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	education	Y	string		用户的教育经历，注意格式如下
-<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
 ```[
     {
         "school":"是对的",
@@ -760,7 +774,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
 ]```  
 返回成功：  
-```{"status": "success", "msg": "", "token": "177", "data": 167}```    
+```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####19.简历编辑-职业意向post：/resume-edit-expect  
 参数：
 		
@@ -966,3 +980,45 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "1",
   "data": {}
 }```  
+####28.忘记，找回密码post：/auth/forgetpwd  
+参数：
+		
+	参数名称	必填	类型		描述
+	mobile		Y	string		手机号
+	pwd			Y	string		密码
+	code		Y	string		验证码
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": 170,
+  "data": {}
+}```  
+返回失败：  
+```{
+  "status": "fail",
+  "msg": "验证码超时，请重新获取",
+  "token": "",
+  "data": {
+    "token": ""
+  }
+}```  
+####29.短信发送接口post：/sendsms  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	key			Y	string		注册(register),找回密码(forgetpwd)
+返回成功：  
+```{
+  "status": "success",
+  "msg": "短信发送成功",
+  "token": "",
+  "data": "111111"
+}```  
+返回失败：  
+```{
+  "status": "fail",
+  "msg": "短信发送失败",
+  "token": "",
+  "data": {}}```  
