@@ -40,7 +40,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	<tr>
         <td>2016-8-27</td>
         <td>增-改</td>
-		<td>增加短信验证接口；注册和忘记密码，需要多传一个参数code；修改密码接口，传的mobile改为token；搜索接口，查找职位状态job_type</td>
+		<td>增加短信验证接口；注册和忘记密码，需要多传一个参数code；修改密码接口，传的mobile改为token；搜索接口，查找职位状态job_type；修改登录返回数据</td>
 	</tr>
     </table>
 </div>
@@ -151,9 +151,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "username": "徐帅楠",
     "school": "1111111111",
-    "user_id": 170,
     "major": "1111",
     "sex": "男",
+    "avatar": "a.jpg",
     "edu": "博士",
     "id": "170"
   }

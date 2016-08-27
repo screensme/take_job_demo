@@ -104,16 +104,19 @@ class Action(object):
 
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
-                # 查找用户基本信息
+                # 查找用户基本信息(缺少用户头像，能不能数据库中加一个出来)
                 sqll = "SELECT %s FROM candidate_cv  where user_id=%s" \
-                       % ("user_id,username,sex,edu,school,major", search_mobile['id'])
+                       % ("username,sex,edu,school,major,candidate_cv", search_mobile['id'])
                 user_basic = self.db.get(sqll)
 
                 if user_basic is None:
                     user_basic = dict()
                     user_basic['id'] = str(search_mobile['id'])
                 else:
+                    candidate = json.loads(user_basic['candidate_cv'])
                     user_basic['id'] = str(search_mobile['id'])
+                    user_basic['avatar'] = candidate['basic']['avatar']
+                    user_basic.pop('candidate_cv')
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
