@@ -736,7 +736,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	basic		Y	string		用户的基本信息，注意格式如下
-<font color=blue>（basic本身是dict格式，将这个dict转换为string格式传过来）如下</font>   
+<font color=blue>（basic本身是dict格式，将这个dict转换为string格式传过来）如下</font>  
 ```{
         "education":"中专",
         "birthday":"2010",
@@ -749,14 +749,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "avatar":"avatar_7.png",
         "marital_status":"未婚"
     }```  
-返回成功：  
+返回成功：
 ```{
     "status":"success",
     "msg":"",
     "token":"177",
     "data":167
-}
-```  
+}```  
 ####18.简历编辑-教育经历post：/resume-edit-education  
 参数：
 		
