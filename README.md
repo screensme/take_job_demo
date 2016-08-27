@@ -1007,7 +1007,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id
+	mobile		Y	string		手机号
 	key			Y	string		注册(register),找回密码(forgetpwd)
 返回成功：  
 ```{
