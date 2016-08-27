@@ -155,43 +155,22 @@ class UpdatePwdHandler(BaseHandler):
     def post(self):
         logger.info(json.dumps(self.get_arguments()))
         logger.info('user update password')
-        data = dict()
         try:
-            data['mobile'] = self.get_argument('mobile')
+            token = self.get_argument('token')
+            oldpwd = self.get_argument('oldpwd')
+            pwd = self.get_argument('pwd')
         except Exception,e:
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
-            result['msg'] = "缺少'mobile'"
-            result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
-        try:
-            data['oldpwd'] = self.get_argument('oldpwd')
-        except Exception,e:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = ''
-            result['msg'] = "缺少'oldpwd'"
-            result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
-        try:
-            data['pwd'] = self.get_argument('pwd')
-        except Exception,e:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = ''
-            result['msg'] = "缺少'pwd'"
+            result['msg'] = "缺少参数"
             result['data'] = {}
             self.write(ObjectToString().encode(result))
             self.finish()
             return
         cache_flag = self.get_cache_flag()
 
-        if (data['oldpwd'] == '') or (data['pwd'] == ''):
+        if (oldpwd == '') or (pwd == ''):
             result = dict()
             result['status'] = 'fail'
             result['token'] = ''
@@ -202,9 +181,9 @@ class UpdatePwdHandler(BaseHandler):
             logger.info('user update false,pwd is None')
             return
         else:
-            result = yield self.db.User_updatepwd(mobile=data['mobile'],
-                                                  oldpwd=data['oldpwd'],
-                                                  pwd=data['pwd'],
+            result = yield self.db.User_updatepwd(token=token,
+                                                  oldpwd=oldpwd,
+                                                  pwd=pwd,
                                                   cache_flag=cache_flag
                                                   )
             self.write(ObjectToString().encode(result))

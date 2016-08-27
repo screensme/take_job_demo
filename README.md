@@ -207,7 +207,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 参数：
 		
 	参数名称	必填	类型		描述
-	mobile		Y	string		手机号
+	token		Y	string		用户id
 	oldpwd		Y	string		旧密码
 	pwd			Y	string		密码
 返回成功：
@@ -232,6 +232,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page				Y	string		页数
 	num					Y	string		每页显示数量
 	job_name			Y	string		职位名称
+	job_type			N	string		全职:"fulltime",兼职/实习:['parttime','intern']
 	trade				N	string		行业
 	work_years_start(0)	N	string		工作年限
 	Work_year_end(50)	N	string		工作年限

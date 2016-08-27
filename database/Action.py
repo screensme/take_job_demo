@@ -66,6 +66,7 @@ class Action(object):
                 raise tornado.gen.Return(result)
             else:
                 try:
+                    # 添加用户
                     active = '1'
                     authenticated = '1'
                     post_status = 'allow'
@@ -91,12 +92,7 @@ class Action(object):
 
     # 用户登陆
     @tornado.gen.coroutine
-    def User_login(self, mobile=str,
-                      pwd=str,
-                      # umengid=str,
-                      # mobibuild=str,
-                      # mobitype=str,
-                      cache_flag=int):
+    def User_login(self, mobile=str, pwd=str, cache_flag=int):
         result = dict()
         sql = "SELECT * FROM candidate_user WHERE phonenum=%s" % mobile
         search_mobile = self.db.get(sql)
@@ -107,9 +103,9 @@ class Action(object):
 
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
+                # 查找用户基本信息
                 sqll = "SELECT %s FROM candidate_cv as p left join candidate_user as q on q.id=p.user_id where q.id=%s" \
                        % ("user_id", search_mobile['id'])
-                # user_id, username, sex, age, edu, school, major
                 user_basic = self.db.get(sqll)
                 if user_basic == None:
                     user_basic = {'id': str(search_mobile['id'])}
@@ -128,8 +124,9 @@ class Action(object):
     # 用户登出
     @tornado.gen.coroutine
     def User_logout(self, token=str):
-        # result = {}
-        search_user = self.db.get("SELECT * FROM rcat_test.candidate_user WHERE id=%s" % token)
+
+        sql = "SELECT * FROM rcat_test.candidate_user WHERE id=%s" % token
+        search_user = self.db.get(sql)
         result = dict()
         if (search_user['id'] != token):
                 result['status'] = 'fail'
@@ -178,7 +175,7 @@ class Action(object):
                 try:
                     sql_update = "update candidate_user set password=%s,dt_update=%s where phonenum=%s"
                     update_pwd = self.db.update(sql_update, hash_pass, dt_updated, mobile)
-                    self.log.info('user update_pwd,id=%s')
+                    self.log.info('user update_pwd,id=%s' % update_pwd)
                     result['status'] = 'success'
                     result['token'] = search_mobile['id']
                     result['msg'] = ''
@@ -192,9 +189,9 @@ class Action(object):
 
     # 用户修改密码
     @tornado.gen.coroutine
-    def User_updatepwd(self, mobile=str, oldpwd=str, pwd=str, cache_flag=int):
+    def User_updatepwd(self, token=str, oldpwd=str, pwd=str, cache_flag=int):
 
-        sql = "SELECT * FROM candidate_user WHERE phonenum='%s'" % mobile
+        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
         search_user = self.db.get(sql)
         if (search_user['password'] != bcrypt.hashpw(oldpwd.encode('utf-8'), search_user['password'].encode('utf-8'))) \
                 or (search_user is None):
@@ -205,7 +202,7 @@ class Action(object):
             result['data'] = {}
         else:
             hash_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
-            update_pwd = self.db.update("update candidate_user set password=%s where phonenum=%s", hash_pwd, mobile)
+            update_pwd = self.db.update("update candidate_user set password=%s where id=%s", hash_pwd, token)
 
             self.log.info("user edit password %s (1 mean yes,0 nean no)")
             result = dict()
@@ -335,6 +332,11 @@ class Action(object):
         b = values.pop('page')
         c = values.pop('num')
         value = values
+        if 'job_type' in values:
+            if 'fulltime' == values['job_type']:
+                pass
+            else:
+                value['job_type'] = eval(value['job_type'])
         if value == {}:
             result = dict()
             result['status'] = 'fail'
@@ -349,28 +351,31 @@ class Action(object):
             try:
                 contect_id = sorted(eval(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
-                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                         %('job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
-                for index in search_job:
-                    index['company_logo'] = ''
-                    if index['job_type'] == 'fulltime':
-                        index['job_type'] = '全职'
-                    elif index['job_type'] == 'parttime':
-                        index['job_type'] = '兼职'
-                    elif index['job_type'] == 'intern':
-                        index['job_type'] = '实习'
-                    elif index['job_type'] == 'unclear':
-                        index['job_type'] = '不限'
+                if args != '':
+                    search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
+                                             %('job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                    for index in search_job:
+                        index['company_logo'] = ''
+                        if index['job_type'] == 'fulltime':
+                            index['job_type'] = '全职'
+                        elif index['job_type'] == 'parttime':
+                            index['job_type'] = '兼职'
+                        elif index['job_type'] == 'intern':
+                            index['job_type'] = '实习'
+                        elif index['job_type'] == 'unclear':
+                            index['job_type'] = '不限'
+                else:
+                    search_job = []
                 result = dict()
                 result['status'] = 'success'
                 result['token'] = token
                 result['msg'] = ''
                 result['data'] = search_job
-            except KeyError, e:
+            except Exception, e:
                 result = dict()
                 result['status'] = 'fail'
                 result['token'] = token
-                result['msg'] = '传入参数有误'
+                result['msg'] = e
                 result['data'] = {}
         raise tornado.gen.Return(result)
 
