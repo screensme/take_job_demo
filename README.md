@@ -762,7 +762,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	education	Y	string		用户的教育经历，注意格式如下
-<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>
 ```[
     {
         "school":"是对的",
@@ -772,7 +772,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "end_time":"2016.02"
     }
 ]```  
-返回成功：  
+返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####19.简历编辑-职业意向post：/resume-edit-expect  
 参数：
@@ -788,7 +788,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "status":"全职",
         "expect_salary":"500000"
     }```  
-返回成功：  
+返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####20.简历编辑-实习经历post：/resume-edit-career  
 参数：
@@ -817,7 +817,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "company":"万科"
     }
 ]```  
-返回成功：  
+返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####21.简历编辑-自我评价post：/resume-edit-evaluation  
 参数：
@@ -825,14 +825,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	description	Y	string		用户的自我评价
-返回成功：  
+返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####22.意见反馈post：/feedback  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-返回成功：  
+返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
 参数：
