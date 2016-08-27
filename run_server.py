@@ -46,7 +46,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, urls, **settings)
         self.log = web_log.debugf("")
         self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
-        sms = int(options.sms)
+        sms = options.sms
         mysqlstr = 'mysql-%s' % options.mysql
         esapistr = 'esapi-%s' % options.esapi
         redisstr = 'redis-%s' % options.redis

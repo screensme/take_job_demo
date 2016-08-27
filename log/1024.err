@@ -1,0 +1,7 @@
+2016-08-22 14:29:44,763 $5580--MainThread tornado.application ERROR http1connection.py: #53 Uncaught exception
+Traceback (most recent call last):
+  File "F:\SOFEWARE\python2.7.12\lib\site-packages\tornado\http1connection.py", line 236, in _read_message
+    delegate.finish()
+  File "F:\SOFEWARE\python2.7.12\lib\site-packages\tornado\httpserver.py", line 267, in finish
+    self.server.request_callback(self.request)
+TypeError: 'Application' object is not callable
