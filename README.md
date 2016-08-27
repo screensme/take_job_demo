@@ -146,13 +146,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 返回成功：
 ```{
   "status": "success",
-  "msg": "",
-  "token": "120",
+  "msg": "登陆成功",
+  "token": 170,
   "data": {
-    "mobile": "13333333333",
-    "pwd": "111111",
-    "uuid": "8626fa72-4275-11e6-92c4-c81f664404a0",
-    "image": "http://images.huoban.io/th_21111.jpg"
+    "username": "徐帅楠",
+    "school": "1111111111",
+    "user_id": 170,
+    "major": "1111",
+    "sex": "男",
+    "edu": "博士",
+    "id": "170"
   }
 }```  
 ####3.登出get：/auth/logout/token-{token}
@@ -240,10 +243,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	area				N	string		区域
 	education			N	string		'中专': 2,'大专': 3,'本科': 4,'硕士': 5,'博士': 6
 	scale_start(0)		N	string		企业规模
-	Scale_end(20000)	N	string		企业规模
+	scale_end(20000)	N	string		企业规模
 	company_type(0)		N	string 		企业性质
 	salary_start(0)		N	string		薪资范围
-	Salary_end(200000)	N	string		薪资范围
+	salary_end(200000)	N	string		薪资范围
 返回结果：
 ```
 {
