@@ -621,9 +621,10 @@ class Action(object):
             resume_name = data['name'] + '的简历'
             username = data['name']
             sex = data['gender']
+            high_edu = data['education']
             age = int(nowyear) - int(data['birthday'])
-            sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, resume_name, username, sex, age, json.dumps(basic_resume), dt, token)
+            sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
