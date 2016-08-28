@@ -70,7 +70,7 @@ urls = [
     url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-基本信息post
     url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post(list)
     url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post
-    url(r"/resume-edit-experience", ResumeCareerHandler),    # 简历编辑-实习经历post(list)
+    url(r"/resume-edit-career", ResumeCareerHandler),    # 简历编辑-实习经历post(list)
     # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post(先不做)
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post

@@ -12,7 +12,6 @@ class ResumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        # token = self.get_argument('token')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Resume_view(token, cache_flag)
 
@@ -25,8 +24,10 @@ class PostresumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info(self.get_arguments())
         token = self.get_argument('token')
         job_id = self.get_argument('job_id')
+
         cache_flag = self.get_cache_flag()
         result = yield self.db.Post_resume(token, job_id, cache_flag)
 

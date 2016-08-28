@@ -30,8 +30,8 @@ class RegisterHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user register')
+        self.log.info('user register')
+        self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         data = dict()
         try:
@@ -67,8 +67,8 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user login')
+        self.log.info('user login')
+        self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         data = dict()
         try:
@@ -111,6 +111,7 @@ class LogoutHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token=str):
+        self.log.info('user logout')
         result = yield self.db.User_logout(token)
 
         self.write(ObjectToString().encode(result))
@@ -122,8 +123,8 @@ class ForgetpwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user forget password')
+        self.log.info('user forget password')
+        self.log.info(json.dumps(self.get_arguments()))
         data = dict()
         try:
             data['mobile'] = self.get_argument('mobile')
@@ -153,8 +154,8 @@ class UpdatePwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user update password')
+        self.log.info('user update password')
+        self.log.info(json.dumps(self.get_arguments()))
         try:
             token = self.get_argument('token')
             oldpwd = self.get_argument('oldpwd')
@@ -178,7 +179,7 @@ class UpdatePwdHandler(BaseHandler):
             result['data'] = {}
             self.write(ObjectToString().encode(result))
             self.finish()
-            logger.info('user update false,pwd is None')
+            self.log.info('user update false,pwd is None')
             return
         else:
             result = yield self.db.User_updatepwd(token=token,
@@ -195,9 +196,7 @@ class UserHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user info')
-        # token = self.get_argument('token')
+        self.log.info('user info')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Home_user(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -209,7 +208,8 @@ class MessageHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        logger.info('message num')
+        self.log.info('message number')
+        self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         result = yield self.db.Job_message(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -221,7 +221,7 @@ class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('get resume all status')
+        self.log.info('get resume all status')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -234,7 +234,7 @@ class MessageViewedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('user view resume status viewed')
+        self.log.info('user view resume status viewed')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -246,7 +246,7 @@ class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('user view resume status communicated')
+        self.log.info('user view resume status communicated')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -258,7 +258,7 @@ class MessagePassedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('user view resume status passed')
+        self.log.info('user view resume status passed')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -270,7 +270,7 @@ class MessageImproperHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('user view resume status deny')
+        self.log.info('user view resume status deny')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -282,7 +282,7 @@ class ViewcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        logger.info('user view collection job')
+        self.log.info('user view collection job')
         cache_flag = self.get_cache_flag()
         result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -294,8 +294,8 @@ class AddcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user add or del collections')
+        self.log.info('user add or del collections')
+        self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         data = dict()
         try:
@@ -318,8 +318,8 @@ class CutcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        logger.info(json.dumps(self.get_arguments()))
-        logger.info('user cancel collections')
+        self.log.info(json.dumps(self.get_arguments()))
+        self.log.info('user cancel collections')
         data = dict()
         try:
             token = self.get_argument('token')
