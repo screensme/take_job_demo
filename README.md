@@ -81,6 +81,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 28.忘记，找回密码post：/auth/forgetpwd  
 29.短信发送接口post：/sendsms  
 
+***
+#####简历状态：  
+	
+	名称					状态
+	'post'				发送
+	'viewed'			被查看
+	'notify'			已通知
+	'pass', 'info'		面试通过(两个状态都属于面试通过)
+	'deny'				不合适	
+***
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
 参数：
@@ -313,33 +323,35 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "22",
+  "token": "18",
   "data": [
     {
-      "salary_str": "面议",
-      "scale_str": "20-99人",
-      "job_id": 1764,
-      "post_status": "allow",
+      "salary_str": "10001-15000元/月",
+      "status": "post",
+      "scale_str": "100-499人",
+      "job_id": 4276,
       "company_type": "民营",
       "job_city": "北京",
-      "company_name": "北京宠知道科技有限公司",
-      "boon": "年底双薪,绩效奖金,年终分红,股票期权,弹性工作,补充医疗保险,定期体检,员工旅游",
-      "education_str": "本科",
-      "job_name": "产品经理",
-      "work_years_str": "1-3年"
+      "company_name": "笨鸟盛世(北京)教育科技有限公司",
+      "boon": "五险一金,年底双薪,绩效奖金,带薪年假",
+      "education_str": "大专",
+      "job_name": "PHP高级工程师",
+      "work_years_str": "1-3年",
+      "dt_update": "2016-08-17T15:02:12"
     },
     {
       "salary_str": "面议",
+      "status": "post",
       "scale_str": "100-499人",
-      "job_id": 27872,
-      "post_status": "allow",
-      "company_type": "上市公司",
+      "job_id": 22349,
+      "company_type": "民营",
       "job_city": "北京",
-      "company_name": "嘉网股份",
-      "boon": "",
-      "education_str": "本科",
-      "job_name": "C#软件工程师",
-      "work_years_str": "1-3年"
+      "company_name": "北京智邦国际软件技术有限公司",
+      "boon": "五险一金,绩效奖金,年终分红,加班补助,餐补,带薪年假,员工旅游,节日福利",
+      "education_str": "大专",
+      "job_name": "产品经理/产品专员/产品助理",
+      "work_years_str": "1-3年",
+      "dt_update": "2016-08-23T10:20:29"
     }
   ]
 }```  
@@ -354,20 +366,21 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "18",
+  "token": "22",
   "data": [
     {
-      "salary_str": "0-0",
-      "scale_str": "20-99人",
-      "job_id": 214400,
-      "post_status": "allow",
-      "company_type": "民营企业/私营公司",
+      "salary_str": "5000-9000",
+      "status": "viewed",
+      "scale_str": "100-499人",
+      "job_id": 214229,
+      "company_type": "股份制企业/上市公司",
       "job_city": "北京",
-      "company_name": "联创锐峰科技有限公司",
-      "boon": "",
-      "education_str": "大专",
-      "job_name": "策划专员",
-      "work_years_str": "不限"
+      "company_name": "郭路路的公司",
+      "boon": "年奖季奖,绩效奖金,股权激励,周末双休",
+      "education_str": "不限",
+      "job_name": "大神测试",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T20:31:06"
     }
   ]
 }```  
@@ -386,16 +399,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": [
     {
       "salary_str": "15564-1968498",
+      "status": "notify",
       "scale_str": "20-99人",
       "job_id": 214116,
-      "post_status": "allow",
       "company_type": "国有企业",
       "job_city": "上海",
       "company_name": "归途如虹",
       "boon": "周末双休",
       "education_str": "中专",
       "job_name": "..111",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:18:53"
     }
   ]
 }```  
@@ -414,16 +428,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": [
     {
       "salary_str": "15564-1968498",
+      "status": "pass",
       "scale_str": "20-99人",
       "job_id": 214116,
-      "post_status": "allow",
       "company_type": "国有企业",
       "job_city": "上海",
       "company_name": "归途如虹",
       "boon": "周末双休",
       "education_str": "中专",
       "job_name": "..111",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:29:13"
     }
   ]
 }```  
@@ -442,29 +457,31 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": [
     {
       "salary_str": "0-0",
+      "status": "deny",
       "scale_str": "20-99人",
       "job_id": 214404,
-      "post_status": "allow",
       "company_type": "民营企业/私营公司",
       "job_city": "北京",
       "company_name": "联创锐峰科技有限公司",
       "boon": "",
       "education_str": "不限",
       "job_name": "双11发单员",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:12:16"
     },
     {
       "salary_str": "0-0",
+      "status": "deny",
       "scale_str": "20-99人",
       "job_id": 214405,
-      "post_status": "allow",
       "company_type": "民营企业/私营公司",
       "job_city": "北京",
       "company_name": "联创锐峰科技有限公司",
       "boon": "",
       "education_str": "不限",
       "job_name": "国贸发单员",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:12:11"
     }
   ]
 }```  
