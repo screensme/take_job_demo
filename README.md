@@ -42,6 +42,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         <td>增-改</td>
 		<td>增加短信验证接口；注册和忘记密码，需要多传一个参数code；修改密码接口，传的mobile改为token；搜索接口，查找职位状态job_type；修改登录返回数据</td>
 	</tr>
+	<tr>
+        <td>2016-8-28</td>
+        <td>改</td>
+		<td>简历修改基本信息和教育背景，不成功的bug；首页和搜索返回的薪资字段改变salary_start，salary_end，返回的都是多少多少K</td>
+	</tr>
     </table>
 </div>
 
@@ -84,48 +89,44 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id
 	page		Y	string		页数
 	num			Y	string		每页显示数量
-返回结果：
+返回结果：（返回的薪资是多少多少K）
 ```
 {
   "status": "success",
   "msg": "",
-  "token": "111",
+  "token": "null",
   "data": [
     {
-      "salary_str": "6000-7999/月",
-      "scale_str": "500-1000人",
-      "trade": "教育/培训/院校",
+      "scale_str": "",
+      "boon": "",
+      "company_logo": "",
+      "job_type": "不限",
+      "job_name": "客户经理",
       "job_city": "北京",
-      "company_name": "文新教育集团",
-      "boon": "员工旅游,专业培训,绩效奖金,年终奖金",
-      "education_str": "中专",
-      "job_name": "课程顾问/咨询师/咨询顾问（北京就近分配）",
-      "work_years_str": "1年经验",
-      "dt_update": "2016-08-19T19:04:29"
-    },
-    {
-      "salary_str": "11000-12000",
-      "scale_str": "500-999人",
-      "trade": "移动互联网/O2O/数据服务",
-      "job_city": "北京",
-      "company_name": "归途如虹",
-      "boon": "五险一金,餐饮补助",
+      "salary_start": 2,
+      "company_name": "四川长虹电器股份有限公司",
+      "salary_end": 3,
+      "trade": "家具/家电/玩具/礼品",
       "education_str": "本科",
-      "job_name": "前端工程师",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T18:56:53"
+      "id": 163742,
+      "work_years_str": "应届毕业生经验",
+      "dt_update": "2016-09-26T00:00:00"
     },
     {
-      "salary_str": "11000-14000",
-      "scale_str": "20人以下",
-      "trade": "互联网/电子商务",
+      "scale_str": "150-500人",
+      "boon": "免费三餐,表现优异有转正机会,百度原始技术团队",
+      "company_logo": "",
+      "job_type": "实习",
+      "job_name": "IOS开发实习生",
       "job_city": "北京",
-      "company_name": "测试",
-      "boon": "五险一金,补充保险,年奖季奖",
-      "education_str": "不限",
-      "job_name": "php",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-23T13:08:37"
+      "salary_start": 3,
+      "company_name": "百度作业帮",
+      "salary_end": 5,
+      "trade": "教育/培训,互联网",
+      "education_str": "本科",
+      "id": 214643,
+      "work_years_str": "实习",
+      "dt_update": "2016-08-27T00:00:00"
     }
   ]
 }
@@ -247,36 +248,44 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	company_type(0)		N	string 		企业性质
 	salary_start(0)		N	string		薪资范围
 	salary_end(200000)	N	string		薪资范围
-返回结果：
+返回结果：（返回的薪资是多少多少K）
 ```
 {
   "status": "success",
   "msg": "",
-  "token": "1111",
+  "token": "123",
   "data": [
     {
-      "salary_str": "10000-14999/月",
-      "scale_str": "少于50人",
-      "trade": "计算机软件",
-      "job_city": "北京-西城区",
-      "company_name": "冷蜘蛛供应链管理（北京）有限公司",
-      "boon": "五险一金,餐饮补贴,年终奖金,交通补贴",
-      "education_str": "大专",
-      "job_name": "PHP软件工程师",
-      "work_years_str": "3-4年经验",
-      "dt_update": "2016-04-26T00:00:00"
+      "scale_str": "500-999人",
+      "boon": "五险一金,餐饮补助",
+      "company_logo": "",
+      "job_type": "全职",
+      "job_name": "前端工程师",
+      "job_city": "北京",
+      "salary_start": 11,
+      "company_name": "归途如虹",
+      "salary_end": 12,
+      "trade": "移动互联网/O2O/数据服务",
+      "education_str": "本科",
+      "id": 214418,
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T18:56:53"
     },
     {
-      "salary_str": "11000-13000",
-      "scale_str": "少于50人",
-      "trade": "",
+      "scale_str": "15-50人",
+      "boon": "在安静的校园里一起探索教育的未来",
+      "company_logo": "",
+      "job_type": "实习",
+      "job_name": "前端工程师",
       "job_city": "北京",
-      "company_name": "八九八创新空间（北京）科技有限公司",
-      "boon": "五险一金,补充保险,年奖季奖",
-      "education_str": "本科",
-      "job_name": "php",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-16T17:38:01"
+      "salary_start": 4,
+      "company_name": "希悦",
+      "salary_end": 9,
+      "trade": "互联网,教育/培训",
+      "education_str": "不限",
+      "id": 214620,
+      "work_years_str": "实习",
+      "dt_update": "2016-08-26T00:00:00"
     }
   ]
 }
