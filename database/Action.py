@@ -427,15 +427,10 @@ class Action(object):
     @tornado.gen.coroutine
     def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
 
-        # user_info = open('%s/message.txt'%filepath,'r+')
-        # read_user = user_info.read().decode('gbk')
-        # ev_user = eval(read_user)
-        # print ev_user
-        # user_info.close()
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+              % ("job_id,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
             boss_profile = self.db.query(sql)
@@ -456,7 +451,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+              % ("job_id,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
             search_status = self.db.query(sql)
@@ -479,7 +474,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+              % ("job_id,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
             search_status = self.db.query(sql)
@@ -502,7 +497,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+              % ("job_id,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
             search_status = self.db.query(sql)
@@ -525,7 +520,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' limit %s,%s"\
-              % ("job_id,post_status,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str",
+              % ("job_id,company_type,salary_str,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
             search_status = self.db.query(sql)
