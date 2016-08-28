@@ -6,7 +6,7 @@ import time
 import json
 import requests, bcrypt
 from common.random_str import random_str
-from api.base_handler import BaseHandler
+from copy import deepcopy
 import random
 import redis
 import torndb
@@ -616,8 +616,14 @@ class Action(object):
             data['avatar'] = basic_resume['basic']['avatar']
             basic_resume['basic'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            nowyear = datetime.datetime.now().strftime("%Y")
+
+            resume_name = data['name'] + '的简历'
+            username = data['name']
+            sex = data['gender']
+            age = int(nowyear) - int(data['birthday'])
+            sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, resume_name, username, sex, age, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -631,10 +637,10 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 新建
         if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             age = ""
             degree = ""
             school = ""
@@ -646,15 +652,22 @@ class Action(object):
             edit_resume = self.db.insert(sqll,
                                          int(token), "", 'public', "", "",
                                          age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
+                                         dt, dt)
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
             data = eval(education)
-            basic_resume['education'] = data
+            basic_resume['education'] = deepcopy(data)
+            for item in data:
+                item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
+            data.sort(key=lambda x: x['end_time'], reverse=True)
+            one_edu = data[0]
+            school = one_edu['school']
+            major = one_edu['major']
+            edu = one_edu['degree']
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
