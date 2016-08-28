@@ -306,9 +306,14 @@ class Action(object):
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
 
         for index in search_job:
+            index['salary_start'] = index['salary_start'] / 1000
+            if (index['salary_end'] % 1000) >= 1:
+                index['salary_end'] = index['salary_end'] / 1000 + 1
+            else:
+                index['salary_end'] = index['salary_end'] / 1000
             index['company_logo'] = ''
             if index['job_type'] == 'fulltime':
                 index['job_type'] = '全职'
@@ -318,6 +323,7 @@ class Action(object):
                 index['job_type'] = '实习'
             elif index['job_type'] == 'unclear':
                 index['job_type'] = '不限'
+
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -361,9 +367,14 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_str,boon,dt_update,scale_str,trade' ,args))
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
                     for index in search_job:
                         index['company_logo'] = ''
+                        index['salary_start'] = index['salary_start'] / 1000
+                        if (index['salary_end'] % 1000) >= 1:
+                            index['salary_end'] = index['salary_end'] / 1000 + 1
+                        else:
+                            index['salary_end'] = index['salary_end'] / 1000
                         if index['job_type'] == 'fulltime':
                             index['job_type'] = '全职'
                         elif index['job_type'] == 'parttime':
