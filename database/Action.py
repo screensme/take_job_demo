@@ -665,21 +665,25 @@ class Action(object):
                                          int(token), "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt, dt)
-        # 修改
+        # 修改(传过来的数据至少有一条全都是空字符串的数据)
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
             data = eval(education)
             basic_resume['education'] = deepcopy(data)
-            for item in data:
-                item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
-            data.sort(key=lambda x: x['end_time'], reverse=True)
-            one_edu = data[0]
-            school = one_edu['school']
-            major = one_edu['major']
-            edu = one_edu['degree']
-            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
+            if data[0]['end_time'] == '':
+                sqllll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+                edit_resume = self.db.update(sqllll, json.dumps(basic_resume), dt, token)
+            else:
+                for item in data:
+                    item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
+                data.sort(key=lambda x: x['end_time'], reverse=True)
+                one_edu = data[0]
+                school = one_edu['school']
+                major = one_edu['major']
+                edu = one_edu['degree']
+                dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+                edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
