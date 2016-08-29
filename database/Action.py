@@ -584,18 +584,55 @@ class Action(object):
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
-                  % ("salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
+                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
         search_job = self.db.get(sql_job)
         if search_job == None:
             search_job = {}
         else:
-            # 调整所有为null的值为""
+
             search_job['boom'] = search_job.pop('boon')
+            if search_job['job_type'] == 'fulltime':
+                search_job['job_type'] = '全职'
+            elif search_job['job_type'] == 'parttime':
+                search_job['job_type'] = '兼职'
+            elif search_job['job_type'] == 'intern':
+                search_job['job_type'] = '实习'
+            elif search_job['job_type'] == 'unclear':
+                search_job['job_type'] = '不限'
             search_job['salary_start'] = search_job['salary_start'] / 1000
             if (search_job['salary_end'] % 1000) >= 1:
                 search_job['salary_end'] = search_job['salary_end'] / 1000 + 1
             else:
                 search_job['salary_end'] = search_job['salary_end'] / 1000
+            try:
+                if search_job['site_name'] == u'智联招聘':
+                    sql_address = "select * from spider_company where company_name ='%s'" % search_job['company_name']
+                    search_company = self.db.get(sql_address)
+                    search_job['company_address'] = search_company['address']
+                else:
+                    sql_address = "select * from company_detail where company_name ='%s'" % search_job['company_name']
+                    search_company = self.db.get(sql_address)
+                    search_job['company_address'] = search_company['company_address']
+            except Exception, e:
+                self.log.info("ERROR is %s" % e)
+                print (e)
+            try:
+                sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
+                              % (token, job_id)
+                search_collect = self.db.query(sql_collect)
+                sql_post = "select id from candidate_post where status in ('post','viewed','pass', 'info','notify','deny')"
+                search_post = self.db.query(sql_post)
+                if search_collect == []:
+                    search_job['collect'] = 0
+                else:
+                    search_job['collect'] = 1
+                if search_post == []:
+                    search_job['resume_post'] = 0
+                else:
+                    search_job['resume_post'] = 1
+            except Exception, e:
+                pass
+            # 调整所有为null的值为""
             for index in search_job.keys():
                 if search_job[index] == None:
                     search_job[index] = ''
