@@ -1013,7 +1013,8 @@ class Action(object):
                 msg = '已投递的职位'
                 post_resume = {}
             # 用户投递简历后，公司收到消息
-            sql_company_userid = "select company_user_id from company_jd  where es_id =%s" % (job_id,)
+            sql_company_userid = "select company_user_id from company_jd as j " \
+                                 "left join jobs_hot_es_test as p on p.id=j.es_id where p.id =%s" % (job_id,)
             search_company_userid = self.db.get(sql_company_userid)
             if search_company_userid is None:
                 status = 'fail'
