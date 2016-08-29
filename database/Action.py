@@ -435,9 +435,9 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status!='post' limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status!='post' order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             boss_profile = self.db.query(sql)
             for index in boss_profile:
@@ -465,9 +465,9 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
@@ -495,9 +495,9 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
@@ -525,9 +525,9 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
@@ -555,9 +555,9 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
@@ -875,9 +875,9 @@ class Action(object):
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
-        sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s,%s"\
+        sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s offset %s"\
               % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update",
-                 token, page, num)
+                 token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             status = 'success'
