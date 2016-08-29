@@ -241,12 +241,12 @@ class MessageViewedHandler(BaseHandler):
         self.finish()
         return
 
-# 简历状态查看get已通知
+# 简历状态查看get简历通过
 class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view resume status communicated')
+        self.log.info('user view resume status pass and info')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
@@ -320,12 +320,11 @@ class CutcollectHandler(BaseHandler):
     def post(self):
         self.log.info(json.dumps(self.get_arguments()))
         self.log.info('user cancel collections')
+        cache_flag = self.get_cache_flag()
         data = dict()
         try:
             token = self.get_argument('token')
             data['job_id'] = self.get_argument('job_id')
-
-            isweb = 0
         except Exception, e:
             result = dict()
             result['status'] = 'fail'
@@ -336,7 +335,6 @@ class CutcollectHandler(BaseHandler):
             self.finish()
             return
 
-        cache_flag = self.get_cache_flag()
         result = yield self.db.user_cancel_collections(token, data['job_id'], cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()

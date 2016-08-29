@@ -413,8 +413,14 @@ class Action(object):
     # 消息页，显示数量
     @tornado.gen.coroutine
     def Job_message(self, token=str, cache_flag=int):
-        search_user = self.db.get("SELECT * FROM candidate_user WHERE id='%s'" % token)
-        boss_profile = self.db.execute_rowcount("SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id'])
+
+        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        search_user = self.db.get(sql)
+        if search_user == None:
+            boss_profile = 0
+        else:
+            sqll = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
+            boss_profile = self.db.execute_rowcount(sqll)
 
         result = dict()
         result['status'] = 'success'
@@ -483,13 +489,13 @@ class Action(object):
         result['data'] = search_status
         raise tornado.gen.Return(result)
 
-    # 简历状态查看get已通知
+    # 简历状态查看get简历通过
     @tornado.gen.coroutine
     def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
@@ -513,13 +519,13 @@ class Action(object):
         result['data'] = search_status
         raise tornado.gen.Return(result)
 
-    # 简历状态查看get面试通过
+    # 简历状态查看get邀请面试
     @tornado.gen.coroutine
     def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') limit %s,%s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' limit %s,%s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, page, num)
         try:
@@ -907,6 +913,7 @@ class Action(object):
     def user_add_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        result = dict()
         sql = "select count(userid) from view_user_collections where userid =%s and jobid=%s " % (token, job_id)
         sql_ins = "INSERT INTO candidate_collection(user_id, job_id, status, dt_create, dt_update) VALUES (%s,%s,%s,%s,%s)"
         sql_up = "update candidate_collection set status=%s, dt_update=%s" \
@@ -918,6 +925,7 @@ class Action(object):
             if search_if['count(userid)'] == 0:
                 result_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
                 result_sql['collect_id'] = result_sql
+                result_sql['collect'] = 1
                 msg = '已收藏'
             else:
                 # 判断收藏状态（收藏或删除）
@@ -926,43 +934,52 @@ class Action(object):
                 if search_status['status'] == "delete":
                     sta = 'favorite'
                     msg = '已收藏'
-                    result_sql = self.db.update(sql_up, sta, dt, token, job_id)
+                    update_db = self.db.update(sql_up, sta, dt, token, job_id)
+                    result_sql = {'collect': 1,
+                                  'collect_id': search_status['collect_id']}
                 else:
-                    sta = 'favorite'
+                    sta = 'delete'
                     msg = '已取消收藏'
-                    result_sql = self.db.update(sql_up, sta, dt, token, job_id)
+                    update_db = self.db.update(sql_up, sta, dt, token, job_id)
+                    result_sql = {'collect': 0,
+                                  'collect_id': search_status['collect_id']}
             status = 'success'
         except Exception, e:
-            result_sql = self.log.info('ERROR is %s' % e)
+            self.log.info('ERROR is %s' % e)
             status = 'fail'
             msg = '收藏失败'
-        result = dict()
+            result_sql = {'collect': 2}
+
         result['status'] = status
         result['token'] = token
         result['msg'] = msg
         result['data'] = result_sql
         raise tornado.gen.Return(result)
 
-    # 取消收藏职位(已不用)
+    # 取消收藏职位
     @tornado.gen.coroutine
     def user_cancel_collections(self, token=str, job_id=str, cache_flag=int):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        result = dict()
         sql = "update rcat_test.candidate_collection set status='delete', dt_update=%s" \
                  " where user_id=%s and job_id=%s"
-
         try:
             search_status = self.db.update(sql, dt, token, job_id)
-            status = 'success'
+            datas = {'collect': 0}
 
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = '成功取消收藏'
+            result['data'] = datas
         except Exception, e:
             search_status = self.log.info('ERROR is %s' % e)
-            status = 'fail'
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = '成功取消收藏'
-        result['data'] = search_status
+
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '取消收藏失败'
+            result['data'] = search_status
+
         raise tornado.gen.Return(result)
 
     # 简历投递post

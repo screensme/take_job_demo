@@ -48,6 +48,23 @@ class SearchHandler(BaseHandler):
         self.finish()
         return
 
+# 职位推荐
+class RecommendjobHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        last = self.get_arguments()
+        result = yield self.db.Recommend_job(last, token, page, num, cache_flag,)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # 意见反馈post
 class FeedbackHandler(BaseHandler):
     @gen.coroutine

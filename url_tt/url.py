@@ -18,7 +18,8 @@ from api.user_handler import \
     MessagePassedHandler, \
     MessageImproperHandler, \
     ViewcollectHandler, \
-    AddcollectHandler
+    AddcollectHandler, \
+    CutcollectHandler
 
 from api.position_handler import \
     HomeHandler, \
@@ -26,7 +27,8 @@ from api.position_handler import \
     PositionHandler, \
     FeedbackHandler, \
     HostsearchlistHandler, \
-    HotcityHandler
+    HotcityHandler, \
+    RecommendjobHandler
 from api.sms_handler import SendSmsHandler, VerifySmsHandler
 from api.company_handler import CompanyHandler
 
@@ -50,18 +52,18 @@ urls = [
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
     url(r"/search", SearchHandler),  # 搜索页post
-    # url(r"/recommend-job/page-(\d+)/num-(\d+)", RecommendjobHandler),  # 推荐职位get
+    url(r"/recommend-job", RecommendjobHandler),  # 推荐职位get
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
     url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get
     url(r"/add_or_del_collect", AddcollectHandler),     # 增加和取消收藏post
-    # url(r"/cut_collect", CutcollectHandler),     # 取消收藏post(已不用)
+    url(r"/cut_collect", CutcollectHandler),     # 取消收藏post(查看收藏中，取消收藏用)
     url(r"/post-resume", PostresumeHandler),     # 简历投递post
     url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
     url(r"/message/resume-allstatus/page-(\d+)/num-(\d+)/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/page-(\d+)/num-(\d+)/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看
-    url(r"/message/resume-communicated/page-(\d+)/num-(\d+)/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get已通知
-    url(r"/message/resume-passed/page-(\d+)/num-(\d+)/token-(\w+)", MessagePassedHandler),    # 消息(简历状态查看)get面试通过
+    url(r"/message/resume-communicated/page-(\d+)/num-(\d+)/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get简历通过
+    url(r"/message/resume-passed/page-(\d+)/num-(\d+)/token-(\w+)", MessagePassedHandler),    # 消息(简历状态查看)get邀请面试
     url(r"/message/resume-improper/page-(\d+)/num-(\d+)/token-(\w+)", MessageImproperHandler),    # 消息(简历状态查看)get不合适
     url(r"/position-full/job-(\w+)/token-(\w+)", PositionHandler),    # 职位详情get
     url(r"/company-full/company-(\w+)/token-(\w+)", CompanyHandler),    # 公司详情get
