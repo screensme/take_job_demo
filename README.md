@@ -326,32 +326,34 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "18",
   "data": [
     {
-      "salary_str": "10001-15000元/月",
-      "status": "post",
-      "scale_str": "100-499人",
-      "job_id": 4276,
-      "company_type": "民营",
+      "status": "info",
+      "scale_str": "10000人以上",
+      "job_id": 214152,
+      "company_type": "股份制企业/上市公司",
       "job_city": "北京",
-      "company_name": "笨鸟盛世(北京)教育科技有限公司",
-      "boon": "五险一金,年底双薪,绩效奖金,带薪年假",
-      "education_str": "大专",
-      "job_name": "PHP高级工程师",
-      "work_years_str": "1-3年",
-      "dt_update": "2016-08-17T15:02:12"
+      "salary_start": 0,
+      "company_name": "郭路路的公司",
+      "salary_end": 0,
+      "boon": "年奖季奖,补充保险,年奖季奖",
+      "education_str": "中专",
+      "job_name": "php大牛1",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:03:07"
     },
     {
-      "salary_str": "面议",
-      "status": "post",
+      "status": "info",
       "scale_str": "100-499人",
-      "job_id": 22349,
-      "company_type": "民营",
+      "job_id": 214229,
+      "company_type": "股份制企业/上市公司",
       "job_city": "北京",
-      "company_name": "北京智邦国际软件技术有限公司",
-      "boon": "五险一金,绩效奖金,年终分红,加班补助,餐补,带薪年假,员工旅游,节日福利",
-      "education_str": "大专",
-      "job_name": "产品经理/产品专员/产品助理",
-      "work_years_str": "1-3年",
-      "dt_update": "2016-08-23T10:20:29"
+      "salary_start": 5000,
+      "company_name": "郭路路的公司",
+      "salary_end": 9000,
+      "boon": "年奖季奖,绩效奖金,股权激励,周末双休",
+      "education_str": "不限",
+      "job_name": "大神测试",
+      "work_years_str": "不限",
+      "dt_update": "2016-08-19T19:03:08"
     }
   ]
 }```  
@@ -362,28 +364,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id
 	page		Y	string		页数
 	num			Y	string		每页显示数量
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "22",
-  "data": [
-    {
-      "salary_str": "5000-9000",
-      "status": "viewed",
-      "scale_str": "100-499人",
-      "job_id": 214229,
-      "company_type": "股份制企业/上市公司",
-      "job_city": "北京",
-      "company_name": "郭路路的公司",
-      "boon": "年奖季奖,绩效奖金,股权激励,周末双休",
-      "education_str": "不限",
-      "job_name": "大神测试",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T20:31:06"
-    }
-  ]
-}```  
+
 ####10.消息(简历状态)get(已通知)：/message/resume-communicated/page-{page}/num-{num}/token-{token}  
 参数：
 		
@@ -391,28 +372,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id
 	page		Y	string		页数
 	num			Y	string		每页显示数量
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "22",
-  "data": [
-    {
-      "salary_str": "15564-1968498",
-      "status": "notify",
-      "scale_str": "20-99人",
-      "job_id": 214116,
-      "company_type": "国有企业",
-      "job_city": "上海",
-      "company_name": "归途如虹",
-      "boon": "周末双休",
-      "education_str": "中专",
-      "job_name": "..111",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:18:53"
-    }
-  ]
-}```  
+
 ####11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 参数：
 		
@@ -420,28 +380,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id
 	page		Y	string		页数
 	num			Y	string		每页显示数量
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "19",
-  "data": [
-    {
-      "salary_str": "15564-1968498",
-      "status": "pass",
-      "scale_str": "20-99人",
-      "job_id": 214116,
-      "company_type": "国有企业",
-      "job_city": "上海",
-      "company_name": "归途如虹",
-      "boon": "周末双休",
-      "education_str": "中专",
-      "job_name": "..111",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:29:13"
-    }
-  ]
-}```  
+
 ####12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 参数：
 		
@@ -449,42 +388,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id
 	page		Y	string		页数
 	num			Y	string		每页显示数量
-返回成功：
-```{
-  "status": "success",
-  "msg": "",
-  "token": "68",
-  "data": [
-    {
-      "salary_str": "0-0",
-      "status": "deny",
-      "scale_str": "20-99人",
-      "job_id": 214404,
-      "company_type": "民营企业/私营公司",
-      "job_city": "北京",
-      "company_name": "联创锐峰科技有限公司",
-      "boon": "",
-      "education_str": "不限",
-      "job_name": "双11发单员",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:12:16"
-    },
-    {
-      "salary_str": "0-0",
-      "status": "deny",
-      "scale_str": "20-99人",
-      "job_id": 214405,
-      "company_type": "民营企业/私营公司",
-      "job_city": "北京",
-      "company_name": "联创锐峰科技有限公司",
-      "boon": "",
-      "education_str": "不限",
-      "job_name": "国贸发单员",
-      "work_years_str": "不限",
-      "dt_update": "2016-08-19T19:12:11"
-    }
-  ]
-}```  
+ 
 ####13.职位详情get：/position-full/job-{job_id}/token-{token}
 参数：
 		
