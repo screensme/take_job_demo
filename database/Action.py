@@ -434,11 +434,20 @@ class Action(object):
                  token, page, num)
         try:
             boss_profile = self.db.query(sql)
+            for index in boss_profile:
+                index['company_logo'] = ''
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+            status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
             boss_profile = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = boss_profile
@@ -455,13 +464,20 @@ class Action(object):
                  token, page, num)
         try:
             search_status = self.db.query(sql)
-            if search_status == None:
-                search_status = {}
+            for index in search_status:
+                index['company_logo'] = ''
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+            status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
             search_status = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
@@ -478,13 +494,20 @@ class Action(object):
                  token, page, num)
         try:
             search_status = self.db.query(sql)
-            if search_status == None:
-                search_status = {}
+            for index in search_status:
+                index['company_logo'] = ''
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+            status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
             search_status = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
@@ -501,13 +524,20 @@ class Action(object):
                  token, page, num)
         try:
             search_status = self.db.query(sql)
-            if search_status == None:
-                search_status = {}
+            for index in search_status:
+                index['company_logo'] = ''
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+            status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
             search_status = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
@@ -524,13 +554,20 @@ class Action(object):
                  token, page, num)
         try:
             search_status = self.db.query(sql)
-            if search_status == None:
-                search_status = {}
+            for index in search_status:
+                index['company_logo'] = ''
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+            status = 'success'
         except Exception, e:
-            self.log.info('ERROR is %s' % e)
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
             search_status = {}
         result = dict()
-        result['status'] = 'success'
+        result['status'] = status
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
