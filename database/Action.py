@@ -861,13 +861,28 @@ class Action(object):
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
-        sql = "select * from view_user_collections where userid =%s and status='favorite' limit %s,%s"\
-              % (token, page, num)
+        sql = "select %s from view_user_collections where userid =%s and status='favorite' limit %s,%s"\
+              % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end",
+                 token, page, num)
         try:
             search_status = self.db.query(sql)
             status = 'success'
-            if search_status == None:
-                search_status = {}
+            for index in search_status:
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                index['company_logo'] = ''
+                if index['job_type'] == 'fulltime':
+                    index['job_type'] = '全职'
+                elif index['job_type'] == 'parttime':
+                    index['job_type'] = '兼职'
+                elif index['job_type'] == 'intern':
+                    index['job_type'] = '实习'
+                elif index['job_type'] == 'unclear':
+                    index['job_type'] = '不限'
+
         except Exception, e:
             self.log.info('ERROR is %s' % e)
             status = 'fail'
