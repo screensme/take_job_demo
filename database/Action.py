@@ -298,7 +298,7 @@ class Action(object):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
-        values['offset'] = page
+        values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
@@ -358,7 +358,7 @@ class Action(object):
             result['msg'] = '请传入查找职位或公司'
             result['data'] = {}
         else:
-            values['offset'] = page
+            values['offset'] = int(page) * int(num)
             values['limit'] = num
             reques = requests.post(url=uri, json=values)
             contect = reques.content.decode('utf-8')
@@ -583,7 +583,8 @@ class Action(object):
     @tornado.gen.coroutine
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
-        search_job = self.db.get("select * from jobs_hot_es_test where id ='%s'" % job_id)
+        sql_job = "select * from jobs_hot_es_test where id ='%s'" % job_id
+        search_job = self.db.get(sql_job)
         # 调整所有为null的值为""
         for index in search_job.keys():
             if search_job[index] == None:
@@ -599,7 +600,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Company_full(self, company_id=str, token=str, cache_flag=int):
 
-        sql = "select site_name,company_name from jobs_hot_es_test where id ='%s'" % company_id
+        sql = "select site_name,company_name from jobs_hot_es_test where company_id ='%s'" % company_id
         try:
             search_job = self.db.get(sql)
             if search_job['site_name'] == u'智联招聘':
