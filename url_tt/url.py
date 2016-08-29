@@ -50,6 +50,7 @@ urls = [
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
     url(r"/search", SearchHandler),  # 搜索页post
+    # url(r"/recommend-job/page-(\d+)/num-(\d+)", RecommendjobHandler),  # 推荐职位get
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
     url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get

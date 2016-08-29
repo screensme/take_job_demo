@@ -575,9 +575,13 @@ class Action(object):
 
     # 职位详情
     @tornado.gen.coroutine
-    def Position(self, job_id=str, token=str, cache_flag=int):
+    def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         search_job = self.db.get("select * from jobs_hot_es_test where id ='%s'" % job_id)
+        # 调整所有为null的值为""
+        for index in search_job.keys():
+            if search_job[index] == None:
+                search_job[index] = ''
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -600,6 +604,10 @@ class Action(object):
                 search_company = self.db.get(sqll)
             if search_company == None:
                 search_company = {}
+            # 调整所有为null的值为""
+            for index in search_company.keys():
+                if search_company[index] == None:
+                    search_company[index] = ''
         except Exception, e:
             self.log.info('ERROR is %s' % e)
             search_company = {}

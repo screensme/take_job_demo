@@ -70,9 +70,7 @@ class PositionHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self, job_id, token):
         cache_flag = self.get_cache_flag()
-        # token = self.get_argument('token')
-        # company_id = self.get_argument('company_id')
-        result = yield self.db.Position(job_id, token, cache_flag)
+        result = yield self.db.Position_full(job_id, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
