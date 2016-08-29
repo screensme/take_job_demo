@@ -17,7 +17,7 @@ class HomeHandler(BaseHandler):
     def get(self, page, num, token):
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
-        result = yield self.db.Home(page, num, token, cache_flag)
+        result = yield self.db.Home_info(page, num, token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return

@@ -782,6 +782,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "1",
   "data": [
     {
+      "education_str": "大专",
       "scale_str": "100-499人",
       "salary_end": 8,
       "userid": 1,
@@ -796,9 +797,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "collection_id": 378,
       "trade": "贸易/进出口",
       "job_name": "财务助理\\会计专员   （月薪8000、朝九晚六、周末双休）",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-04-26T00:00:00"
     },
     {
+      "education_str": "不限",
       "scale_str": "100-499人",
       "salary_end": 6,
       "userid": 1,
@@ -813,7 +816,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "collection_id": 377,
       "trade": "教育/培训/院校",
       "job_name": "课程顾问",
-      "work_years_str": "不限"
+      "work_years_str": "不限",
+      "dt_update": "2016-04-26T00:00:00"
     }
   ]
 }```  

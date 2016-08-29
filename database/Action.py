@@ -294,7 +294,7 @@ class Action(object):
 
     # 首页
     @tornado.gen.coroutine
-    def Home(self, page=int, num=int, token=str, cache_flag=int):
+    def Home_info(self, page=int, num=int, token=str, cache_flag=int):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
@@ -862,7 +862,7 @@ class Action(object):
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
         sql = "select %s from view_user_collections where userid =%s and status='favorite' limit %s,%s"\
-              % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end",
+              % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update",
                  token, page, num)
         try:
             search_status = self.db.query(sql)
