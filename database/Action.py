@@ -583,12 +583,16 @@ class Action(object):
     @tornado.gen.coroutine
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
-        sql_job = "select * from jobs_hot_es_test where id ='%s'" % job_id
+        sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
+                  % ("job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
         search_job = self.db.get(sql_job)
-        # 调整所有为null的值为""
-        for index in search_job.keys():
-            if search_job[index] == None:
-                search_job[index] = ''
+        if search_job == None:
+            search_job = {}
+        else:
+            # 调整所有为null的值为""
+            for index in search_job.keys():
+                if search_job[index] == None:
+                    search_job[index] = ''
         result = dict()
         result['status'] = 'success'
         result['token'] = token

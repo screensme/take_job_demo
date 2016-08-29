@@ -87,9 +87,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	名称					状态
 	'post'				发送
 	'viewed'			被查看
-	'notify'			已通知
-	'pass', 'info'		面试通过(两个状态都属于面试通过)
+	'pass', 'info'		简历通过
+	'notify'			邀请面试(两个状态都属于面试通过)
 	'deny'				不合适	
+***  
+***
+#####收藏状态：  
+	
+	名称					状态
+	0					取消收藏
+	1					已收藏/收藏成功
+	2					收藏失败
 ***
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
