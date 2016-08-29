@@ -584,12 +584,18 @@ class Action(object):
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
-                  % ("job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
+                  % ("salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
         search_job = self.db.get(sql_job)
         if search_job == None:
             search_job = {}
         else:
             # 调整所有为null的值为""
+            search_job['boom'] = search_job.pop('boon')
+            search_job['salary_start'] = search_job['salary_start'] / 1000
+            if (search_job['salary_end'] % 1000) >= 1:
+                search_job['salary_end'] = search_job['salary_end'] / 1000 + 1
+            else:
+                search_job['salary_end'] = search_job['salary_end'] / 1000
             for index in search_job.keys():
                 if search_job[index] == None:
                     search_job[index] = ''
