@@ -420,6 +420,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "salary_start": 0,
     "company_name": "北京三月雨文化传播有限责任公司",
     "salary_end": 0,
+	"company_logo": "",
     "company_address": "北京市海淀区复兴路83号东十二楼401室",
     "resume_post": 1,	(是否投递过简历，已投递1，未投递0)
     "boom": "五险一金,全勤奖,交通补助,通讯补贴,餐补,带薪年假",

@@ -58,8 +58,7 @@ class RecommendjobHandler(BaseHandler):
         token = self.get_argument('token')
         page = self.get_argument('page')
         num = self.get_argument('num')
-        last = self.get_arguments()
-        result = yield self.db.Recommend_job(last, token, page, num, cache_flag,)
+        result = yield self.db.Recommend_job(token, page, num, cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()

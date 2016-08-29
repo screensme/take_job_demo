@@ -398,6 +398,59 @@ class Action(object):
                 result['data'] = {}
         raise tornado.gen.Return(result)
 
+    # 职位推荐
+    @tornado.gen.coroutine
+    def Recommend_job(self, token=str, page=int, num=int, cache_flag=int,):
+
+        uri = '%squery_recommend_job' % self.esapi
+        sql_user_info = "select %s from candidate_cv where user_id=%s" % ('candidate_cv', token)
+        search_user = self.db.get(sql_user_info)
+        values = dict()
+        if search_user == None:
+            pass
+        else:
+            candidate = eval(search_user['candidate_cv'])
+            values['education'] = candidate['intension']['']
+        values['offset'] = int(page) * int(num)
+        values['limit'] = num
+        reques = requests.post(url=uri, json=values)
+        contect = reques.content.decode('utf-8')
+        try:
+            contect_id = sorted(eval(contect)['id_list'])
+            args = ','.join(str(x) for x in contect_id)
+            if args != '':
+                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
+                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
+                for index in search_job:
+                    index['company_logo'] = ''
+                    index['salary_start'] = index['salary_start'] / 1000
+                    if (index['salary_end'] % 1000) >= 1:
+                        index['salary_end'] = index['salary_end'] / 1000 + 1
+                    else:
+                        index['salary_end'] = index['salary_end'] / 1000
+                    if index['job_type'] == 'fulltime':
+                        index['job_type'] = '全职'
+                    elif index['job_type'] == 'parttime':
+                        index['job_type'] = '兼职'
+                    elif index['job_type'] == 'intern':
+                        index['job_type'] = '实习'
+                    elif index['job_type'] == 'unclear':
+                        index['job_type'] = '不限'
+            else:
+                search_job = []
+            result = dict()
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = search_job
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = e
+            result['data'] = {}
+        raise tornado.gen.Return(result)
+
     # 热门搜索
     @tornado.gen.coroutine
     def Host_search_list(self, token=str, cache_flag=int):
@@ -589,7 +642,7 @@ class Action(object):
         if search_job == None:
             search_job = {}
         else:
-
+            search_job['company_logo'] = ''
             search_job['boom'] = search_job.pop('boon')
             if search_job['job_type'] == 'fulltime':
                 search_job['job_type'] = '全职'
