@@ -401,16 +401,19 @@ class Action(object):
     # 职位推荐
     @tornado.gen.coroutine
     def Recommend_job(self, token=str, page=int, num=int, cache_flag=int,):
-
+        # token = unlogin的时候，推荐什么；正常时候，用户信息为空时，推荐什么。
         uri = '%squery_recommend_job' % self.esapi
-        sql_user_info = "select %s from candidate_cv where user_id=%s" % ('candidate_cv', token)
+        sql_user_info = "select %s from candidate_cv where user_id=%s" % ('user_id,school,major,candidate_cv', token)
         search_user = self.db.get(sql_user_info)
         values = dict()
         if search_user == None:
             pass
         else:
             candidate = eval(search_user['candidate_cv'])
-            values['education'] = candidate['intension']['']
+            values['job_name'] = candidate['intension']['title']
+            values['school_str'] = search_user['school']
+            values['major_str'] = search_user['major']
+            values['job_city'] = candidate['intension']['area']
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
