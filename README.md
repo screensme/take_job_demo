@@ -821,7 +821,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
-####24.增加收藏post：/add_collect
+####24.增加和删除收藏post：/add_or_del_collect  
 参数：
 		
 	参数名称	必填	类型		描述

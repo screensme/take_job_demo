@@ -78,7 +78,7 @@ class Action(object):
                                                 mobile, hash_pass, active, authenticated,
                                                 post_status, tag, dt_created, dt_updated, foo_uuid)
 
-                    result['status'] = 'sucess'
+                    result['status'] = 'success'
                     result['msg'] = ''
                     result['token'] = user_write
                     result['data'] = {'token': user_write}
@@ -861,7 +861,7 @@ class Action(object):
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
-        sql = "select %s from view_user_collections where userid =%s and status='favorite' limit %s,%s"\
+        sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s,%s"\
               % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update",
                  token, page, num)
         try:
