@@ -922,9 +922,8 @@ class Action(object):
         try:
             # 查找是否收藏
             search_if = self.db.get(sql)
-            if search_if['count(userid)'] == 0:
+            if search_if['count(userid)'] == 0L:
                 result_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
-                result_sql['collect_id'] = result_sql
                 result_sql['collect'] = 1
                 msg = '已收藏'
             else:
@@ -935,14 +934,12 @@ class Action(object):
                     sta = 'favorite'
                     msg = '已收藏'
                     update_db = self.db.update(sql_up, sta, dt, token, job_id)
-                    result_sql = {'collect': 1,
-                                  'collect_id': search_status['collect_id']}
+                    result_sql = {'collect': 1}
                 else:
                     sta = 'delete'
                     msg = '已取消收藏'
                     update_db = self.db.update(sql_up, sta, dt, token, job_id)
-                    result_sql = {'collect': 0,
-                                  'collect_id': search_status['collect_id']}
+                    result_sql = {'collect': 0}
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e)
