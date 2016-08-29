@@ -975,7 +975,7 @@ class Action(object):
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '取消收藏失败'
-            result['data'] = search_status
+            result['data'] = {'collect': 2}
 
         raise tornado.gen.Return(result)
 
