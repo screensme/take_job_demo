@@ -396,6 +396,7 @@ class Action(object):
                             if index[ind] == None:
                                 index[ind] = ''
                         # 薪资显示单位为K
+                        index['company_logo'] = ''
                         index['salary_start'] = index['salary_start'] / 1000
                         if (index['salary_end'] % 1000) >= 1:
                             index['salary_end'] = index['salary_end'] / 1000 + 1
