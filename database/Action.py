@@ -311,8 +311,10 @@ class Action(object):
 
         for index in search_job:
             # 调整所有为null的值为""
-            if search_job[index] == None:
-                search_job[index] = ''
+            for ind in index:
+                if index[ind] == None:
+                    index[ind] = ''
+            # 薪资显示单位为K
             index['salary_start'] = index['salary_start'] / 1000
             if (index['salary_end'] % 1000) >= 1:
                 index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -373,10 +375,11 @@ class Action(object):
                     search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
                     for index in search_job:
-                        index['company_logo'] = ''
                         # 调整所有为null的值为""
-                        if search_job[index] == None:
-                            search_job[index] = ''
+                        for ind in index:
+                            if index[ind] == None:
+                                index[ind] = ''
+                        # 薪资显示单位为K
                         index['salary_start'] = index['salary_start'] / 1000
                         if (index['salary_end'] % 1000) >= 1:
                             index['salary_end'] = index['salary_end'] / 1000 + 1
