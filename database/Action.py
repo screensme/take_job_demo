@@ -539,7 +539,7 @@ class Action(object):
 
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status!='post' order by dt_update DESC limit %s offset %s"\
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
               % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
                  token, num, (int(page) * int(num)))
         try:
