@@ -313,13 +313,14 @@ class MessageImproperHandler(BaseHandler):
         self.log.info('user view resume status deny')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
+
+        else:
             result = dict()
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '未登录状态'
             result['data'] = {}
-        else:
-            result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
