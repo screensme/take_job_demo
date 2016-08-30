@@ -1166,7 +1166,7 @@ class Action(object):
                              "left join jobs_hot_es_test as p on p.id=j.es_id where p.id =%s" % (job_id,)
         search_company_userid = self.db.get(sql_company_userid)
         if search_company_userid is None:
-            status = 'fail'
+            status = 'success'
             msg = '公司收消息错误'
         else:
             m_info = {'type': 'post',
