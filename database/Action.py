@@ -425,7 +425,7 @@ class Action(object):
         if search_user == None:     #
             uri = '%squery_new_job' % self.esapi
         else:
-            candidate = eval(search_user['candidate_cv'])
+            candidate = json.loads(search_user['candidate_cv'])
             if candidate['intension']['title'] == "":
                 pass
             else:
@@ -441,7 +441,7 @@ class Action(object):
             if candidate['intension']['area'] == '':
                 pass
             else:
-                values['job_city'] = candidate['intension']['area'].decode('utf-8')
+                values['job_city'] = candidate['intension']['area']
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -453,6 +453,9 @@ class Action(object):
                 search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
                 for index in search_job:
+                    for ind in index:
+                        if index[ind] == None:
+                            index[ind] = ""
                     index['company_logo'] = ''
                     index['salary_start'] = index['salary_start'] / 1000
                     if (index['salary_end'] % 1000) >= 1:
