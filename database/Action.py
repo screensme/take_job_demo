@@ -310,6 +310,9 @@ class Action(object):
                                  %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
 
         for index in search_job:
+            # 调整所有为null的值为""
+            if search_job[index] == None:
+                search_job[index] = ''
             index['salary_start'] = index['salary_start'] / 1000
             if (index['salary_end'] % 1000) >= 1:
                 index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -371,6 +374,9 @@ class Action(object):
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
                     for index in search_job:
                         index['company_logo'] = ''
+                        # 调整所有为null的值为""
+                        if search_job[index] == None:
+                            search_job[index] = ''
                         index['salary_start'] = index['salary_start'] / 1000
                         if (index['salary_end'] % 1000) >= 1:
                             index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -1047,8 +1053,7 @@ class Action(object):
             search_if = self.db.get(sql)
             if search_if['count(userid)'] == 0:
                 insert_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
-                result_sql = dict()
-                result_sql['collect'] = 1
+                result_sql = {'collect': 1}
                 msg = '已收藏'
             else:
                 # 判断收藏状态（收藏或删除）
