@@ -11,10 +11,11 @@ import random
 import redis
 import torndb
 import tornado
-from common.tools import args404, ObjectToString
+import re
 import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
+import unicodedata
 
 class Action(object):
     def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, esapi=str,
@@ -402,18 +403,36 @@ class Action(object):
     @tornado.gen.coroutine
     def Recommend_job(self, token=str, page=int, num=int, cache_flag=int,):
         # token = unlogin的时候，推荐什么；正常时候，用户信息为空时，推荐什么。
-        uri = '%squery_recommend_job' % self.esapi
-        sql_user_info = "select %s from candidate_cv where user_id=%s" % ('user_id,school,major,candidate_cv', token)
-        search_user = self.db.get(sql_user_info)
+
+        if re.match(r'\d+', '%s' % token):
+            uri = '%squery_recommend_job' % self.esapi
+            sql_user_info = "select %s from candidate_cv where user_id=%s" % ('user_id,school,major,candidate_cv', token)
+            search_user = self.db.get(sql_user_info)
+        else:
+            self.log.info('Recommend job, user==%s' % token)
+            uri = '%squery_new_job' % self.esapi
+            search_user = None
         values = dict()
-        if search_user == None:
-            pass
+        if search_user == None:     #
+            uri = '%squery_new_job' % self.esapi
         else:
             candidate = eval(search_user['candidate_cv'])
-            values['job_name'] = candidate['intension']['title']
-            values['school_str'] = search_user['school']
-            values['major_str'] = search_user['major']
-            values['job_city'] = candidate['intension']['area']
+            if candidate['intension']['title'] == "":
+                pass
+            else:
+                values['job_name'] = candidate['intension']['title']
+            if search_user['school'] == '':
+                pass
+            else:
+                values['school_str'] = search_user['school']
+            if search_user['major'] == '':
+                pass
+            else:
+                values['major_str'] = search_user['major']
+            if candidate['intension']['area'] == '':
+                pass
+            else:
+                values['job_city'] = candidate['intension']['area'].decode('utf-8')
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -1026,8 +1045,9 @@ class Action(object):
         try:
             # 查找是否收藏
             search_if = self.db.get(sql)
-            if search_if['count(userid)'] == 0L:
-                result_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
+            if search_if['count(userid)'] == 0:
+                insert_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
+                result_sql = dict()
                 result_sql['collect'] = 1
                 msg = '已收藏'
             else:
