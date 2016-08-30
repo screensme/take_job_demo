@@ -710,11 +710,11 @@ class Action(object):
                 search_job['salary_end'] = search_job['salary_end'] / 1000
             try:
                 if search_job['site_name'] == u'智联招聘':
-                    sql_address = "select * from spider_company where company_name ='%s'" % search_job['company_name']
+                    sql_address = "select address from spider_company where company_name ='%s'" % search_job['company_name']
                     search_company = self.db.get(sql_address)
                     search_job['company_address'] = search_company['address']
                 else:
-                    sql_address = "select * from company_detail where company_name ='%s'" % search_job['company_name']
+                    sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
                     search_company = self.db.get(sql_address)
                     search_job['company_address'] = search_company['company_address']
             except Exception, e:
