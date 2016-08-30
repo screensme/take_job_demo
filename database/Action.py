@@ -430,11 +430,11 @@ class Action(object):
     def Recommend_job(self, token=str, page=int, num=int, cache_flag=int,):
         # token = unlogin的时候，推荐什么；正常时候，用户信息为空时，推荐什么。
 
-        if re.match(r'\d+', '%s' % token):
+        if re.match(r'\d+', '%s' % token):      # 登陆状态
             uri = '%squery_recommend_job' % self.esapi
             sql_user_info = "select %s from candidate_cv where user_id=%s" % ('user_id,school,major,candidate_cv', token)
             search_user = self.db.get(sql_user_info)
-        else:
+        else:   # 未登录状态
             self.log.info('Recommend job, user==%s' % token)
             uri = '%squery_new_job' % self.esapi
             search_user = None
@@ -721,7 +721,7 @@ class Action(object):
                 self.log.info("ERROR is %s" % e)
                 search_job['company_address'] = ''
             try:
-                if re.match(r'\d+', '%s' % token):
+                if re.match(r'\d+', '%s' % token):      # 登陆
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
                                   % (token, job_id)
                     search_collect = self.db.query(sql_collect)
