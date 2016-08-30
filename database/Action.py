@@ -719,7 +719,7 @@ class Action(object):
                     search_job['company_address'] = search_company['company_address']
             except Exception, e:
                 self.log.info("ERROR is %s" % e)
-                print (e)
+                search_job['company_address'] = ''
             try:
                 if re.match(r'\d+', '%s' % token):
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
