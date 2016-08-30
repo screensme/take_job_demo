@@ -721,21 +721,25 @@ class Action(object):
                 self.log.info("ERROR is %s" % e)
                 print (e)
             try:
-                sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
-                              % (token, job_id)
-                search_collect = self.db.query(sql_collect)
-                sql_post = "select id from candidate_post where status in ('post','viewed','pass', 'info','notify','deny')"
-                search_post = self.db.query(sql_post)
-                if search_collect == []:
-                    search_job['collect'] = 0
+                if re.match(r'\d+', '%s' % token):
+                    sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
+                                  % (token, job_id)
+                    search_collect = self.db.query(sql_collect)
+                    sql_post = "select id from candidate_post where status in ('post','viewed','pass', 'info','notify','deny')"
+                    search_post = self.db.query(sql_post)
+                    if search_collect == []:
+                        search_job['collect'] = 0
+                    else:
+                        search_job['collect'] = 1
+                    if search_post == []:
+                        search_job['resume_post'] = 0
+                    else:
+                        search_job['resume_post'] = 1
                 else:
-                    search_job['collect'] = 1
-                if search_post == []:
-                    search_job['resume_post'] = 0
-                else:
-                    search_job['resume_post'] = 1
+                    search_job['collect'] = 2
+                    search_job['resume_post'] = 2
             except Exception, e:
-                pass
+                self.log.info('ERROR is %s' % e)
             # 调整所有为null的值为""
             for index in search_job.keys():
                 if search_job[index] == None:
