@@ -788,7 +788,7 @@ class Action(object):
         search_resume = self.db.get("SELECT * FROM candidate_cv WHERE user_id=%s" % token)
         try:
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
-        except Exception,e :
+        except Exception, e:
             pass
         if search_resume == None:
             search_resume = {}
@@ -1045,6 +1045,7 @@ class Action(object):
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
                 index['company_logo'] = ''
+                index['id'] = index['jobid']
                 if index['job_type'] == 'fulltime':
                     index['job_type'] = '全职'
                 elif index['job_type'] == 'parttime':

@@ -6,7 +6,7 @@ from api.base_handler import BaseHandler
 import logging
 import tornado
 from common.tools import args404, ObjectToString
-from common.random_str import random_str
+import re
 
 logger = logging.getLogger('boilerplate.' + __name__)
 
@@ -211,7 +211,14 @@ class MessageHandler(BaseHandler):
         self.log.info('message number')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Job_message(token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = 0
+        else:
+            result = yield self.db.Job_message(token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -223,7 +230,14 @@ class MessageAllHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('get resume all status')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -236,7 +250,14 @@ class MessageViewedHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('user view resume status viewed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -248,7 +269,14 @@ class MessageCommunicatedHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('user view resume status pass and info')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -260,7 +288,14 @@ class MessagePassedHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('user view resume status passed')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -272,7 +307,14 @@ class MessageImproperHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('user view resume status deny')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -284,7 +326,14 @@ class ViewcollectHandler(BaseHandler):
     def get(self, page, num, token):
         self.log.info('user view collection job')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        else:
+            result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -297,17 +346,16 @@ class AddcollectHandler(BaseHandler):
         self.log.info('user add or del collections')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
-        data = dict()
-        try:
-            token = self.get_argument('token')
-            data['job_id'] = self.get_argument('job_id')
-            result = yield self.db.user_add_collections(token, data['job_id'],cache_flag=cache_flag)
-        except Exception, e:
+        token = self.get_argument('token')
+        job_id = self.get_argument('job_id')
+        if re.match(r'\d+', '%s' % token):
             result = dict()
             result['status'] = 'fail'
-            result['token'] = ''
-            result['msg'] = '缺少参数'
-            result['data'] = {}
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = 0
+        else:
+            result = yield self.db.user_add_collections(token, job_id, cache_flag=cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
