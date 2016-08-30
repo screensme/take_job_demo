@@ -229,6 +229,14 @@ class Action(object):
         # sms == '0' 是真实发送
         if self.sms == 'yes':
             if key == "register":   # 注册
+                sql = "select id from candidate_user where phonenum=%s" % mobile
+                search_mobile = self.db.get(sql)
+                if search_mobile != None:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '手机号已经注册'
+                    result['data'] = {}
+                    raise tornado.gen.Return(result)
                 ret_info = SmsApi().sms_register(mobile=mobile, rand_num=random_number)
                 if ret_info['code'] == '0':
                     self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
@@ -256,11 +264,19 @@ class Action(object):
                     result['msg'] = '短信发送失败'
                     result['data'] = {}
                 raise tornado.gen.Return(result)
-        # sms == 'no' 不发送，验证码为1111111
+        # sms == 'no' 不发送，验证码为111111
         else:
             random_number = '111111'
             result = dict()
-
+            if key == "register":   # 注册
+                sql = "select id from candidate_user where phonenum=%s" % mobile
+                search_mobile = self.db.get(sql)
+                if search_mobile != None:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '手机号已经注册'
+                    result['data'] = {}
+                    raise tornado.gen.Return(result)
             self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
             result['status'] = 'success'
             result['token'] = ''
