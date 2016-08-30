@@ -80,6 +80,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 27.简历投递post：/post-resume  
 28.忘记，找回密码post：/auth/forgetpwd  
 29.短信发送接口post：/sendsms  
+30.推荐职位post：/recommend-job
 
 ***
 #####简历状态：  
@@ -933,3 +934,50 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "短信发送失败",
   "token": "",
   "data": {}}```  
+####30.推荐职位post：/recommend-job  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	page		Y	string		页数
+	num			Y	string		每页数量
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "22",
+  "data": [
+    {
+      "scale_str": "20-99人",
+      "boon": "五险一金,交通补助",
+      "company_logo": "",
+      "job_type": "全职",
+      "job_name": "Python",
+      "job_city": "北京",
+      "salary_start": 20,
+      "company_name": "Python软件开发公司",
+      "salary_end": 30,
+      "trade": "互联网/电子商务",
+      "education_str": "大专",
+      "id": 214170,
+      "work_years_str": "不限",
+      "dt_update": "2016-07-29T17:09:47"
+    },
+    {
+      "scale_str": "",
+      "boon": "五险一金,交通补助",
+      "company_logo": "",
+      "job_type": "全职",
+      "job_name": "Python",
+      "job_city": "北京",
+      "salary_start": 20,
+      "company_name": "",
+      "salary_end": 30,
+      "trade": "",
+      "education_str": "大专",
+      "id": 214199,
+      "work_years_str": "",
+      "dt_update": "2016-07-29T00:00:00"
+    }
+  ]
+}```
