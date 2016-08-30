@@ -725,8 +725,9 @@ class Action(object):
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
                                   % (token, job_id)
                     search_collect = self.db.query(sql_collect)
-                    sql_post = "select id from candidate_post where status in ('post','viewed','pass', 'info','notify','deny')"
+                    sql_post = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
                     search_post = self.db.query(sql_post)
+                    # 0-未收藏---未投递； 1-已收藏---已投递
                     if search_collect == []:
                         search_job['collect'] = 0
                     else:
@@ -819,7 +820,7 @@ class Action(object):
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), data['name'], 'public', data['name'], data['gender'],
+                                         token, data['name'], 'public', data['name'], data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
         # 修改
@@ -864,7 +865,7 @@ class Action(object):
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), "", 'public', "", "",
+                                         token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt, dt)
         # 修改(传过来的数据至少有一条全都是空字符串的数据)
@@ -912,7 +913,7 @@ class Action(object):
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), "", 'public', "", "",
+                                         token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
         # 修改
@@ -949,7 +950,7 @@ class Action(object):
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), "", 'public', "", "",
+                                         token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
         # 修改
@@ -997,7 +998,7 @@ class Action(object):
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         int(token), "", 'public', "", "",
+                                         token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
         # 修改
