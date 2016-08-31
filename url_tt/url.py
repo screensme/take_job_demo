@@ -18,6 +18,7 @@ from api.user_handler import \
     MessageCommunicatedHandler,\
     MessagePassedHandler, \
     MessageImproperHandler, \
+    MessagefullHandler, \
     ViewcollectHandler, \
     AddcollectHandler, \
     CutcollectHandler
@@ -70,6 +71,7 @@ urls = [
     url(r"/message/resume-communicated/page-(\d+)/num-(\d+)/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get简历通过
     url(r"/message/resume-passed/page-(\d+)/num-(\d+)/token-(\w+)", MessagePassedHandler),    # 消息(简历状态查看)get邀请面试
     url(r"/message/resume-improper/page-(\d+)/num-(\d+)/token-(\w+)", MessageImproperHandler),    # 消息(简历状态查看)get不合适
+    url(r"/message-full/job-(\w+)/token-(\w+)", MessagefullHandler),    # 消息详情页，时间轴
     url(r"/position-full/job-(\w+)/token-(\w+)", PositionHandler),    # 职位详情get
     url(r"/company-full/company-(\w+)/token-(\w+)", CompanyHandler),    # 公司详情get
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）

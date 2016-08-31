@@ -700,6 +700,29 @@ class Action(object):
         result['data'] = search_status
         raise tornado.gen.Return(result)
 
+    # 消息详情页，时间轴
+    @tornado.gen.coroutine
+    def Message_full(self, job_id=str, token=str,  cache_flag=int):
+
+        sql = "select operate_massage from candidate_post where job_id=%s and user_id=%s" % (job_id, token)
+        try:
+            search_status = self.db.get(sql)
+            if search_status == None:
+                search_status = []
+            else:
+                search_status = json.loads(search_status['operate_massage'])
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            status = 'fail'
+            search_status = []
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        raise tornado.gen.Return(result)
+
     # 职位详情
     @tornado.gen.coroutine
     def Position_full(self, job_id=str, token=str, cache_flag=int):

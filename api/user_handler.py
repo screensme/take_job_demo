@@ -341,6 +341,26 @@ class MessageImproperHandler(BaseHandler):
         self.finish()
         return
 
+# 消息详情页，时间轴
+class MessagefullHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, job_id, token):
+        self.log.info('user view resume status full')
+        cache_flag = self.get_cache_flag()
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Message_full(job_id, token, cache_flag=cache_flag)
+
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # 查看收藏get
 class ViewcollectHandler(BaseHandler):
     @gen.coroutine

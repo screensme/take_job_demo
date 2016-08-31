@@ -81,6 +81,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 28.忘记，找回密码post：/auth/forgetpwd  
 29.短信发送接口post：/sendsms  
 30.推荐职位post：/recommend-job
+31.消息详情get：/message-full/job-{job_id}/token-{token}  
 
 ***
 #####简历状态：  
@@ -169,13 +170,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "登陆成功",
   "token": 170,
   "data": {
-    "username": "徐帅楠",
-    "school": "1111111111",
-    "major": "1111",
-    "sex": "男",
-    "avatar": "a.jpg",
-    "edu": "博士",
-    "id": "170"
+    "user_name": "屌先生",
+    "id": 170,
+    "avatar": "",
+    "sex": "男"
   }
 }```  
 ####3.登出get：/auth/logout/token-{token}
@@ -904,7 +902,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "status": "success",
   "msg": "",
   "token": 170,
-  "data": {}
+  "data": {
+    "sex": "男",
+    "user_name": "屌先生",
+    "id": 170,
+    "avatar": ""
+  }
 }```  
 返回失败：  
 ```{
@@ -981,3 +984,43 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```
+####31.消息详情get：/message-full/job-{job_id}/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	job_id		Y	string		职位id
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "20",
+  "data": [
+    {
+      "status": "post",
+      "time": "2016-08-31 15:57:45"
+    },
+    {
+      "status": "pass",
+      "time": "2016-08-31 15:57:53"
+    },
+    {
+      "status": "info",
+      "time": "2016-08-31 15:58:01"
+    },
+    {
+      "status": "notify",
+      "username": "赵辰磊",
+      "invite_time": "2016-11-11 08:12",
+      "address": "北京",
+      "invite_type": "笔试邀请",
+      "content": "带简历",
+      "phone": "18031269672",
+      "contact": "赵",
+      "company_name": "京东",
+      "time": "2016-08-31 15:58:39",
+      "job_name": "php",
+      "subject": "php"
+    }
+  ]
+}```  
