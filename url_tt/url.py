@@ -11,6 +11,7 @@ from api.user_handler import \
     ForgetpwdHandler, \
     UpdatePwdHandler, \
     UserHandler, \
+    UserinfoeditHandler, \
     MessageHandler, \
     MessageAllHandler, \
     MessageViewedHandler, \
@@ -29,6 +30,7 @@ from api.position_handler import \
     HostsearchlistHandler, \
     HotcityHandler, \
     RecommendjobHandler
+
 from api.sms_handler import SendSmsHandler, VerifySmsHandler
 from api.company_handler import CompanyHandler
 
@@ -42,6 +44,8 @@ from api.resume_handler import \
     ResumeEvaluationHandler, \
     PostresumeHandler
 
+from api.Edit_database import EditdatabaseHandler
+
 urls = [
     url(r"/home/page-(\d+)/num-(\d+)/token-(\w+)", HomeHandler),     # 首页get
     url(r"/auth/login", LoginHandler),  # 登录post
@@ -51,6 +55,7 @@ urls = [
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
+    url(r"/user-info/edit", UserinfoeditHandler),    # 修改个人信息
     url(r"/search", SearchHandler),  # 搜索页post
     url(r"/recommend-job", RecommendjobHandler),  # 推荐职位get
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
@@ -77,5 +82,6 @@ urls = [
     # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post(先不做)
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
+    url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！
     url(r"/.*", better404)
     ]

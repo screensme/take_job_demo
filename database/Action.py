@@ -15,7 +15,6 @@ import re
 import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
-import unicodedata
 
 class Action(object):
     def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, esapi=str,
@@ -72,12 +71,16 @@ class Action(object):
                     authenticated = '1'
                     post_status = 'allow'
                     tag = 'test'
+                    user_name = ""
+                    avatar = ""
+                    sex = ""
                     dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     user_write = self.db.insert(sqll,
                                                 mobile, hash_pass, active, authenticated,
-                                                post_status, tag, dt_created, dt_updated, foo_uuid)
+                                                post_status, tag, dt_created, dt_updated, foo_uuid,
+                                                user_name, avatar, sex)
 
                     result['status'] = 'success'
                     result['msg'] = ''
@@ -95,33 +98,21 @@ class Action(object):
     @tornado.gen.coroutine
     def User_login(self, mobile=str, pwd=str, cache_flag=int):
         result = dict()
-        sql = "select id,password from candidate_user where phonenum=%s" % mobile
+        sql = "select id,password,user_name,sex,avatar from candidate_user where phonenum=%s" % mobile
         search_mobile = self.db.get(sql)
         if search_mobile is None:
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
                 result['data'] = {}
-
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查找用户基本信息(缺少用户头像，能不能数据库中加一个出来)
-                sqll = "SELECT %s FROM candidate_cv  where user_id=%s" \
-                       % ("username,sex,edu,school,major,candidate_cv", search_mobile['id'])
-                user_basic = self.db.get(sqll)
-
-                if user_basic is None:
-                    user_basic = dict()
-                    user_basic['id'] = str(search_mobile['id'])
-                else:
-                    candidate = json.loads(user_basic['candidate_cv'])
-                    user_basic['id'] = str(search_mobile['id'])
-                    user_basic['avatar'] = candidate['basic']['avatar']
-                    user_basic.pop('candidate_cv')
+                search_mobile.pop('password')
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
-                result['data'] = user_basic
+                result['data'] = search_mobile
             else:
                 result['status'] = 'fail'
                 result['token'] = ''
@@ -154,8 +145,8 @@ class Action(object):
     def User_forgetpwd(self, mobile=str, pwd=str, code=str, cache_flag=int):
 
         result = dict()
-        hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
-        dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+        # dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         sql_search = "select * from candidate_user where phonenum=%s" % (mobile,)
         search_mobile = self.db.get(sql_search)
         if search_mobile == None:
@@ -181,13 +172,19 @@ class Action(object):
                 raise tornado.gen.Return(result)
             else:
                 try:
+                    hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+                    dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     sql_update = "update candidate_user set password=%s,dt_update=%s where phonenum=%s"
                     update_pwd = self.db.update(sql_update, hash_pass, dt_updated, mobile)
                     self.log.info('user update_pwd,id=%s' % update_pwd)
                     result['status'] = 'success'
                     result['token'] = search_mobile['id']
                     result['msg'] = ''
-                    result['data'] = {}
+                    result['data'] = {'id': search_mobile['id'],
+                                      'user_name': search_mobile['user_name'],
+                                      'avatar': search_mobile['avatar'],
+                                      'sex': search_mobile['sex'],
+                                      }
                 except Exception, e:
                     result['status'] = 'fail'
                     result['token'] = ''
@@ -303,6 +300,26 @@ class Action(object):
             % ("id, user_id, username, sex, age, edu, school, major", token)
         search_user = self.db.get(sql)
         result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_user
+        raise tornado.gen.Return(result)
+
+    # 修改个人信息
+    @tornado.gen.coroutine
+    def User_info_edit(self, token=str, user_name=str, sex=str, avatar=str, cache_flag=int):
+
+        result = dict()
+        sql_update = "update candidate_user set user_name=%s,sex=%s,avatar=%s where id=%s"
+        try:
+            search_user = self.db.update(sql_update, user_name, sex, avatar, token)
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = e
+            result['data'] = {}
+            raise tornado.gen.Return(result)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -823,6 +840,9 @@ class Action(object):
                                          token, data['name'], 'public', data['name'], data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            sql_userinfo = "update candidate_user set user_name=%s,sex=%s where id=%s"
+            insert_user_info = self.db.update(sql_userinfo, data['name'], data['gender'], token)
+            self.log.info("user(%s) add resume-basic,resume_id=%s; AND update user_info" % (token, edit_resume, ))
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1186,3 +1206,35 @@ class Action(object):
         result['msg'] = msg
         result['data'] = post_resume
         raise tornado.gen.Return(result)
+
+# ########################################################################
+
+    # 修改数据，慎用
+    @tornado.gen.coroutine
+    def Edit_datebase(self, token=str, job_id=str, cache_flag=int):
+        # dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        result = dict()
+        sql_getuser = "select id from candidate_user"
+        getuser = self.db.query(sql_getuser)
+        sql_update = "update candidate_user set user_name=%s,avatar=%s,sex=%s where id=%s"
+        for index in getuser:
+            try:
+                sql_cv = "select username,sex from candidate_cv where user_id=%s" % index['id']
+                se_cv = self.db.get(sql_cv)
+                if se_cv == None:
+                    pass
+                else:
+                    search_st = self.db.update(sql_update, se_cv['username'], "", se_cv['sex'], index['id'])
+                    print search_st
+            except Exception, e:
+                search_status = self.log.info('ERROR is %s' % e)
+
+                result['status'] = 'fail'
+                result['token'] = index['id']
+                result['msg'] = '数据修改失败'
+                result['data'] = search_status
+                raise tornado.gen.Return(result)
+
+        raise tornado.gen.Return(result)
+# ########################################################################

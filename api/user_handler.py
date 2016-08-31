@@ -203,6 +203,22 @@ class UserHandler(BaseHandler):
         self.finish()
         return
 
+# 修改个人信息
+class UserinfoeditHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('user edit info')
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        sex = self.get_argument('sex')
+        avatar = self.get_argument('avatar')
+        user_name = self.get_argument('user_name')
+        result = yield self.db.User_info_edit(token, user_name, sex, avatar, cache_flag=cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # 消息页,显示数量
 class MessageHandler(BaseHandler):
     @gen.coroutine
