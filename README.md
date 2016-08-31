@@ -171,6 +171,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": 170,
   "data": {
     "user_name": "屌先生",
+	"cv_name": "屌先生",	(简历中的姓名，判断是否重新填写简历用)
     "id": 170,
     "avatar": "",
     "sex": "男"
