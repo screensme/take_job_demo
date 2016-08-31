@@ -1230,7 +1230,7 @@ class Action(object):
                 msg = '公司收消息错误'
             else:
                 m_info = {'type': 'post',
-                          'info': '您有新投递的简历'}
+                          'info': u'您有新投递的简历'}
                 sender = 'system'
                 receiver_type = 'company',
                 message_type = 'system',
