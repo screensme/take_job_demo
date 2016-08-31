@@ -720,20 +720,23 @@ class Action(object):
         sql = "select operate_massage from candidate_post where job_id=%s and user_id=%s" % (job_id, token)
         try:
             search_status = self.db.get(sql)
-            if search_status == None:
-                search_status = []
+            if search_status is None:
+                search_st = []
             else:
-                search_status = json.loads(search_status['operate_massage'])
+                if search_status['operate_massage'] is None:
+                    search_st = []
+                else:
+                    search_st = json.loads(search_status['operate_massage'])
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e)
             status = 'fail'
-            search_status = []
+            search_st = []
         result = dict()
         result['status'] = status
         result['token'] = token
         result['msg'] = ''
-        result['data'] = search_status
+        result['data'] = search_st
         raise tornado.gen.Return(result)
 
     # 职位详情
