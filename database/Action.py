@@ -487,6 +487,14 @@ class Action(object):
         contect = reques.content.decode('utf-8')
         try:
             contect_id = sorted(eval(contect)['id_list'])
+            if contect_id == []:
+                uri = '%squery_new_job' % self.esapi
+                val = dict()
+                val['offset'] = int(page) * int(num)
+                val['limit'] = num
+                reques = requests.post(url=uri, json=val)
+                contect = reques.content.decode('utf-8')
+                contect_id = sorted(eval(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
