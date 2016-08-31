@@ -1221,24 +1221,28 @@ class Action(object):
             result['data'] = {}
             raise tornado.gen.Return(result)
         # 用户投递简历后，公司收到消息
-        sql_company_userid = "select company_user_id from company_jd as j " \
-                             "left join jobs_hot_es_test as p on p.id=j.es_id where p.id =%s" % (job_id,)
-        search_company_userid = self.db.get(sql_company_userid)
-        if search_company_userid is None:
-            status = 'success'
-            msg = '公司收消息错误'
-        else:
-            m_info = {'type': 'post',
-                      'info': '您有新投递的简历'}
-            sender = 'system'
-            receiver_type = 'company',
-            message_type = 'system',
-            receiver_user_id = search_company_userid['company_user_id']
-            message = json.dumps(m_info),
-            sql_company = "insert into message(sender, receiver_type, message_type, receiver_user_id, message, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s)"
-            post_company = self.db.insert(sql_company, sender, receiver_type, message_type, receiver_user_id,
-                                          message, 'unread', dt, dt)
-            self.log.info('company receive user resume,message_id=%s' % post_company)
+        try:
+            sql_company_userid = "select company_user_id from company_jd as j " \
+                                 "left join jobs_hot_es_test as p on p.id=j.es_id where p.id =%s" % (job_id,)
+            search_company_userid = self.db.get(sql_company_userid)
+            if search_company_userid is None:
+                status = 'success'
+                msg = '公司收消息错误'
+            else:
+                m_info = {'type': 'post',
+                          'info': '您有新投递的简历'}
+                sender = 'system'
+                receiver_type = 'company',
+                message_type = 'system',
+                receiver_user_id = search_company_userid['company_user_id']
+                message = json.dumps(m_info),
+                sql_company = "insert into message(sender, receiver_type, message_type, receiver_user_id, message, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s)"
+                post_company = self.db.insert(sql_company, sender, receiver_type, message_type, receiver_user_id,
+                                              message, 'unread', dt, dt)
+                self.log.info('company receive user resume,message_id=%s' % post_company)
+        except Exception, e:
+            status = 'fail'
+            msg = '%s' % e
         result = dict()
         result['status'] = status
         result['token'] = token

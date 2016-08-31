@@ -82,7 +82,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 29.短信发送接口post：/sendsms  
 30.推荐职位post：/recommend-job
 31.消息详情get：/message-full/job-{job_id}/token-{token}  
-
+32.修改个人信息post：/user-info/edit  
 ***
 #####简历状态：  
 	
@@ -1025,3 +1025,45 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     }
   ]
 }```  
+####32.修改个人信息post：/user-info/edit  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	sex			Y	string		性别
+	avatar		Y	string		头像
+	user_name	Y	string		用户名
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "20",
+  "data": [
+    {
+      "status": "post",
+      "time": "2016-08-31 15:57:45"
+    },
+    {
+      "status": "pass",
+      "time": "2016-08-31 15:57:53"
+    },
+    {
+      "status": "info",
+      "time": "2016-08-31 15:58:01"
+    },
+    {
+      "status": "notify",
+      "username": "赵辰磊",
+      "invite_time": "2016-11-11 08:12",
+      "address": "北京",
+      "invite_type": "笔试邀请",
+      "content": "带简历",
+      "phone": "18031269672",
+      "contact": "赵",
+      "company_name": "京东",
+      "time": "2016-08-31 15:58:39",
+      "job_name": "php",
+      "subject": "php"
+    }
+  ]
+}```
