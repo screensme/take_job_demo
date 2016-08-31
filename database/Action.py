@@ -107,8 +107,13 @@ class Action(object):
                 result['data'] = {}
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
-                # 查找用户基本信息(缺少用户头像，能不能数据库中加一个出来)
+                # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
+                sql_cv = "select candidate_cv from candidate_cv where user_id=%s" % search_mobile['id']
+                search_cv = self.db.get(sql_cv)
+                cv = json.loads(search_cv['candidate_cv'])
+                search_mobile['cv_name'] = cv['basic']['name']
                 search_mobile.pop('password')
+
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
