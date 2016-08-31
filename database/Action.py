@@ -1232,11 +1232,13 @@ class Action(object):
                 m_info = {'type': 'post',
                           'info': u'您有新投递的简历'}
                 sender = 'system'
-                receiver_type = 'company',
-                message_type = 'system',
+                receiver_type = 'company'
+                message_type = 'system'
                 receiver_user_id = search_company_userid['company_user_id']
-                message = json.dumps(m_info),
+                message = json.dumps(m_info)
                 sql_company = "insert into message(sender, receiver_type, message_type, receiver_user_id, message, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s)"
+                # self.log.info( "insert into message(sender, receiver_type, message_type, receiver_user_id, message, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s)" % (sender, receiver_type, message_type, receiver_user_id,
+                #                               message, 'unread', dt, dt))
                 post_company = self.db.insert(sql_company, sender, receiver_type, message_type, receiver_user_id,
                                               message, 'unread', dt, dt)
                 self.log.info('company receive user resume,message_id=%s' % post_company)
