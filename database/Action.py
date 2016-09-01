@@ -841,7 +841,8 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_view(self, token=str, cache_flag=int):
 
-        search_resume = self.db.get("SELECT * FROM candidate_cv WHERE user_id=%s" % token)
+        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        search_resume = self.db.get(sql_resume)
         try:
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
         except Exception, e:
@@ -1043,7 +1044,7 @@ class Action(object):
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
-    # 简历编辑-项目实践post
+    # 简历编辑-项目实践post(这个接口不用了)
     @tornado.gen.coroutine
     def Resume_Item(self, token=str, data=dict, cache_flag=int):
 
@@ -1084,6 +1085,8 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
+            # 判断简历是否能投简历,1可以,0不可以
+            J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -1221,14 +1224,24 @@ class Action(object):
 
         search_status = self.db.get(sql)
         if search_status == None:
-            match_rate = random.randint(50, 100)
-            status = 'post'
-            collect_status = ''
-            sql_post = "insert into candidate_post(user_id, job_id, match_rate," \
-                       " status, collect_status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s)"
-            post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt)
-            status = 'success'
-            msg = '投递成功'
+            sql_resume = "select allow_post from candidate_cv where user_id=%s" % token
+            user_resume = self.db.get(sql_resume)
+            if (user_resume is None) or (user_resume['allow_post'] == 0):
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '简历信息不完整'
+                result['data'] = {}
+                raise tornado.gen.Return(result)
+            else:
+                match_rate = random.randint(50, 100)
+                status = 'post'
+                collect_status = ''
+                sql_post = "insert into candidate_post(user_id, job_id, match_rate," \
+                           " status, collect_status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s)"
+                post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt)
+                status = 'success'
+                msg = '投递成功'
         else:
             result = dict()
             result['status'] = 'fail'

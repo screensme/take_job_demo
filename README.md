@@ -684,7 +684,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	education	Y	string		用户的教育经历，注意格式如下
-<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
 ```[
     {
         "school":"是对的",
@@ -884,13 +884,20 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "1",
   "data": 1399
 }```  
-返回失败：
+返回失败1：
 ```{
   "status": "fail",
   "msg": "已投递的职位",
   "token": "1",
   "data": {}
 }```  
+返回失败2：
+```{
+  "status": "fail",
+  "msg": "简历信息不完整",
+  "token": "27",
+  "data": {}
+}```
 ####28.忘记，找回密码post：/auth/forgetpwd  
 参数：
 		
@@ -1036,4 +1043,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	avatar		Y	string		头像（第一版传空字符串）
 	user_name	Y	string		用户名
 返回成功：  
-```返回的数据，一会给你们写```
+```{
+  "status": "success",
+  "msg": "",
+  "token": "170",
+  "data": 1
+}```
