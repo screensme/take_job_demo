@@ -8,13 +8,14 @@ from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
 from common import web_log
-from common.web_config import MY_SQL, ES_API, REDIS
+from common.web_config import MY_SQL, ES_API, REDIS, IMAGE_URL
 from database import Action
 define("port", default=8889, help="run on the given port", type=int)
 define("mysql", default='neiwang', help="run on the test or pro")
 define("esapi", default='neiwang', help="run on the test or pro")
 define("redis", default='local', help="run on the test or pro")
 define("sms", default='no', help="true=yes,false=no(send:111111)")
+define("image", default='neiwang', help="run on the test or pro")
 
 abp = os.path.abspath(sys.argv[0])
 file_path = os.path.dirname(abp) + '/json_txt'
@@ -50,12 +51,14 @@ class Application(tornado.web.Application):
         mysqlstr = 'mysql-%s' % options.mysql
         esapistr = 'esapi-%s' % options.esapi
         redisstr = 'redis-%s' % options.redis
+        imagestr = 'image-%s' % options.image
         self.db = Action.Action(dbhost=MY_SQL[mysqlstr]['host'],
                                 dbname=MY_SQL[mysqlstr]['db'],
                                 dbuser=MY_SQL[mysqlstr]['user'],
                                 dbpwd=MY_SQL[mysqlstr]['pwd'],
                                 log=self.log,
                                 sms=sms,
+                                image=IMAGE_URL[imagestr]['url'],
                                 esapi=ES_API[esapistr]['url'],
                                 cahost=REDIS[redisstr]['host'],
                                 caport=REDIS[redisstr]['port'],

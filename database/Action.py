@@ -17,7 +17,7 @@ from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 
 class Action(object):
-    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, esapi=str,
+    def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, image=str, esapi=str,
                  cahost=str, caport=str, capassword=str, caseldb=int):
         # pass
         self.db = torndb.Connection(host=dbhost,
@@ -30,6 +30,7 @@ class Action(object):
         self.esapi = esapi
         self.log = log
         self.sms = sms
+        self.image = image
         self.log.info('mysql=%s, db=%s, esapi=%s, cache=%s' % (dbhost, dbname, esapi, cahost))
         print('init end')
 
@@ -1237,9 +1238,11 @@ class Action(object):
                 match_rate = random.randint(50, 100)
                 status = 'post'
                 collect_status = ''
+                operate_massage = [{'status': 'post',
+                                    'time': dt}]
                 sql_post = "insert into candidate_post(user_id, job_id, match_rate," \
-                           " status, collect_status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s)"
-                post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt)
+                           " status, collect_status, dt_create, dt_update, operate_massage) values(%s,%s,%s,%s,%s,%s,%s,%s)"
+                post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt, json.dumps(operate_massage))
                 status = 'success'
                 msg = '投递成功'
         else:
