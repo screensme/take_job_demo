@@ -15,7 +15,8 @@ import re
 import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
-import oss2
+from common import IF_email
+# import oss2
 
 class Action(object):
     def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, image=str, esapi=str,
@@ -881,7 +882,7 @@ class Action(object):
             data = eval(basic)
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            nowyear = datetime.datetime.now().strftime("%Y")
+            # nowyear = datetime.datetime.now().strftime("%Y")
             # age = int(nowyear) - int(data['birthday'])
             age = ""
             degree = ""
@@ -906,7 +907,15 @@ class Action(object):
             data['avatar'] = basic_resume['basic']['avatar']
             basic_resume['basic'] = data
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            nowyear = datetime.datetime.now().strftime("%Y")
+            # nowyear = datetime.datetime.now().strftime("%Y")
+            e_mail = basic_resume['basic']['email']
+            if not IF_email.if_email(e_mail):
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '邮箱不合法'
+                result['data'] = {'msg': 'email is not true'}
+                raise tornado.gen.Return(result)
 
             resume_name = data['name'] + '的简历'
             username = data['name']
