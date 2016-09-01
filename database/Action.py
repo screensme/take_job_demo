@@ -112,8 +112,11 @@ class Action(object):
                 # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
                 sql_cv = "select candidate_cv from candidate_cv where user_id=%s" % search_mobile['id']
                 search_cv = self.db.get(sql_cv)
-                cv = json.loads(search_cv['candidate_cv'])
-                search_mobile['cv_name'] = cv['basic']['name']
+                if search_cv is None:
+                    search_mobile['cv_name'] = ''
+                else:
+                    cv = json.loads(search_cv['candidate_cv'])
+                    search_mobile['cv_name'] = cv['basic']['name']
                 search_mobile.pop('password')
 
                 result['status'] = 'success'
@@ -1353,7 +1356,7 @@ class Action(object):
 
     # 修改数据，慎用
     @tornado.gen.coroutine
-    def Edit_datebase(self, token=str, job_id=str, cache_flag=int):
+    def Edit_datebase(self, cache_flag=int):
         # dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         result = dict()

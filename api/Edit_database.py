@@ -15,7 +15,11 @@ class EditdatabaseHandler(BaseHandler):
     def get(self, token):
         cache_flag = self.get_cache_flag()
         if token == "123QWEqwe":
-            result = yield self.db.Edit_datebase(cache_flag,)
+            code = self.get_argument('code')
+            if code == '我要修改数据':
+                result = yield self.db.Edit_datebase(code, cache_flag,)
+            else:
+                result = "少废话，放码过来"
         else:
             result = "no things don\'t BB!"
         self.write(ObjectToString().encode(result))
