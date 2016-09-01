@@ -28,6 +28,15 @@ ES_API = {
     }
 }
 
+IMAGE_URL = {
+    'image-neiwang': {
+        'url': 'http://imgtest.zhaopintt.com/'
+    },
+    'image-waiwang': {
+        'url': 'http://images.zhaopintt.com/'
+    }
+}
+
 REDIS = {
     'redis-local': {
         'host': '127.0.0.1',
