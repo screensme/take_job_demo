@@ -693,7 +693,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "degree":"博士以上",
         "end_time":"2016.02"
     }
-]```  
+]
+```  
 返回成功：
 ```{"status": "success", "msg": "", "token": "177", "data": 167}```  
 ####19.简历编辑-职业意向post：/resume-edit-expect  
