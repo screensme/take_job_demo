@@ -956,7 +956,7 @@ class Action(object):
                 sql_null = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
                 edit_resume = self.db.update(sql_null, json.dumps(basic_resume), dt, token)
             else:
-                if data[0]['end_time'] != '':
+                if data[0]['end_time'] == '':
                     sqllll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
                     edit_resume = self.db.update(sqllll, json.dumps(basic_resume), dt, token)
                 else:

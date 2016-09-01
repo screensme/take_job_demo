@@ -65,6 +65,7 @@ REDIS = {
 }
 REDIS_URL = 'redis://23fef09bdd5a4810:Rcat123ABCD@23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com/1'
 # user / password @ ip:port / db
+# 23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com ---> 100.114.45.27
 FCGI_SETTIGNS = {
     'fcgi_port': 1024,
 }
