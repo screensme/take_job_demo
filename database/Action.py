@@ -15,6 +15,7 @@ import re
 import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
+import oss2
 
 class Action(object):
     def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, image=str, esapi=str,
@@ -346,7 +347,7 @@ class Action(object):
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
         search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
+                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo',args))
 
         for index in search_job:
             # 调整所有为null的值为""
@@ -359,7 +360,8 @@ class Action(object):
                 index['salary_end'] = index['salary_end'] / 1000 + 1
             else:
                 index['salary_end'] = index['salary_end'] / 1000
-            index['company_logo'] = ''
+            if index['company_logo'] != '':
+                index['company_logo'] = "%s" % self.image + index['company_logo']
             if index['job_type'] == 'fulltime':
                 index['job_type'] = '全职'
             elif index['job_type'] == 'parttime':
@@ -412,14 +414,15 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
                     for index in search_job:
                         # 调整所有为null的值为""
                         for ind in index:
                             if index[ind] == None:
                                 index[ind] = ''
                         # 薪资显示单位为K
-                        index['company_logo'] = ''
+                        if index['company_logo'] != '':
+                            index['company_logo'] = "%s" % self.image + index['company_logo']
                         index['salary_start'] = index['salary_start'] / 1000
                         if (index['salary_end'] % 1000) >= 1:
                             index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -499,12 +502,13 @@ class Action(object):
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
-                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade' ,args))
+                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
                 for index in search_job:
                     for ind in index:
                         if index[ind] == None:
                             index[ind] = ""
-                    index['company_logo'] = ''
+                    if index['company_logo'] != '':
+                        index['company_logo'] = "%s" % self.image + index['company_logo']
                     index['salary_start'] = index['salary_start'] / 1000
                     if (index['salary_end'] % 1000) >= 1:
                         index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -571,12 +575,13 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
+              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             boss_profile = self.db.query(sql)
             for index in boss_profile:
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -601,12 +606,13 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
+              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -631,12 +637,13 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
+              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -661,12 +668,13 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
+              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -691,12 +699,13 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update",
+              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
             for index in search_status:
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -745,12 +754,13 @@ class Action(object):
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
-                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update",job_id)
+                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo",job_id)
         search_job = self.db.get(sql_job)
         if search_job == None:
             search_job = {}
         else:
-            search_job['company_logo'] = ''
+            if search_job['company_logo'] != '':
+                search_job['company_logo'] = "%s" % self.image + search_job['company_logo']
             search_job['boom'] = search_job.pop('boon')
             if search_job['job_type'] == 'fulltime':
                 search_job['job_type'] = '全职'
@@ -1112,7 +1122,7 @@ class Action(object):
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
 
         sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s offset %s"\
-              % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update",
+              % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update,company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
@@ -1123,7 +1133,8 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
-                index['company_logo'] = ''
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
                 index['id'] = index['jobid']
                 if index['job_type'] == 'fulltime':
                     index['job_type'] = '全职'
