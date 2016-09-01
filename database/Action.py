@@ -240,7 +240,7 @@ class Action(object):
                     result['data'] = {}
                     raise tornado.gen.Return(result)
                 ret_info = SmsApi().sms_register(mobile=mobile, rand_num=random_number)
-                if ret_info['code'] == '0':
+                if ret_info['code'] != '500':
                     self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
                     result['status'] = 'success'
                     result['token'] = ''
@@ -254,7 +254,7 @@ class Action(object):
                 raise tornado.gen.Return(result)
             elif key == "forgetpwd":    # 忘记密码
                 ret_info = SmsApi().sms_forget(mobile=mobile, rand_num=random_number)
-                if ret_info['code'] == '0':
+                if ret_info['code'] != '500':
                     self.cacheredis.set(mobile+'msgcode', random_number, 5*60)
                     result['status'] = 'success'
                     result['token'] = ''
