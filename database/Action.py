@@ -882,7 +882,8 @@ class Action(object):
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             nowyear = datetime.datetime.now().strftime("%Y")
-            age = int(nowyear) - int(data['birthday'])
+            # age = int(nowyear) - int(data['birthday'])
+            age = ""
             degree = ""
             school = ""
             major = ""
