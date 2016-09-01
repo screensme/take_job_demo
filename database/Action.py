@@ -912,7 +912,8 @@ class Action(object):
             username = data['name']
             sex = data['gender']
             high_edu = data['education']
-            age = int(nowyear) - int(data['birthday'])
+            # age = int(nowyear) - int(data['birthday'])
+            age = ""
             sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
             # 判断简历是否能投简历,1可以,0不可以
