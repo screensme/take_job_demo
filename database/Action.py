@@ -879,6 +879,7 @@ class Action(object):
                                          token, data['name'], 'public', data['name'], data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            # 第一次新建的时候，流程跟网站相同。。然后将基本信息写到个人信息的数据库中
             sql_userinfo = "update candidate_user set user_name=%s,sex=%s where id=%s"
             insert_user_info = self.db.update(sql_userinfo, data['name'], data['gender'], token)
             self.log.info("user(%s) add resume-basic,resume_id=%s; AND update user_info" % (token, edit_resume, ))
@@ -898,6 +899,8 @@ class Action(object):
             age = int(nowyear) - int(data['birthday'])
             sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
+            # 判断简历是否能投简历,1可以,0不可以
+            J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -932,20 +935,27 @@ class Action(object):
             basic_resume = json.loads(search_user['candidate_cv'])
             data = eval(education)
             basic_resume['education'] = deepcopy(data)
-            if data[0]['end_time'] == '':
-                sqllll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
-                edit_resume = self.db.update(sqllll, json.dumps(basic_resume), dt, token)
+            if data == []:
+                sql_null = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+                edit_resume = self.db.update(sql_null, json.dumps(basic_resume), dt, token)
             else:
-                for item in data:
-                    item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
-                data.sort(key=lambda x: x['end_time'], reverse=True)
-                one_edu = data[0]
-                school = one_edu['school']
-                major = one_edu['major']
-                edu = one_edu['degree']
-                dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
-                edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
+                if data[0]['end_time'] != '':
+                    sqllll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+                    edit_resume = self.db.update(sqllll, json.dumps(basic_resume), dt, token)
+                else:
+                    for item in data:
+                        item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
+                    data.sort(key=lambda x: x['end_time'], reverse=True)
+                    one_edu = data[0]
+                    school = one_edu['school']
+                    major = one_edu['major']
+                    edu = one_edu['degree']
+                    dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+                    edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
+
+            # 判断简历是否能投简历,1可以,0不可以
+            J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -983,6 +993,9 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
+
+            # 判断简历是否能投简历,1可以,0不可以
+            J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -1020,6 +1033,9 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+
+            # 判断简历是否能投简历,1可以,0不可以
+            J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -1252,6 +1268,60 @@ class Action(object):
         result['data'] = post_resume
         raise tornado.gen.Return(result)
 
+#   ##### 判断简历
+    @tornado.gen.coroutine
+    def Judgment_resume(self, token=str):
+            sql_status = "select candidate_cv from candidate_cv where user_id=%s" % token
+            resume_status = self.db.get(sql_status)
+            user_cv = json.loads(resume_status['candidate_cv'])
+
+            up_status = "update candidate_cv set allow_post=%s where user_id=%s"
+            if user_cv['basic']['name'] == '':
+                # 状态写为0
+                allow_0 = self.db.update(up_status, 0, token)
+                self.log.info("candidate_cv allow_post=0; reson-->user_cv['basic']['name'] == ''")
+                return 0
+            else:
+                if user_cv['education'] == []:
+                    # 状态写为0
+                    allow_0 = self.db.update(up_status, 0, token)
+                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'] == []")
+                    return 0
+                else:
+                    if user_cv['education'][0]['end_time'] == '':
+                        # 状态写为0
+                        allow_0 = self.db.update(up_status, 0, token)
+                        self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
+                        return 0
+                    else:
+                        if user_cv['intension']['title'] == '':
+                            # 状态写为0
+                            allow_0 = self.db.update(up_status, 0, token)
+                            self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
+                            return 0
+                        else:
+                            if user_cv['career'] == []:
+                                # 状态写为0
+                                allow_0 = self.db.update(up_status, 0, token)
+                                self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
+                                return 0
+                            else:
+                                if user_cv['career'][0]['end_time'] == '':
+                                    # 状态写为0
+                                    allow_0 = self.db.update(up_status, 0, token)
+                                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
+                                    return 0
+                                else:
+                                    if user_cv['extra']['description'] == '':
+                                        # 状态写为0
+                                        allow_0 = self.db.update(up_status, 0, token)
+                                        self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
+                                        return 0
+                                    else:
+                                        # 状态写为1
+                                        allow_1 = self.db.update(up_status, 1, token)
+                                        self.log.info("candidate_cv allow_post=1")
+                                        return 1
 # ########################################################################
 
     # 修改数据，慎用

@@ -991,6 +991,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id
 	job_id		Y	string		职位id
+！！备注：状态依次是：投递简历，被查看，过初筛，邀请面试，面试不合适。
+公司可能会不查看，直接下载简历，这样就会没有被查看的状态。  
 返回成功：  
 ```{
   "status": "success",
@@ -1011,17 +1013,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     },
     {
       "status": "notify",
-      "username": "赵辰磊",
-      "invite_time": "2016-11-11 08:12",
-      "address": "北京",
+      "username": "赵辰磊",		(个人用户名)
+      "invite_time": "2016-11-11 08:12",	(邀请面试时间)
+      "address": "北京",		(面试地点)
       "invite_type": "笔试邀请",
-      "content": "带简历",
-      "phone": "18031269672",
-      "contact": "赵",
-      "company_name": "京东",
-      "time": "2016-08-31 15:58:39",
-      "job_name": "php",
-      "subject": "php"
+      "content": "带简历，带笔参加笔试",		(面试要求)
+      "phone": "18031269672",		（企业联系人的联系方式）
+      "contact": "赵",		(企业用户名)
+      "company_name": "京东",		（公司名）
+      "time": "2016-08-31 15:58:39",	（操作时间）
+      "job_name": "php",		（职位名称）
+      "subject": "php"		（职位标题）
     }
   ]
 }```  
@@ -1031,39 +1033,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id
 	sex			Y	string		性别
-	avatar		Y	string		头像
+	avatar		Y	string		头像（第一版传空字符串）
 	user_name	Y	string		用户名
 返回成功：  
-```{
-  "status": "success",
-  "msg": "",
-  "token": "20",
-  "data": [
-    {
-      "status": "post",
-      "time": "2016-08-31 15:57:45"
-    },
-    {
-      "status": "pass",
-      "time": "2016-08-31 15:57:53"
-    },
-    {
-      "status": "info",
-      "time": "2016-08-31 15:58:01"
-    },
-    {
-      "status": "notify",
-      "username": "赵辰磊",
-      "invite_time": "2016-11-11 08:12",
-      "address": "北京",
-      "invite_type": "笔试邀请",
-      "content": "带简历",
-      "phone": "18031269672",
-      "contact": "赵",
-      "company_name": "京东",
-      "time": "2016-08-31 15:58:39",
-      "job_name": "php",
-      "subject": "php"
-    }
-  ]
-}```
+```返回的数据，一会给你们写```
