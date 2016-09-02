@@ -12,6 +12,7 @@ class ResumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
+        self.log.info('+++++++++++Resume get+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Resume_view(token, cache_flag)
@@ -31,6 +32,7 @@ class PostresumeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Post+++++++++++')
         self.log.info(self.get_arguments())
         token = self.get_argument('token')
         job_id = self.get_argument('job_id')
@@ -47,6 +49,7 @@ class ResumeBasicHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume edit+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -73,6 +76,7 @@ class ResumeEducationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume education+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -95,6 +99,7 @@ class ResumeExpectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Expect+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -117,6 +122,7 @@ class ResumeCareerHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Career+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -134,11 +140,12 @@ class ResumeCareerHandler(BaseHandler):
         self.finish()
         return
 
-# 简历编辑-项目实践post
+# 简历编辑-项目实践post(暂时不用)
 class ResumeItemHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Item+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -161,6 +168,7 @@ class ResumeEvaluationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Evaluation+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -178,6 +186,7 @@ class ResumeAvatarHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Resume Avatar+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')

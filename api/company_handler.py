@@ -13,6 +13,7 @@ class CompanyHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, company_id, token):
+        self.log.info('+++++++++++Company Full+++++++++++')
         result = yield self.db.Company_full(company_id, token)
 
         self.write(ObjectToString().encode(result))

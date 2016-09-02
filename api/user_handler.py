@@ -30,7 +30,7 @@ class RegisterHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user register')
+        self.log.info('+++++++++++user register+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         data = dict()
@@ -67,7 +67,7 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user login')
+        self.log.info('+++++++++++user login+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         data = dict()
@@ -111,7 +111,7 @@ class LogoutHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token=str):
-        self.log.info('user logout')
+        self.log.info('+++++++++++user logout+++++++++++')
         result = yield self.db.User_logout(token)
 
         self.write(ObjectToString().encode(result))
@@ -123,7 +123,7 @@ class ForgetpwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user forget password')
+        self.log.info('+++++++++++user forget password+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         data = dict()
         try:
@@ -154,7 +154,7 @@ class UpdatePwdHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user update password')
+        self.log.info('+++++++++++user update password+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         try:
             token = self.get_argument('token')
@@ -196,7 +196,7 @@ class UserHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        self.log.info('user info')
+        self.log.info('+++++++++++user info+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Home_user(token, cache_flag=cache_flag)
@@ -215,7 +215,7 @@ class UserinfoeditHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user edit info')
+        self.log.info('+++++++++++user edit info+++++++++++')
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         sex = self.get_argument('sex')
@@ -238,7 +238,7 @@ class MessageHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        self.log.info('message number')
+        self.log.info('+++++++++++message number+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
@@ -259,7 +259,7 @@ class MessageAllHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('get resume all status')
+        self.log.info('+++++++++++get resume all status+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_all(page, num, token, cache_flag=cache_flag)
@@ -280,7 +280,7 @@ class MessageViewedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view resume status viewed')
+        self.log.info('+++++++++++user view resume status viewed+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_viewed(page, num, token, cache_flag=cache_flag)
@@ -300,7 +300,7 @@ class MessageCommunicatedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view resume status pass and info')
+        self.log.info('+++++++++++user view resume status pass and info+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_communicated(page, num, token, cache_flag=cache_flag)
@@ -315,12 +315,12 @@ class MessageCommunicatedHandler(BaseHandler):
         self.finish()
         return
 
-# 简历状态查看get面试通过
+# 简历状态查看get邀请面试
 class MessagePassedHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view resume status passed')
+        self.log.info('+++++++++++user view resume status notify+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_passed(page, num, token, cache_flag=cache_flag)
@@ -340,7 +340,7 @@ class MessageImproperHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view resume status deny')
+        self.log.info('+++++++++++user view resume status deny+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_improper(page, num, token, cache_flag=cache_flag)
@@ -360,7 +360,7 @@ class MessagefullHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, job_id, token):
-        self.log.info('user view resume status full')
+        self.log.info('+++++++++++User View resume full-status+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Message_full(job_id, token, cache_flag=cache_flag)
@@ -380,7 +380,7 @@ class ViewcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('user view collection job')
+        self.log.info('+++++++++++user view collection job+++++++++++')
         cache_flag = self.get_cache_flag()
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.view_user_collections(page, num, token, cache_flag=cache_flag)
@@ -400,7 +400,7 @@ class AddcollectHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('user add or del collections')
+        self.log.info('+++++++++++user add or del collections+++++++++++')
         self.log.info(json.dumps(self.get_arguments()))
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -425,7 +425,7 @@ class CutcollectHandler(BaseHandler):
     @tornado.web.asynchronous
     def post(self):
         self.log.info(json.dumps(self.get_arguments()))
-        self.log.info('user cancel collections')
+        self.log.info('+++++++++++user cancel collections+++++++++++')
         cache_flag = self.get_cache_flag()
         data = dict()
         try:

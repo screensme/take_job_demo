@@ -4,7 +4,6 @@ from tornado import gen
 from tornado import web
 import json
 from api.base_handler import BaseHandler
-import logging
 import tornado
 from common.tools import args404, ObjectToString
 
@@ -15,7 +14,7 @@ class HomeHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self, page, num, token):
         cache_flag = self.get_cache_flag()
-        # token = self.get_argument('token')
+        self.log.info('+++++++++++Home page+++++++++++')
         result = yield self.db.Home_info(page, num, token, cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -26,6 +25,7 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Search+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -52,6 +52,7 @@ class RecommendjobHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Recommend job+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
@@ -68,6 +69,7 @@ class FeedbackHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++Feedback+++++++++++')
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
@@ -84,6 +86,7 @@ class PositionHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, job_id, token):
+        self.log.info('+++++++++++Position Full+++++++++++')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Position_full(job_id, token, cache_flag)
 
@@ -91,11 +94,12 @@ class PositionHandler(BaseHandler):
         self.finish()
         return
 
-# 首页搜索
+# 热门搜索
 class HostsearchlistHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
+        self.log.info('+++++++++++Hot search+++++++++++')
         cache_flag = self.get_cache_flag()
         # token = self.get_argument('token')
         # page = self.get_argument('page')
@@ -112,6 +116,7 @@ class HotcityHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
+        self.log.info('+++++++++++Hot city+++++++++++')
         cache_flag = self.get_cache_flag()
         data = dict()
         data['hotcity'] = ['不限', '北京', '上海', '广州','深圳']
