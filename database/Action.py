@@ -44,7 +44,7 @@ class Action(object):
         foo_uuid = str(uuid.uuid1())
         hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
 
-        user_info = self.db.get('SELECT * FROM rcat_test.candidate_user where phonenum=%s' % mobile)
+        user_info = self.db.get('SELECT * FROM candidate_user where phonenum=%s' % mobile)
         if user_info != None:
             result['status'] = 'fail'
             result['msg'] = '手机号已经被注册'
@@ -79,7 +79,7 @@ class Action(object):
                     sex = ""
                     dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    sqll = "INSERT INTO rcat_test.candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    sqll = "INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     user_write = self.db.insert(sqll,
                                                 mobile, hash_pass, active, authenticated,
                                                 post_status, tag, dt_created, dt_updated, foo_uuid,
@@ -135,7 +135,7 @@ class Action(object):
     @tornado.gen.coroutine
     def User_logout(self, token=str):
 
-        sql = "SELECT * FROM rcat_test.candidate_user WHERE id=%s" % token
+        sql = "SELECT * FROM candidate_user WHERE id=%s" % token
         search_user = self.db.get(sql)
         result = dict()
         if (search_user['id'] != token):
@@ -350,7 +350,7 @@ class Action(object):
         self.log.info('id_list = %s' % contect)
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
-        search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+        search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                  %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo',args))
 
         for index in search_job:
@@ -417,7 +417,7 @@ class Action(object):
                 contect_id = sorted(eval(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
-                    search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                    search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
                     for index in search_job:
                         # 调整所有为null的值为""
@@ -505,7 +505,7 @@ class Action(object):
                 contect_id = sorted(eval(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
-                search_job = self.db.query("SELECT %s FROM rcat_test.jobs_hot_es_test WHERE id IN (%s)"
+                search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
                 for index in search_job:
                     for ind in index:
@@ -1229,7 +1229,7 @@ class Action(object):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         result = dict()
-        sql = "update rcat_test.candidate_collection set status='delete', dt_update=%s" \
+        sql = "update candidate_collection set status='delete', dt_update=%s" \
                  " where user_id=%s and job_id=%s"
         try:
             search_status = self.db.update(sql, dt, token, job_id)
