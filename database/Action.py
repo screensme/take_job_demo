@@ -1284,7 +1284,8 @@ class Action(object):
             search_company_userid = self.db.get(sql_company_userid)
             if search_company_userid is None:
                 status = 'success'
-                msg = '公司收消息错误'
+                msg = '投递成功'
+                self.log.info("User post job , But company_user is None!!!")
             else:
                 m_info = {'type': 'post',
                           'info': u'您有新投递的简历'}
