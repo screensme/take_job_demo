@@ -45,6 +45,7 @@ class Action(object):
         hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
 
         user_info = self.db.get('SELECT * FROM candidate_user where phonenum=%s' % mobile)
+        self.db.close()
         if user_info != None:
             result['status'] = 'fail'
             result['msg'] = '手机号已经被注册'
@@ -103,6 +104,7 @@ class Action(object):
         result = dict()
         sql = "select id,password,user_name,sex,avatar from candidate_user where phonenum=%s" % mobile
         search_mobile = self.db.get(sql)
+        self.db.close()
         if search_mobile is None:
                 result['status'] = 'fail'
                 result['token'] = ''
@@ -113,6 +115,7 @@ class Action(object):
                 # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
                 sql_cv = "select candidate_cv from candidate_cv where user_id=%s" % search_mobile['id']
                 search_cv = self.db.get(sql_cv)
+                self.db.close()
                 if search_cv is None:
                     search_mobile['cv_name'] = ''
                 else:
@@ -137,6 +140,7 @@ class Action(object):
 
         sql = "SELECT * FROM candidate_user WHERE id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
         result = dict()
         if (search_user['id'] != token):
                 result['status'] = 'fail'
@@ -160,6 +164,7 @@ class Action(object):
         # dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         sql_search = "select * from candidate_user where phonenum=%s" % (mobile,)
         search_mobile = self.db.get(sql_search)
+        self.db.close()
         if search_mobile == None:
             result['status'] = 'fail'
             result['token'] = ''
@@ -209,6 +214,7 @@ class Action(object):
 
         sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
         search_user = self.db.get(sql)
+        self.db.close()
         if (search_user['password'] != bcrypt.hashpw(oldpwd.encode('utf-8'), search_user['password'].encode('utf-8'))) \
                 or (search_user is None):
             result = dict()
@@ -239,6 +245,7 @@ class Action(object):
             if key == "register":   # 注册
                 sql = "select id from candidate_user where phonenum=%s" % mobile
                 search_mobile = self.db.get(sql)
+                self.db.close()
                 if search_mobile != None:
                     result['status'] = 'fail'
                     result['token'] = ''
@@ -279,6 +286,7 @@ class Action(object):
             if key == "register":   # 注册
                 sql = "select id from candidate_user where phonenum=%s" % mobile
                 search_mobile = self.db.get(sql)
+                self.db.close()
                 if search_mobile != None:
                     result['status'] = 'fail'
                     result['token'] = ''
@@ -310,6 +318,7 @@ class Action(object):
         sql = "SELECT %s FROM candidate_cv WHERE user_id='%s'" \
             % ("id, user_id, username, sex, age, edu, school, major", token)
         search_user = self.db.get(sql)
+        self.db.close()
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -464,6 +473,7 @@ class Action(object):
             uri = '%squery_recommend_job' % self.esapi
             sql_user_info = "select %s from candidate_cv where user_id=%s" % ('user_id,school,major,candidate_cv', token)
             search_user = self.db.get(sql_user_info)
+            self.db.close()
         else:   # 未登录状态
             self.log.info('Recommend job, user==%s' % token)
             uri = '%squery_new_job' % self.esapi
@@ -559,6 +569,7 @@ class Action(object):
 
         sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
         search_user = self.db.get(sql)
+        self.db.close()
         if search_user == None:
             boss_profile = 0
         else:
@@ -739,6 +750,7 @@ class Action(object):
         sql = "select operate_massage from candidate_post where job_id=%s and user_id=%s" % (job_id, token)
         try:
             search_status = self.db.get(sql)
+            self.db.close()
             if search_status is None:
                 search_st = []
             else:
@@ -766,6 +778,7 @@ class Action(object):
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
                   % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo",job_id)
         search_job = self.db.get(sql_job)
+        self.db.close()
         if search_job == None:
             search_job = {}
         else:
@@ -794,10 +807,12 @@ class Action(object):
                 if search_job['site_name'] == u'智联招聘':
                     sql_address = "select address from spider_company where company_name ='%s'" % search_job['company_name']
                     search_company = self.db.get(sql_address)
+                    self.db.close()
                     search_job['company_address'] = search_company['address']
                 else:
                     sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
                     search_company = self.db.get(sql_address)
+                    self.db.close()
                     search_job['company_address'] = search_company['company_address']
             except Exception, e:
                 self.log.info("ERROR is %s" % e)
@@ -838,12 +853,15 @@ class Action(object):
         sql = "select site_name,company_name from jobs_hot_es_test where company_id ='%s'" % company_id
         try:
             search_job = self.db.get(sql)
+            self.db.close()
             if search_job['site_name'] == u'智联招聘':
                 sqlll = "select * from spider_company where company_name ='%s'" % search_job['company_name']
                 search_company = self.db.get(sqlll)
+                self.db.close()
             else:
                 sqll = "select * from company_detail where company_name ='%s'" % search_job['company_name']
                 search_company = self.db.get(sqll)
+                self.db.close()
             if search_company == None:
                 search_company = {}
             # 调整所有为null的值为""
@@ -866,6 +884,7 @@ class Action(object):
 
         sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
         search_resume = self.db.get(sql_resume)
+        self.db.close()
         try:
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
         except Exception, e:
@@ -885,6 +904,7 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
         # 新建
         if search_user is None:
             data = eval(basic)
@@ -948,6 +968,7 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
 
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 新建
@@ -1003,6 +1024,7 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
         # 新建
         if search_user is None:
             data = eval(expect)
@@ -1043,6 +1065,7 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
         # 新建
         if search_user is None:
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1095,6 +1118,7 @@ class Action(object):
 
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
+        self.db.close()
         # 新建--
         if search_user is None:
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1192,6 +1216,7 @@ class Action(object):
         try:
             # 查找是否收藏
             search_if = self.db.get(sql)
+            self.db.close()
             if search_if['count(userid)'] == 0:
                 insert_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
                 result_sql = {'collect': 1}
@@ -1200,6 +1225,7 @@ class Action(object):
                 # 判断收藏状态（收藏或删除）
                 sql_update = "select * from candidate_collection where user_id=%s and job_id=%s" % (token, job_id)
                 search_status = self.db.get(sql_update)
+                self.db.close()
                 if search_status['status'] == "delete":
                     sta = 'favorite'
                     msg = '已收藏'
@@ -1257,9 +1283,11 @@ class Action(object):
         sql = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
 
         search_status = self.db.get(sql)
+        self.db.close()
         if search_status == None:
             sql_resume = "select allow_post from candidate_cv where user_id=%s" % token
             user_resume = self.db.get(sql_resume)
+            self.db.close()
             if (user_resume is None) or (user_resume['allow_post'] == 0):
                 result = dict()
                 result['status'] = 'fail'
@@ -1290,6 +1318,7 @@ class Action(object):
             sql_company_userid = "select company_user_id from company_jd as j " \
                                  "left join jobs_hot_es_test as p on p.id=j.es_id where p.id =%s" % (job_id,)
             search_company_userid = self.db.get(sql_company_userid)
+            self.db.close()
             if search_company_userid is None:
                 status = 'success'
                 msg = '投递成功'
@@ -1324,6 +1353,7 @@ class Action(object):
     def Judgment_resume(self, token=str):
             sql_status = "select candidate_cv from candidate_cv where user_id=%s" % token
             resume_status = self.db.get(sql_status)
+            self.db.close()
             user_cv = json.loads(resume_status['candidate_cv'])
 
             up_status = "update candidate_cv set allow_post=%s where user_id=%s"
@@ -1388,6 +1418,7 @@ class Action(object):
             try:
                 sql_cv = "select username,sex from candidate_cv where user_id=%s" % index['id']
                 se_cv = self.db.get(sql_cv)
+                self.db.close()
                 if se_cv == None:
                     pass
                 else:
