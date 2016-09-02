@@ -3,7 +3,7 @@
 from tornado import gen
 import json
 from api.base_handler import BaseHandler
-import logging
+import re
 import tornado
 from common.tools import args404, ObjectToString
 
@@ -13,8 +13,15 @@ class ResumeHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self, token):
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Resume_view(token, cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Resume_view(token, cache_flag)
 
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
         self.write(ObjectToString().encode(result))
         self.finish()
         return
