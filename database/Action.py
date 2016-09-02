@@ -769,6 +769,11 @@ class Action(object):
         if search_job == None:
             search_job = {}
         else:
+            # 调整所有为null的值为""
+            for index in search_job.keys():
+                if search_job[index] == None:
+                    search_job[index] = ''
+            search_job['position_des'] = search_job['position_des'].replace("<br/>", "\n")
             if search_job['company_logo'] != '':
                 search_job['company_logo'] = "%s" % self.image + search_job['company_logo']
             search_job['boom'] = search_job.pop('boon')
@@ -818,10 +823,7 @@ class Action(object):
                     search_job['resume_post'] = 2
             except Exception, e:
                 self.log.info('ERROR is %s' % e)
-            # 调整所有为null的值为""
-            for index in search_job.keys():
-                if search_job[index] == None:
-                    search_job[index] = ''
+
         result = dict()
         result['status'] = 'success'
         result['token'] = token
