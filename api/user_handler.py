@@ -198,7 +198,14 @@ class UserHandler(BaseHandler):
     def get(self, token):
         self.log.info('user info')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Home_user(token, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Home_user(token, cache_flag=cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -214,7 +221,14 @@ class UserinfoeditHandler(BaseHandler):
         sex = self.get_argument('sex')
         avatar = self.get_argument('avatar')
         user_name = self.get_argument('user_name')
-        result = yield self.db.User_info_edit(token, user_name, sex, avatar, cache_flag=cache_flag)
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.User_info_edit(token, user_name, sex, avatar, cache_flag=cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
         self.write(ObjectToString().encode(result))
         self.finish()
         return

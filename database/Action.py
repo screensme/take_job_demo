@@ -85,10 +85,11 @@ class Action(object):
                                                 post_status, tag, dt_created, dt_updated, foo_uuid,
                                                 user_name, avatar, sex)
 
+                    sql_user = "select id,password,user_name,sex,avatar from candidate_user where phonenum=%s" % mobile
                     result['status'] = 'success'
                     result['msg'] = ''
                     result['token'] = user_write
-                    result['data'] = {'token': user_write}
+                    result['data'] = {'token': sql_user}
                 except Exception, e:
                     result['status'] = 'fail'
                     result['msg'] = e.message
