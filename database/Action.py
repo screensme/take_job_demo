@@ -1257,7 +1257,7 @@ class Action(object):
                 result['status'] = 'fail'
                 result['token'] = token
                 result['msg'] = '简历信息不完整'
-                result['data'] = {}
+                result['data'] = {'errorcode': 10}
                 raise tornado.gen.Return(result)
             else:
                 match_rate = random.randint(50, 100)
@@ -1275,7 +1275,7 @@ class Action(object):
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '已投递的职位'
-            result['data'] = {}
+            result['data'] = {'errorcode': 20}
             raise tornado.gen.Return(result)
         # 用户投递简历后，公司收到消息
         try:
@@ -1303,6 +1303,7 @@ class Action(object):
         except Exception, e:
             status = 'fail'
             msg = '%s' % e
+            post_resume = {'errorcode': 500}
         result = dict()
         result['status'] = status
         result['token'] = token

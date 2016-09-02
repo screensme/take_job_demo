@@ -878,6 +878,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id
 	job_id		Y	string		职位id
+
+----返回失败种类： 
+	 
+	errorcode:10(简历信息不完整)  
+	errorcode:20(已投递的职位)  
+	errorcode：500(服务器异常)  
 返回成功：
 ```{
   "status": "success",
@@ -885,20 +891,15 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "1",
   "data": 1399
 }```  
-返回失败1：
+返回失败：
 ```{
   "status": "fail",
   "msg": "已投递的职位",
   "token": "1",
-  "data": {}
+  "data": {
+	'errorcode':10
+	}
 }```  
-返回失败2：
-```{
-  "status": "fail",
-  "msg": "简历信息不完整",
-  "token": "27",
-  "data": {}
-}```
 ####28.忘记，找回密码post：/auth/forgetpwd  
 参数：
 		
