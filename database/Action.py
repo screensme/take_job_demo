@@ -601,6 +601,7 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = boss_profile
+        self.log.info(boss_profile)
         raise tornado.gen.Return(result)
 
     # 简历状态查看get被查看
@@ -632,6 +633,7 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
+        self.log.info(search_status)
         raise tornado.gen.Return(result)
 
     # 简历状态查看get简历通过
@@ -663,6 +665,7 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
+        self.log.info(search_status)
         raise tornado.gen.Return(result)
 
     # 简历状态查看get邀请面试
@@ -694,6 +697,7 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
+        self.log.info(search_status)
         raise tornado.gen.Return(result)
 
     # 简历状态查看get不合适
@@ -725,6 +729,7 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_status
+        self.log.info(search_status)
         raise tornado.gen.Return(result)
 
     # 消息详情页，时间轴
