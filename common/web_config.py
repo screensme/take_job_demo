@@ -18,13 +18,23 @@ MY_SQL = {
                       'db': 'rcat_test',
                       'user': 'probie_test',
                       'pwd': 'tt_probie'
-                      }}
+                      },
+    'mysql-online': {'host': 'rds6zqwqw8amt8v02464.mysql.rds.aliyuncs.com:3306',
+                      # 'port': '',
+                      'db': 'cainiao',
+                      'user': 'user_01',
+                      'pwd': 'yigehenchanghenchangdemima'
+                      }
+}
 ES_API = {
     'esapi-neiwang': {
         'url': 'http://192.168.12.146:8000/'
     },
     'esapi-waiwang': {
         'url': 'http://182.92.99.38:8000/'
+    },
+    'esapi-online': {
+        'url': 'http://100.98.221.12:9200/'
     }
 }
 

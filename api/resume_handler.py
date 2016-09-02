@@ -172,3 +172,19 @@ class ResumeEvaluationHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# 简历编辑-修改头像post
+class ResumeAvatarHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        avatar = self.get_argument('avatar')
+
+        result = yield self.db.Resume_Avatar(token, avatar, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
