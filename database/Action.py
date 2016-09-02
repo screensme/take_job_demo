@@ -742,6 +742,7 @@ class Action(object):
                 else:
                     search_st = json.loads(search_status['operate_massage'])
             status = 'success'
+            self.log.info(search_st)
         except Exception, e:
             self.log.info('ERROR is %s' % e)
             status = 'fail'
