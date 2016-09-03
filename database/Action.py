@@ -902,12 +902,13 @@ class Action(object):
     # 简历编辑-基本信息post
     @tornado.gen.coroutine
     def Resume_Basic(self, token=str, basic=str, cache_flag=int):
-
+        self.log.info('+++++++++++Resume edit 2222222222+++++++++++')
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
         self.db.close()
         # 新建
         if search_user is None:
+            self.log.info('==============Resume edit none 222222222==============')
             data = eval(basic)
             dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -921,16 +922,21 @@ class Action(object):
             cv_dict_default['basic'] = data
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            self.log.info( "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" %(token, data['name'], 'public', data['name'], data['gender'],
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update))
             edit_resume = self.db.insert(sqll,
                                          token, data['name'], 'public', data['name'], data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             # 第一次新建的时候，流程跟网站相同。。然后将基本信息写到个人信息的数据库中
             sql_userinfo = "update candidate_user set user_name=%s,sex=%s where id=%s"
+            self.log.info("update candidate_user set user_name=%s,sex=%s where id=%s" % token)
             insert_user_info = self.db.update(sql_userinfo, data['name'], data['gender'], token)
             self.log.info("user(%s) add resume-basic,resume_id=%s; AND update user_info" % (token, edit_resume, ))
         # 修改
         else:
+            self.log.info('==============Resume edit yes 222222222==============')
             basic_resume = json.loads(search_user['candidate_cv'])
             data = eval(basic)
             data['avatar'] = basic_resume['basic']['avatar']
@@ -953,6 +959,7 @@ class Action(object):
             # age = int(nowyear) - int(data['birthday'])
             age = ""
             sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+            self.log.info('update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s' % (resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token))
             edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
@@ -968,6 +975,7 @@ class Action(object):
     def Resume_Education(self, token=str, education=str, cache_flag=int):
 
         sql = "select * from candidate_cv where user_id=%s" % token
+        self.log.info(sql)
         search_user = self.db.get(sql)
         self.db.close()
 
@@ -982,6 +990,9 @@ class Action(object):
             cv_dict_default['education'] = data
             json_cv = json.dumps(cv_dict_default)
             sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            self.log.info("insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (token, "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt, dt))
             edit_resume = self.db.insert(sqll,
                                          token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
