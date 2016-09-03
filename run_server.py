@@ -45,6 +45,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         settings = dict()
         tornado.web.Application.__init__(self, urls, **settings)
+        web_log.init()
         self.log = web_log.debugf("")
         self.template_path = os.path.join(os.path.dirname(__file__), 'templates'),
         sms = options.sms
