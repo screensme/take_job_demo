@@ -116,11 +116,12 @@ class Action(object):
                 sql_cv = "select candidate_cv from candidate_cv where user_id=%s" % search_mobile['id']
                 search_cv = self.db.get(sql_cv)
                 self.db.close()
+                self.log.info(search_cv)
                 if search_cv is None:
                     search_mobile['cv_name'] = ''
                 else:
                     # cv = json.loads(search_cv['candidate_cv'])
-                    search_mobile['cv_name'] = '0123456'
+                    search_mobile['cv_name'] = "123456"
                 search_mobile.pop('password')
 
                 result['status'] = 'success'

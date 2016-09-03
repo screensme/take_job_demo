@@ -1,9 +1,2 @@
-2016-08-22 14:29:25,573 $5580--MainThread root INFO Action.py: #23 mysql=192.168.12.146:3306,db=rcat_test
-2016-08-22 14:29:44,763 $5580--MainThread tornado.application ERROR http1connection.py: #53 Uncaught exception
-Traceback (most recent call last):
-  File "F:\SOFEWARE\python2.7.12\lib\site-packages\tornado\http1connection.py", line 236, in _read_message
-    delegate.finish()
-  File "F:\SOFEWARE\python2.7.12\lib\site-packages\tornado\httpserver.py", line 267, in finish
-    self.server.request_callback(self.request)
-TypeError: 'Application' object is not callable
-2016-08-22 14:31:23,210 $6336--MainThread root INFO Action.py: #23 mysql=192.168.12.146:3306,db=rcat_test
+2016-09-03 11:19:50,507 $6732--MainThread root INFO Action.py: #36 mysql=192.168.12.146:3306, db=rcat_test, esapi=http://192.168.12.146:8000/, cache=127.0.0.1
+2016-09-03 11:19:50,513 $6732--MainThread root DEBUG run_server.py: #75 load finished! listening on 127.0.0.1:8889
