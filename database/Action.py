@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import sys
 from tornado import gen
 import datetime
 import time
@@ -17,6 +18,8 @@ from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 from common import IF_email
 # import oss2
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class Action(object):
     def __init__(self, dbhost=str, dbname=str, dbuser=str, dbpwd=str, log=None, sms=int, image=str, esapi=str,

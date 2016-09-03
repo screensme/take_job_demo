@@ -1,2 +1,0 @@
-2016-09-03 11:19:50,507 $6732--MainThread root INFO Action.py: #36 mysql=192.168.12.146:3306, db=rcat_test, esapi=http://192.168.12.146:8000/, cache=127.0.0.1
-2016-09-03 11:19:50,513 $6732--MainThread root DEBUG run_server.py: #75 load finished! listening on 127.0.0.1:8889
