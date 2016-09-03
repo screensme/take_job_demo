@@ -120,7 +120,7 @@ class Action(object):
                     search_mobile['cv_name'] = ''
                 else:
                     cv = json.loads(search_cv['candidate_cv'])
-                    search_mobile['cv_name'] = cv['basic']['name']
+                    search_mobile['cv_name'] = '1'
                 search_mobile.pop('password')
 
                 result['status'] = 'success'

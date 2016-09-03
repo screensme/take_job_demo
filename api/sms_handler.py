@@ -12,6 +12,8 @@ class SendSmsHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info('+++++++++++send sms+++++++++++')
+        self.log.info(json.dumps(self.get_arguments()))
         mobile = self.get_argument('mobile')
         key = self.get_argument('key')
         cache_flag = self.get_cache_flag()
@@ -26,6 +28,7 @@ class VerifySmsHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, mobile, code):
+        self.log.info('+++++++++++Verify sms+++++++++++')
         cache_flag = self.get_cache_flag()
         result = yield self.db.Verification_sms(mobile, code, cache_flag)
 
