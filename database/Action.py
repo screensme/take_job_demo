@@ -119,7 +119,7 @@ class Action(object):
                 if search_cv is None:
                     search_mobile['cv_name'] = ''
                 else:
-                    cv = json.loads(search_cv['candidate_cv'])
+                    # cv = json.loads(search_cv['candidate_cv'])
                     search_mobile['cv_name'] = '0123456'
                 search_mobile.pop('password')
 
