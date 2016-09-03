@@ -74,16 +74,13 @@ class Action(object):
                     active = '1'
                     authenticated = '1'
                     post_status = 'allow'
-                    tag = 'test'
+                    tag = ''
                     user_name = ""
                     avatar = ""
                     sex = ""
                     dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     sqll = "INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    self.log.info("INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (mobile, hash_pass, active, authenticated,
-                                                post_status, tag, dt_created, dt_updated, foo_uuid,
-                                                user_name, avatar, sex))
                     user_write = self.db.insert(sqll,
                                                 mobile, hash_pass, active, authenticated,
                                                 post_status, tag, dt_created, dt_updated, foo_uuid,
