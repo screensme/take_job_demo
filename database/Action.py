@@ -117,14 +117,21 @@ class Action(object):
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
                 sql_cv = "select candidate_cv from candidate_cv where user_id=%s" % search_mobile['id']
-                search_cv = self.db.get(sql_cv)
-                self.db.close()
-                self.log.info(search_cv)
-                if search_cv is None:
-                    search_mobile['cv_name'] = ''
-                else:
-                    # cv = json.loads(search_cv['candidate_cv'])
-                    search_mobile['cv_name'] = "123456"
+                try:
+                    search_cv = self.db.get(sql_cv)
+                    self.db.close()
+                    self.log.info(search_cv)
+                    if search_cv is None:
+                        search_mobile['cv_name'] = ''
+                    else:
+                        # cv = json.loads(search_cv['candidate_cv'])
+                        search_mobile['cv_name'] = "123456"
+                except Exception, e:
+                    result['status'] = 'fail'
+                    result['token'] = ''
+                    result['msg'] = '服务器错误，正在修复中!'
+                    result['data'] = {}
+                    raise tornado.gen.Return(result)
                 search_mobile.pop('password')
 
                 result['status'] = 'success'
@@ -379,6 +386,8 @@ class Action(object):
                 index['salary_end'] = index['salary_end'] / 1000
             if index['company_logo'] != '':
                 index['company_logo'] = "%s" % self.image + index['company_logo']
+            else:
+                index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
             if index['job_type'] == 'fulltime':
                 index['job_type'] = '全职'
             elif index['job_type'] == 'parttime':
@@ -440,6 +449,8 @@ class Action(object):
                         # 薪资显示单位为K
                         if index['company_logo'] != '':
                             index['company_logo'] = "%s" % self.image + index['company_logo']
+                        else:
+                            index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                         index['salary_start'] = index['salary_start'] / 1000
                         if (index['salary_end'] % 1000) >= 1:
                             index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -527,6 +538,8 @@ class Action(object):
                             index[ind] = ""
                     if index['company_logo'] != '':
                         index['company_logo'] = "%s" % self.image + index['company_logo']
+                    else:
+                        index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                     index['salary_start'] = index['salary_start'] / 1000
                     if (index['salary_end'] % 1000) >= 1:
                         index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -601,6 +614,8 @@ class Action(object):
             for index in boss_profile:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -633,6 +648,8 @@ class Action(object):
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -665,6 +682,8 @@ class Action(object):
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -697,6 +716,8 @@ class Action(object):
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -729,6 +750,8 @@ class Action(object):
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['salary_start'] = index['salary_start'] / 1000
                 if (index['salary_end'] % 1000) >= 1:
                     index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -1196,6 +1219,8 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
                 index['id'] = index['jobid']
                 if index['job_type'] == 'fulltime':
                     index['job_type'] = '全职'
