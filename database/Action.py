@@ -828,7 +828,7 @@ class Action(object):
                     search_collect = self.db.query(sql_collect)
                     sql_post = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
                     search_post = self.db.query(sql_post)
-                    # 0-未收藏---未投递； 1-已收藏---已投递
+                    # 0-未收藏---未投递； 1-已收藏---已投递； 2-未登录
                     if search_collect == []:
                         search_job['collect'] = 0
                     else:
