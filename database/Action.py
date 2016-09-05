@@ -816,6 +816,8 @@ class Action(object):
             search_job['position_des'] = search_job['position_des'].replace("<br/>", "\n")
             if search_job['company_logo'] != '':
                 search_job['company_logo'] = "%s" % self.image + search_job['company_logo']
+            else:
+                search_job['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
             search_job['boom'] = search_job.pop('boon')
             if search_job['job_type'] == 'fulltime':
                 search_job['job_type'] = '全职'
