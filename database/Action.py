@@ -17,7 +17,8 @@ import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 from common import IF_email
-# import oss2
+import oss2
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -29,6 +30,7 @@ class Action(object):
                                     database=dbname,
                                     user=dbuser,
                                     password=dbpwd,
+                                    connect_timeout=5
                                     )
         pool = redis.ConnectionPool(host=cahost, port=caport, db=caseldb, password=capassword)
         self.cacheredis = redis.StrictRedis(connection_pool=pool)
@@ -927,6 +929,26 @@ class Action(object):
         result['data'] = search_resume
         raise tornado.gen.Return(result)
 
+    # 简历编辑-修改头像post
+    @tornado.gen.coroutine
+    def Resume_Avatar(self, token=str, cache_flag=int):
+
+        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        search_resume = self.db.get(sql_resume)
+        self.db.close()
+        try:
+            search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
+        except Exception, e:
+            pass
+        if search_resume == None:
+            search_resume = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_resume
+        raise tornado.gen.Return(result)
+
     # 简历编辑-基本信息post
     @tornado.gen.coroutine
     def Resume_Basic(self, token=str, basic=str, cache_flag=int):
@@ -959,7 +981,7 @@ class Action(object):
                                          dt_create, dt_update)
             # 第一次新建的时候，流程跟网站相同。。然后将基本信息写到个人信息的数据库中
             sql_userinfo = "update candidate_user set user_name=%s,sex=%s where id=%s"
-            self.log.info("update candidate_user set user_name=%s,sex=%s where id=%s" % token)
+            self.log.info("update candidate_user set user_name=%s,sex=%s where id=%s" % (data['name'], data['gender'], token))
             insert_user_info = self.db.update(sql_userinfo, data['name'], data['gender'], token)
             self.log.info("user(%s) add resume-basic,resume_id=%s; AND update user_info" % (token, edit_resume, ))
         # 修改
