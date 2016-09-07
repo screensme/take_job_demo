@@ -90,6 +90,7 @@ class Action(object):
                                                 mobile, hash_pass, active, authenticated,
                                                 post_status, tag, dt_created, dt_updated, foo_uuid,
                                                 user_name, avatar, sex)
+                    self.db.close()
 
                     result['status'] = 'success'
                     result['msg'] = ''
@@ -205,6 +206,7 @@ class Action(object):
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     sql_update = "update candidate_user set password=%s,dt_update=%s where phonenum=%s"
                     update_pwd = self.db.update(sql_update, hash_pass, dt_updated, mobile)
+                    self.db.close()
                     self.log.info('user update_pwd,id=%s' % update_pwd)
                     result['status'] = 'success'
                     result['token'] = search_mobile['id']
@@ -238,6 +240,7 @@ class Action(object):
         else:
             hash_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
             update_pwd = self.db.update("update candidate_user set password=%s where id=%s", hash_pwd, token)
+            self.db.close()
 
             self.log.info("user edit password %s (1 mean yes,0 nean no)")
             result = dict()
@@ -347,6 +350,7 @@ class Action(object):
         sql_update = "update candidate_user set user_name=%s,sex=%s,avatar=%s where id=%s"
         try:
             search_user = self.db.update(sql_update, user_name, sex, avatar, token)
+            self.db.close()
         except Exception, e:
             result['status'] = 'fail'
             result['token'] = token
@@ -375,6 +379,7 @@ class Action(object):
         search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                  %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo',args))
 
+        self.db.close()
         for index in search_job:
             # 调整所有为null的值为""
             for ind in index:
@@ -443,6 +448,7 @@ class Action(object):
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                    self.db.close()
                     for index in search_job:
                         # 调整所有为null的值为""
                         for ind in index:
@@ -534,6 +540,7 @@ class Action(object):
             if args != '':
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                self.db.close()
                 for index in search_job:
                     for ind in index:
                         if index[ind] == None:
@@ -613,6 +620,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             boss_profile = self.db.query(sql)
+            self.db.close()
             for index in boss_profile:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
@@ -647,6 +655,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
+            self.db.close()
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
@@ -681,6 +690,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
+            self.db.close()
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
@@ -715,6 +725,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
+            self.db.close()
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
@@ -749,6 +760,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
+            self.db.close()
             for index in search_status:
                 if index['company_logo'] != '':
                     index['company_logo'] = "%s" % self.image + index['company_logo']
@@ -853,8 +865,10 @@ class Action(object):
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
                                   % (token, job_id)
                     search_collect = self.db.query(sql_collect)
+                    self.db.close()
                     sql_post = "select * from candidate_post where user_id=%s and job_id=%s" % (token, job_id)
                     search_post = self.db.query(sql_post)
+                    self.db.close()
                     # 0-未收藏---未投递； 1-已收藏---已投递； 2-未登录
                     if search_collect == []:
                         search_job['collect'] = 0
@@ -979,10 +993,12 @@ class Action(object):
                                          token, data['name'], 'public', data['name'], data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            self.db.close()
             # 第一次新建的时候，流程跟网站相同。。然后将基本信息写到个人信息的数据库中
             sql_userinfo = "update candidate_user set user_name=%s,sex=%s where id=%s"
             self.log.info("update candidate_user set user_name=%s,sex=%s where id=%s" % (data['name'], data['gender'], token))
             insert_user_info = self.db.update(sql_userinfo, data['name'], data['gender'], token)
+            self.db.close()
             self.log.info("user(%s) add resume-basic,resume_id=%s; AND update user_info" % (token, edit_resume, ))
         # 修改
         else:
@@ -1011,6 +1027,7 @@ class Action(object):
             sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
             self.log.info('update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s' % (resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token))
             edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
+            self.db.close()
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
@@ -1047,6 +1064,7 @@ class Action(object):
                                          token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt, dt)
+            self.db.close()
         # 修改(传过来的数据至少有一条全都是空字符串的数据)
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1055,10 +1073,12 @@ class Action(object):
             if data == []:
                 sql_null = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
                 edit_resume = self.db.update(sql_null, json.dumps(basic_resume), dt, token)
+                self.db.close()
             else:
                 if data[0]['end_time'] == '':
                     sqllll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
                     edit_resume = self.db.update(sqllll, json.dumps(basic_resume), dt, token)
+                    self.db.close()
                 else:
                     for item in data:
                         item['end_time'] = int(time.mktime(time.strptime(item['end_time'], "%Y.%m")))
@@ -1070,7 +1090,7 @@ class Action(object):
                     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
                     edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
-
+                    self.db.close()
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
@@ -1103,6 +1123,7 @@ class Action(object):
                                          token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            self.db.close()
         # 修改
         else:
             expect_resume = json.loads(search_user['candidate_cv'])
@@ -1111,6 +1132,7 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
+            self.db.close()
 
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
@@ -1144,6 +1166,7 @@ class Action(object):
                                          token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            self.db.close()
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1152,6 +1175,7 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            self.db.close()
 
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
@@ -1196,6 +1220,7 @@ class Action(object):
                                          token, "", 'public', "", "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
+            self.db.close()
         # 修改
         else:
             expect_resume = json.loads(search_user['candidate_cv'])
@@ -1204,6 +1229,7 @@ class Action(object):
             dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
+            self.db.close()
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
@@ -1234,6 +1260,7 @@ class Action(object):
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
+            self.db.close()
             status = 'success'
             for index in search_status:
                 index['salary_start'] = index['salary_start'] / 1000
@@ -1283,6 +1310,7 @@ class Action(object):
             self.db.close()
             if search_if['count(userid)'] == 0:
                 insert_sql = self.db.insert(sql_ins, token, job_id, 'favorite', dt, dt)
+                self.db.close()
                 result_sql = {'collect': 1}
                 msg = '已收藏'
             else:
@@ -1294,11 +1322,13 @@ class Action(object):
                     sta = 'favorite'
                     msg = '已收藏'
                     update_db = self.db.update(sql_up, sta, dt, token, job_id)
+                    self.db.close()
                     result_sql = {'collect': 1}
                 else:
                     sta = 'delete'
                     msg = '已取消收藏'
                     update_db = self.db.update(sql_up, sta, dt, token, job_id)
+                    self.db.close()
                     result_sql = {'collect': 0}
             status = 'success'
         except Exception, e:
@@ -1323,6 +1353,7 @@ class Action(object):
                  " where user_id=%s and job_id=%s"
         try:
             search_status = self.db.update(sql, dt, token, job_id)
+            self.db.close()
             datas = {'collect': 0}
 
             result['status'] = 'success'
@@ -1368,6 +1399,7 @@ class Action(object):
                 sql_post = "insert into candidate_post(user_id, job_id, match_rate," \
                            " status, collect_status, dt_create, dt_update, operate_massage) values(%s,%s,%s,%s,%s,%s,%s,%s)"
                 post_resume = self.db.insert(sql_post, token, job_id, match_rate, status, collect_status, dt, dt, json.dumps(operate_massage))
+                self.db.close()
                 status = 'success'
                 msg = '投递成功'
         else:
@@ -1400,6 +1432,7 @@ class Action(object):
                 #                               message, 'unread', dt, dt))
                 post_company = self.db.insert(sql_company, sender, receiver_type, message_type, receiver_user_id,
                                               message, 'unread', dt, dt)
+                self.db.close()
                 self.log.info('company receive user resume,message_id=%s' % post_company)
         except Exception, e:
             status = 'fail'
@@ -1424,47 +1457,55 @@ class Action(object):
             if user_cv['basic']['name'] == '':
                 # 状态写为0
                 allow_0 = self.db.update(up_status, 0, token)
+                self.db.close()
                 self.log.info("candidate_cv allow_post=0; reson-->user_cv['basic']['name'] == ''")
                 return 0
             else:
                 if user_cv['education'] == []:
                     # 状态写为0
                     allow_0 = self.db.update(up_status, 0, token)
+                    self.db.close()
                     self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'] == []")
                     return 0
                 else:
                     if user_cv['education'][0]['end_time'] == '':
                         # 状态写为0
                         allow_0 = self.db.update(up_status, 0, token)
+                        self.db.close()
                         self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
                         return 0
                     else:
                         if user_cv['intension']['title'] == '':
                             # 状态写为0
                             allow_0 = self.db.update(up_status, 0, token)
+                            self.db.close()
                             self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
                             return 0
                         else:
                             if user_cv['career'] == []:
                                 # 状态写为0
                                 allow_0 = self.db.update(up_status, 0, token)
+                                self.db.close()
                                 self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
                                 return 0
                             else:
                                 if user_cv['career'][0]['end_time'] == '':
                                     # 状态写为0
                                     allow_0 = self.db.update(up_status, 0, token)
+                                    self.db.close()
                                     self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
                                     return 0
                                 else:
                                     if user_cv['extra']['description'] == '':
                                         # 状态写为0
                                         allow_0 = self.db.update(up_status, 0, token)
+                                        self.db.close()
                                         self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
                                         return 0
                                     else:
                                         # 状态写为1
                                         allow_1 = self.db.update(up_status, 1, token)
+                                        self.db.close()
                                         self.log.info("candidate_cv allow_post=1")
                                         return 1
 # ########################################################################
@@ -1477,6 +1518,7 @@ class Action(object):
         result = dict()
         sql_getuser = "select id from candidate_user"
         getuser = self.db.query(sql_getuser)
+        self.db.close()
         sql_update = "update candidate_user set user_name=%s,avatar=%s,sex=%s where id=%s"
         for index in getuser:
             try:
@@ -1487,6 +1529,7 @@ class Action(object):
                     pass
                 else:
                     search_st = self.db.update(sql_update, se_cv['username'], "", se_cv['sex'], index['id'])
+                    self.db.close()
                     print search_st
             except Exception, e:
                 search_status = self.log.info('ERROR is %s' % e)
