@@ -192,7 +192,7 @@ class ResumeAvatarHandler(BaseHandler):
         token = self.get_argument('token')
         avatar = self.get_argument('avatar')
 
-        result = yield self.db.Resume_Avatar(token, avatar, cache_flag)
+        result = yield self.db.Resume_Avatar(token=token, avatar=avatar, cache_flag=cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

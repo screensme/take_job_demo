@@ -64,7 +64,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 13.职位详情get：/position-full/job-{job_id}/token-{token}  
-14.公司详情get：/company-full/company-{company_id}/token-{token}  
+xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}  
 15.个人信息页get(基本信息)：/me/token-{token}  
 16.简历查看get：/resume-view/token-{token}  
 17.简历编辑-基本信息post：/resume-edit-basic  
@@ -83,6 +83,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 30.推荐职位post：/recommend-job
 31.消息详情get：/message-full/job-{job_id}/token-{token}  
 32.修改个人信息post：/user-info/edit  
+33.修改个人头像post：/user-info/avatar  
+34.修改简历头像post：/resume-edit-avatar  
+35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
+36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
+37.公司详情-所有职位get：/company-full/job/company-{company_id}/token-{token}  
 ***
 #####简历状态：  
 	
@@ -1050,4 +1055,150 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "170",
   "data": 1
-}```
+}```  
+####33.修改个人头像post：/user-info/avatar  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	avatar		Y	string		头像（文件名xxx.png）
+返回成功：  
+```{
+  "status": "success",
+  "msg": "修改个人头像成功",
+  "token": "238",
+  "data": {}
+}```  
+####34.修改简历头像post：/resume-edit-avatar  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	avatar		Y	string		头像（文件名xxx.png）
+返回成功：  
+```{
+  "status": "success",
+  "msg": "修改简历头像成功",
+  "token": "238",
+  "data": {}
+}```  
+####35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	company_id	Y	string		公司id
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "1",
+  "data": {
+    "company_logo": "http://imgtest.zhaopintt.com/company_logo_1.jpeg",
+    "company_type": "民营企业/私营公司",
+    "company_scale": "500-999人",
+    "company_name": "归途如虹",
+    "company_address": "西城区-丹棱街3号中国电子大厦B座1901北京",
+    "company_site": "www.baidu.com",
+    "company_trade": "移动互联网/O2O/数据服务"
+  }
+}```  
+返回错误:
+```{
+  "status": "fail",
+  "msg": "没有公司详情!",
+  "token": "1",
+  "data": {
+    "errorcode": 1001
+  }
+}```  
+####36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id
+	company_id	Y	string		公司id
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "1",
+  "data": {
+    "picture": [],
+    "company_des": "发展历程：上海德祐地产正式宣布合并。[3] \r\n■3月，中联地产与链家地产在全国范围内全面合并，旨在打造新链家万亿级房产O2O平台。[4]",
+    "company_id": "",
+    "boon": "",
+    "events": ""
+  }
+}```  
+返回错误:
+```{
+  "status": "fail",
+  "msg": "没有公司详情!",
+  "token": "1",
+  "data": {
+    "errorcode": 1001
+  }
+}```  
+####37.公司详情-所有职位get：/company-full/job/company-{company_id}/token-{token}  
+
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id
+	company_id		Y	string		公司id
+	page			Y	string		页数
+	num				Y	string		每页数量
+	job_type		Y	string		部门名称(默认请填写"全部")
+	company_id		Y	string		公司id
+	company_name	Y	string		公司名称
+返回成功：  
+```{
+  "status": "success",
+  "msg": "",
+  "token": "123",
+  "data": {
+    "department": [
+      "全部",
+      "111111111111111",
+      "开发部",
+      "市场部",
+      "grhg"
+    ],
+    "job": [
+      {
+        "job_id": 214423,
+        "job_type": "兼职",
+        "need_num": 10,
+        "job_city": "北京",
+        "salary_start": 9,
+        "dt_update": "2016-08-19T19:50:16",
+        "salary_end": 11,
+        "department": "",
+        "education_str": "不限",
+        "job_name": "发单员"
+      },
+      {
+        "job_id": 214421,
+        "job_type": "全职",
+        "need_num": 2,
+        "job_city": "北京",
+        "salary_start": 7,
+        "dt_update": "2016-08-19T19:05:42",
+        "salary_end": 12,
+        "department": "grhg",
+        "education_str": "不限",
+        "job_name": "g4g"
+      }
+    ]
+  }
+}```  
+返回错误:
+```{
+  "status": "fail",
+  "msg": "没有公司详情!",
+  "token": "1",
+  "data": {
+    "errorcode": 1001
+  }
+}```  

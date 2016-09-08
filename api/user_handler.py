@@ -44,6 +44,12 @@ class RegisterHandler(BaseHandler):
             result['token'] = ''
             result['msg'] = '缺少参数'
             result['data'] = {}
+        try:
+            data['jiguang_id'] = self.get_argument('jiguang_id')
+            data['umeng_id'] = self.get_argument('umeng_id')
+        except Exception, e:
+            data['jiguang_id'] = ""
+            data['umeng_id'] = ""
 
         if len(data['mobile']) != 11:
             result = dict()
@@ -56,6 +62,8 @@ class RegisterHandler(BaseHandler):
             result = yield self.db.Register_user(data['mobile'],
                                                  data['pwd'],
                                                  data['code'],
+                                                 data['jiguang_id'],
+                                                 data['umeng_id'],
                                                  cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -86,10 +94,12 @@ class LoginHandler(BaseHandler):
             self.write(ObjectToString().encode(result))
             self.finish()
             return
-        # try:
-        #     data['umengid'] = self.get_argument('umengid')
-        # except Exception, e:
-        #     data['umengid'] = 'umengid/%s' % (self.get_argument('mobile'), )
+        try:
+            data['jiguang_id'] = self.get_argument('jiguang_id')
+            data['umeng_id'] = self.get_argument('umeng_id')
+        except Exception, e:
+            data['jiguang_id'] = ""
+            data['umeng_id'] = ""
 
         if len(data['mobile']) != 11:
             result = dict()
@@ -101,6 +111,8 @@ class LoginHandler(BaseHandler):
         else:
             result = yield self.db.User_login(mobile=data['mobile'],
                                               pwd=data['pwd'],
+                                              jiguang_id=data['jiguang_id'],
+                                              umeng_id=data['umeng_id'],
                                               cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -219,10 +231,34 @@ class UserinfoeditHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         sex = self.get_argument('sex')
-        avatar = self.get_argument('avatar')
         user_name = self.get_argument('user_name')
+        try:
+            avatar = self.get_argument('avatar')
+        except Exception, e:
+            avatar = ''
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.User_info_edit(token, user_name, sex, avatar, cache_flag=cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 修改个人头像
+class UseravatareditHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++user edit avatar+++++++++++')
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        avatar = self.get_argument('avatar')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.User_avatar_edit(token, avatar, cache_flag=cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

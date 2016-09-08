@@ -43,7 +43,7 @@ class Action(object):
 
     # 用户注册
     @tornado.gen.coroutine
-    def Register_user(self, mobile=str, pwd=str, code=str, cache_flag=int):
+    def Register_user(self, mobile=str, pwd=str, code=str, jiguang_id=str, umeng_id=str, cache_flag=int):
 
         result = dict()
         foo_uuid = str(uuid.uuid1())
@@ -85,11 +85,15 @@ class Action(object):
                     sex = ""
                     dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    sqll = "INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    sqll = "INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    self.log.info("INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) "
+                                  "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (mobile, hash_pass, active, authenticated,
+                                                                                    post_status, tag, dt_created, dt_updated, foo_uuid,
+                                                                                    user_name, avatar, sex, jiguang_id, umeng_id))
                     user_write = self.db.insert(sqll,
                                                 mobile, hash_pass, active, authenticated,
                                                 post_status, tag, dt_created, dt_updated, foo_uuid,
-                                                user_name, avatar, sex)
+                                                user_name, avatar, sex, jiguang_id, umeng_id)
                     self.db.close()
 
                     result['status'] = 'success'
@@ -106,9 +110,9 @@ class Action(object):
 
     # 用户登陆
     @tornado.gen.coroutine
-    def User_login(self, mobile=str, pwd=str, cache_flag=int):
+    def User_login(self, mobile=str, pwd=str, jiguang_id=str, umeng_id=str, cache_flag=int):
         result = dict()
-        sql = "select id,password,user_name,sex,avatar from candidate_user where phonenum=%s" % mobile
+        sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id from candidate_user where phonenum=%s" % mobile
         search_mobile = self.db.get(sql)
         self.db.close()
         if search_mobile is None:
@@ -116,6 +120,10 @@ class Action(object):
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
                 result['data'] = {}
+        elif search_mobile['umeng_id'] and search_mobile['jiguang_id'] is None:
+            sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s where phonenum=%s"
+            self.db.update(sql_umeng_jg, jiguang_id, umeng_id, mobile)
+            self.db.close()
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
@@ -135,7 +143,13 @@ class Action(object):
                     result['msg'] = '服务器错误，正在修复中!'
                     result['data'] = {}
                     raise tornado.gen.Return(result)
+                if search_mobile['avatar'] != '':
+                    search_mobile['avatar'] = "%s" % self.image + search_mobile['avatar']
+                else:
+                    pass
                 search_mobile.pop('password')
+                search_mobile.pop('jiguang_id')
+                search_mobile.pop('umeng_id')
 
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
@@ -208,6 +222,10 @@ class Action(object):
                     update_pwd = self.db.update(sql_update, hash_pass, dt_updated, mobile)
                     self.db.close()
                     self.log.info('user update_pwd,id=%s' % update_pwd)
+                    if search_mobile['avatar'] != '':
+                        search_mobile['avatar'] = "%s" % self.image + search_mobile['avatar']
+                    else:
+                        pass
                     result['status'] = 'success'
                     result['token'] = search_mobile['id']
                     result['msg'] = ''
@@ -347,9 +365,9 @@ class Action(object):
     def User_info_edit(self, token=str, user_name=str, sex=str, avatar=str, cache_flag=int):
 
         result = dict()
-        sql_update = "update candidate_user set user_name=%s,sex=%s,avatar=%s where id=%s"
+        sql_update = "update candidate_user set user_name=%s,sex=%s where id=%s"
         try:
-            search_user = self.db.update(sql_update, user_name, sex, avatar, token)
+            search_user = self.db.update(sql_update, user_name, sex, token)
             self.db.close()
         except Exception, e:
             result['status'] = 'fail'
@@ -361,6 +379,27 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = search_user
+        raise tornado.gen.Return(result)
+
+    # 修改个人头像
+    @tornado.gen.coroutine
+    def User_avatar_edit(self, token=str, avatar=str, cache_flag=int):
+
+        result = dict()
+        sql_update = "update candidate_user set avatar=%s where id=%s"
+        try:
+            update_user = self.db.update(sql_update, avatar, token)
+            self.db.close()
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = e
+            result['data'] = {}
+            raise tornado.gen.Return(result)
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '修改个人头像成功'
+        result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 首页
@@ -817,7 +856,7 @@ class Action(object):
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
-                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo",job_id)
+                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo,company_id",job_id)
         search_job = self.db.get(sql_job)
         self.db.close()
         if search_job == None:
@@ -846,20 +885,25 @@ class Action(object):
                 search_job['salary_end'] = search_job['salary_end'] / 1000 + 1
             else:
                 search_job['salary_end'] = search_job['salary_end'] / 1000
-            try:
-                if search_job['site_name'] == u'智联招聘':
-                    sql_address = "select address from spider_company where company_name ='%s'" % search_job['company_name']
-                    search_company = self.db.get(sql_address)
-                    self.db.close()
-                    search_job['company_address'] = search_company['address']
-                else:
-                    sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
-                    search_company = self.db.get(sql_address)
-                    self.db.close()
-                    search_job['company_address'] = search_company['company_address']
-            except Exception, e:
-                self.log.info("ERROR is %s" % e)
+            if search_job['company_id'] == 0:
                 search_job['company_address'] = ''
+            else:
+                try:
+                    if search_job['site_name'] != 'local':
+                        sql_address = "select address from spider_company where company_name ='%s'" % search_job['company_name']
+                        search_company = self.db.get(sql_address)
+                        self.db.close()
+                        search_job['company_address'] = search_company['address']
+                        search_job['company_id'] = str(search_job['company_id']) + '10'
+                    else:
+                        sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
+                        search_company = self.db.get(sql_address)
+                        self.db.close()
+                        search_job['company_address'] = search_company['company_address']
+                        search_job['company_id'] = str(search_job['company_id']) + '01'
+                except Exception, e:
+                    self.log.info("ERROR is %s" % e)
+                    search_job['company_address'] = ''
             try:
                 if re.match(r'\d+', '%s' % token):      # 登陆
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
@@ -891,36 +935,194 @@ class Action(object):
         result['data'] = search_job
         raise tornado.gen.Return(result)
 
-    # 公司详情get
+    # 公司详情-公司信息get  01--spider 10-local
     @tornado.gen.coroutine
-    def Company_full(self, company_id=str, token=str, cache_flag=int):
+    def Company_basic(self, company_id=str, token=str, cache_flag=int):
 
-        sql = "select site_name,company_name from jobs_hot_es_test where company_id ='%s'" % company_id
-        try:
-            search_job = self.db.get(sql)
+        if company_id[-2:] == '01':
+            sql_company = "select company_name,company_type,scale,address,company_trade,site_url,logo from spider_company where id='%s' limit 1" % company_id[:-2]
+            search_company = self.db.get(sql_company)
             self.db.close()
-            if search_job['site_name'] == u'智联招聘':
-                sqlll = "select * from spider_company where company_name ='%s'" % search_job['company_name']
-                search_company = self.db.get(sqlll)
-                self.db.close()
+            if search_company['logo'] != '':
+                logo = "%s" % self.image + search_company['logo']
             else:
-                sqll = "select * from company_detail where company_name ='%s'" % search_job['company_name']
-                search_company = self.db.get(sqll)
-                self.db.close()
-            if search_company == None:
-                search_company = {}
+                logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+            company = {'company_name': search_company['company_name'],
+                       'company_trade': search_company['company_trade'],
+                       'company_scale': search_company['scale'],
+                       'company_type': search_company['company_type'],
+                       'company_address': search_company['address'],
+                       'company_site': search_company['site_url'],
+                       'company_logo': logo
+                       }
+        elif company_id[-2:] == '10':
+            sql_company = "select company_name,company_trade,company_scale,company_type,company_city,company_address,company_site,company_logo from company_detail where id='%s' limit 1" % company_id[:-2]
+            search_company = self.db.get(sql_company)
+            self.db.close()
+            if search_company['company_logo'] != '':
+                logo = "%s" % self.image + search_company['company_logo']
+            else:
+                logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+            company = {'company_name': search_company['company_name'],
+                       'company_trade': search_company['company_trade'],
+                       'company_scale': search_company['company_scale'],
+                       'company_type': search_company['company_type'],
+                       # 'company_city': search_company['company_city'],
+                       'company_address': search_company['company_address'] + search_company['company_city'],
+                       'company_site': search_company['company_site'],
+                       'company_logo': logo
+                       }
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = 'company_id 有误'
+            result['data'] = {}
+            raise tornado.gen.Return(result)
+        try:
             # 调整所有为null的值为""
-            for index in search_company.keys():
-                if search_company[index] == None:
-                    search_company[index] = ''
+            for index in company.keys():
+                if company[index] == None:
+                    company[index] = ''
         except Exception, e:
             self.log.info('ERROR is %s' % e)
-            search_company = {}
+            company = {}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = search_company
+        result['data'] = company
+        raise tornado.gen.Return(result)
+
+    # 公司详情-企业详情get（公司介绍，大事记）    01--spider 10-local
+    @tornado.gen.coroutine
+    def Company_company(self, company_id=str, token=str, cache_flag=int):
+
+        if company_id[-2:] == '01':
+            sql_company = "select description from spider_company where id='%s' limit 1" % company_id[:-2]
+            search_company = self.db.get(sql_company)
+            company = {'company_id': '',
+                       'company_des': search_company['description'],
+                       'boon': '',
+                       'events': '',
+                       'picture': []
+                       }
+            self.db.close()
+        elif company_id[-2:] == '10':
+            sql_company = "select p.company_des,q.boon,q.events,GROUP_CONCAT(r.picture_name) from company_detail as p left join company_extra_info as q on p.company_user_id=q.company_user_id left join picture_attachment as r on p.company_user_id=r.company_user_id where p.id=%s limit 1" % company_id[:-2]
+            self.log.info(sql_company)
+            search_company = self.db.get(sql_company)
+            company = {'company_id': company_id,
+                       'company_des': search_company['company_des'],
+                       'boon': search_company['boon'],
+                       'events': search_company['events'],
+                       'picture': search_company['GROUP_CONCAT(r.picture_name)'].split(',')
+                       }
+            self.db.close()
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = 'company_id 有误'
+            result['data'] = {}
+            raise tornado.gen.Return(result)
+        try:
+            # 调整所有为null的值为""
+            for index in company.keys():
+                if company[index] == None:
+                    company[index] = ''
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            company = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = company
+        raise tornado.gen.Return(result)
+
+    # 公司详情-所有职位get  01--spider 10-local
+    @tornado.gen.coroutine
+    def Company_job(self, company_id=str, company_name=str, token=str, page=int, num=int, jobtype=str, cache_flag=int):
+        if company_id[-2:] == '01':
+            uri = '%squery_company_jobs' % self.esapi
+            values = dict()
+            values['offset'] = int(page) * int(num)
+            values['limit'] = num
+            values['company_name'] = company_name
+            reques = requests.post(url=uri, json=values)
+            contect = reques.content.decode('utf-8')
+            self.log.info('id_list = %s' % contect)
+            contect_id = sorted(eval(contect)['id_list'])
+            if contect_id == []:
+                search_job = []
+            else:
+                args = ','.join(str(x) for x in contect_id)
+                sql_job = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc" \
+                          %('id,job_name,job_type,job_city,education_str,salary_start,salary_end,dt_update,need_num',args)
+                search_job = self.db.query(sql_job)
+                self.db.close()
+                for s in search_job:
+                    s['job_id'] = s.pop('id')
+                    s['department'] = ''
+            department = ['全部']
+
+        elif company_id[-2:] == '10':
+            if jobtype != '全部':
+                sql_job = "select a.job_name,a.es_id,a.department,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update from company_jd as a left join company_detail as b on a.company_user_id=b.company_user_id" \
+                          " where b.id ='%s' and a.department='%s' order by dt_update desc limit %s offset %s" % (company_id[:-2], jobtype, num, (int(page) * int(num)))
+            else:
+                sql_job = "select a.job_name,a.es_id,a.department,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update from company_jd as a left join company_detail as b on a.company_user_id=b.company_user_id" \
+                          " where b.id ='%s' order by dt_update desc limit %s offset %s" % (company_id[:-2], num, (int(page) * int(num)))
+
+            search_job = self.db.query(sql_job)
+            self.db.close()
+            for x in search_job:
+                x['job_id'] = x.pop('es_id')
+                x['education_str'] = x.pop('education')
+            sql_department = "select a.department from company_jd as a left join company_detail as b on a.company_user_id=b.company_user_id" \
+                             " where b.id='%s'" % company_id[:-2]
+            search_department = self.db.query(sql_department)
+            self.db.close()
+            department = ['全部']
+            for x in search_department:
+                if x['department'] not in department and x['department'] != '':
+                    department.append(x['department'])
+
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = 'company_id 有误'
+            result['data'] = {}
+            raise tornado.gen.Return(result)
+        for index in search_job:
+            # 调整所有为null的值为""
+            for ind in index:
+                if index[ind] == None:
+                    index[ind] = ''
+            # 薪资显示单位为K
+            index['salary_start'] = index['salary_start'] / 1000
+            if (index['salary_end'] % 1000) >= 1:
+                index['salary_end'] = index['salary_end'] / 1000 + 1
+            else:
+                index['salary_end'] = index['salary_end'] / 1000
+            if index['job_type'] == 'fulltime':
+                index['job_type'] = '全职'
+            elif index['job_type'] == 'parttime':
+                index['job_type'] = '兼职'
+            elif index['job_type'] == 'intern':
+                index['job_type'] = '实习'
+            elif index['job_type'] == 'unclear':
+                index['job_type'] = '不限'
+
+        job = {'department': department,
+               'job': search_job}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = job
         raise tornado.gen.Return(result)
 
     # 简历查看
@@ -932,6 +1134,10 @@ class Action(object):
         self.db.close()
         try:
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
+            if search_resume['candidate_cv']['basic']['avatar'] != '':
+                search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
+            else:
+                pass
         except Exception, e:
             pass
         if search_resume == None:
@@ -945,22 +1151,40 @@ class Action(object):
 
     # 简历编辑-修改头像post
     @tornado.gen.coroutine
-    def Resume_Avatar(self, token=str, cache_flag=int):
+    def Resume_Avatar(self, token=str, avatar=str, cache_flag=int):
 
-        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        sql_resume = "SELECT id,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
         search_resume = self.db.get(sql_resume)
         self.db.close()
-        try:
-            search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
-        except Exception, e:
-            pass
         if search_resume == None:
-            search_resume = {}
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '此用户没有简历'
+            result['data'] = {}
+            raise tornado.gen.Return(result)
+        else:
+            sql_avatar = "update candidate_cv set candidate_cv=%s where user_id=%s"
+            try:
+                candidate_cv = json.loads(search_resume['candidate_cv'])
+                candidate_cv['basic']['avatar'] = avatar
+                candidate_json = json.dumps(candidate_cv)
+                update_avatar = self.db.update(sql_avatar, candidate_json, token)
+                self.log.info("update candidate_cv set candidate_cv=%s where user_id=%s" % (candidate_cv, token))
+
+            except Exception, e:
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = e
+                result['data'] = {}
+                raise tornado.gen.Return(result)
+
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_resume
+        result['msg'] = '修改简历头像成功'
+        result['data'] = {}
         raise tornado.gen.Return(result)
 
     # 简历编辑-基本信息post

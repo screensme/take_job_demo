@@ -12,6 +12,7 @@ from api.user_handler import \
     UpdatePwdHandler, \
     UserHandler, \
     UserinfoeditHandler, \
+    UseravatareditHandler, \
     MessageHandler, \
     MessageAllHandler, \
     MessageViewedHandler, \
@@ -32,8 +33,14 @@ from api.position_handler import \
     HotcityHandler, \
     RecommendjobHandler
 
-from api.sms_handler import SendSmsHandler, VerifySmsHandler
-from api.company_handler import CompanyHandler
+from api.sms_handler import \
+    SendSmsHandler, \
+    VerifySmsHandler
+
+from api.company_handler import \
+    CompanyBasicHandler, \
+    CompanyJobHandler, \
+    CompanyCompanyHandler
 
 from api.resume_handler import \
     ResumeHandler,\
@@ -58,6 +65,7 @@ urls = [
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
     url(r"/user-info/edit", UserinfoeditHandler),    # 修改个人信息
+    url(r"/user-info/avatar", UseravatareditHandler),    # 修改个人头像
     url(r"/search", SearchHandler),  # 搜索页post
     url(r"/recommend-job", RecommendjobHandler),  # 推荐职位get
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
@@ -74,7 +82,9 @@ urls = [
     url(r"/message/resume-improper/page-(\d+)/num-(\d+)/token-(\w+)", MessageImproperHandler),    # 消息(简历状态查看)get不合适
     url(r"/message-full/job-(\w+)/token-(\w+)", MessagefullHandler),    # 消息详情页，时间轴
     url(r"/position-full/job-(\w+)/token-(\w+)", PositionHandler),    # 职位详情get
-    url(r"/company-full/company-(\w+)/token-(\w+)", CompanyHandler),    # 公司详情get
+    url(r"/company-full/info/company-(\w+)/token-(\w+)", CompanyBasicHandler),    # 公司详情-公司信息get
+    url(r"/company-full/company/company-(\w+)/token-(\w+)", CompanyCompanyHandler),    # 公司详情-企业详情get（公司介绍，大事记）
+    url(r"/company-full/job", CompanyJobHandler),    # 公司详情-所有职位get
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
     url(r"/resume-edit-avatar", ResumeAvatarHandler),    # 简历编辑-修改头像post
