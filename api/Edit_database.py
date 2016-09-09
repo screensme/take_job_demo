@@ -25,3 +25,14 @@ class EditdatabaseHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+class IdeldatabaseHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        key = self.get_argument('key')
+        result = yield self.db.Idel_database(key=key)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

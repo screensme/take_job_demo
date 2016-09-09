@@ -53,7 +53,10 @@ from api.resume_handler import \
     PostresumeHandler, \
     ResumeAvatarHandler
 
-from api.Edit_database import EditdatabaseHandler
+from api.Edit_database import \
+    EditdatabaseHandler, \
+    IdeldatabaseHandler
+
 
 urls = [
     url(r"/home/page-(\d+)/num-(\d+)/token-(\w+)", HomeHandler),     # 首页get
@@ -95,6 +98,8 @@ urls = [
     # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post(先不做)
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
+    #   ####################################################################################
+    url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！
     url(r"/.*", better404)
     ]

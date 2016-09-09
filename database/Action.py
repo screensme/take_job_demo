@@ -39,6 +39,7 @@ class Action(object):
         self.sms = sms
         self.image = image
         self.log.info('mysql=%s, db=%s, esapi=%s, cache=%s' % (dbhost, dbname, esapi, cahost))
+        self.coonect = None
         print('init end')
 
     # 用户注册
@@ -1777,3 +1778,19 @@ class Action(object):
 
         raise tornado.gen.Return(result)
 # ########################################################################
+    # 心跳线
+    @tornado.gen.coroutine
+    def Idel_database(self, key=str):
+
+        if key == '心跳线2016-9-9':
+            # while True:
+            cursor = self.db._cursor()
+            cursor.execute("show global status like 'Threads_connected';")
+            Currently = cursor.fetchone()
+            print("mysql当前最大连接数 ：%s" % Currently[1])
+            result = dict()
+            result['status'] = 'sucess'
+            result['token'] = ''
+            result['msg'] = '心跳'
+            result['data'] = Currently[1]
+            raise tornado.gen.Return(result)
