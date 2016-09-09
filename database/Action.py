@@ -113,14 +113,19 @@ class Action(object):
     def User_login(self, mobile=str, pwd=str, jiguang_id=str, umeng_id=str, cache_flag=int):
         result = dict()
         sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id from candidate_user where phonenum=%s" % mobile
-        search_mobile = self.db.get(sql)
+        try:
+            search_mobile = self.db.get(sql)
+        except Exception, e:
+            self.log.info("-------------db error, reconnect, user login---------")
+            self.db.reconnect()
+            search_mobile = self.db.get(sql)
         self.db.close()
         if search_mobile is None:
                 result['status'] = 'fail'
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
                 result['data'] = {}
-        elif search_mobile['umeng_id'] and search_mobile['jiguang_id'] is None:
+        elif (search_mobile['umeng_id'] is None) and (search_mobile['jiguang_id'] is None):
             sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s where phonenum=%s"
             self.db.update(sql_umeng_jg, jiguang_id, umeng_id, mobile)
             self.db.close()
@@ -415,9 +420,15 @@ class Action(object):
         self.log.info('id_list = %s' % contect)
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
-        search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                 %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo',args))
 
+        sql_job = "SELECT id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo " \
+                  "FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc " % args
+        try:
+            search_job = self.db.query(sql_job)
+        except Exception, e:
+            self.log.info("-------------db error, reconnect, home info---------")
+            self.db.reconnect()
+            search_job = self.db.query(sql_job)
         self.db.close()
         for index in search_job:
             # 调整所有为null的值为""
