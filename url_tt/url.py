@@ -31,7 +31,8 @@ from api.position_handler import \
     FeedbackHandler, \
     HostsearchlistHandler, \
     HotcityHandler, \
-    RecommendjobHandler
+    RecommendjobHandler, \
+    SpeedjobHandler
 
 from api.sms_handler import \
     SendSmsHandler, \
@@ -71,6 +72,7 @@ urls = [
     url(r"/user-info/avatar", UseravatareditHandler),    # 修改个人头像
     url(r"/search", SearchHandler),  # 搜索页post
     url(r"/recommend-job", RecommendjobHandler),  # 推荐职位get
+    url(r"/speed-job", SpeedjobHandler),  # 急速招聘post
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
     url(r"/hot_city/token-(\w+)", HotcityHandler),     # 热门搜索城市列表(先写4个)get
     url(r"/view_collect/page-(\d+)/num-(\d+)/token-(\w+)", ViewcollectHandler),     # 查看收藏get

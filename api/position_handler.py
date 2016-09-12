@@ -64,6 +64,23 @@ class RecommendjobHandler(BaseHandler):
         self.finish()
         return
 
+# 急速招聘
+class SpeedjobHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Speed job+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        result = yield self.db.Speed_job(token, page, num, cache_flag,)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # 意见反馈post
 class FeedbackHandler(BaseHandler):
     @gen.coroutine

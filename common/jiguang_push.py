@@ -40,7 +40,7 @@ def https_request(app_key,body, url, content_type=None,version=None, params=None
     #print url,body
     response = https.request('POST', url, data=body, params=params, headers=headers)
     #合并返回
-    print response.content
+    print response.status_code, response.content
     return dict(json.loads(response.content) , **{'status_code':response.status_code})
 
 '''''
@@ -73,7 +73,7 @@ def https_request(app_key,body, url, content_type=None,version=None, params=None
 '''''
     jpush v3 request 简单版
 '''
-def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None):
+def jpush_v3(app_key, device_token, title, message, push_type=None, push_code=None):
     payload = {
             "platform": ["android", "ios"],     # "platform" : "all"
             "audience": {
@@ -85,7 +85,8 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
                     "title": u"招聘头条",
                     "builder_id": 1,
                 "extras": {
-                    "key": out_jump
+                    "push_type": push_type,
+                    "push_code": push_code
                 }
                 },
                 "ios": {
@@ -93,18 +94,20 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
                     "sound": "default",
                     "badge": "+1",
                 "extras": {
-                    "key": out_jump
+                    "push_type": push_type,
+                    "push_code": push_code
                 }
                 }
             },
-            # "message": {        # 消息内容体（APP内可见的推送）
-            #     "msg_content": message,
-            #     "content_type": "text",
-            #     "title": "msg",
-            #     "extras": {
-            #         "key": in_jump
-            #     }
-            # },
+            "message": {        # 消息内容体（APP内可见的推送）相当于"离线推送"
+                "msg_content": message,
+                "content_type": "text",
+                "title": "msg",
+                "extras": {
+                    "push_type": push_type,
+                    "push_code": push_code
+                }
+            },
             "options": {
                 "time_to_live": 86400*3,
                 "apns_production": False    # True 表示推送生产环境，False 表示要推送开发环境
@@ -115,14 +118,14 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
     return https_request(app_key,body, "https://api.jpush.cn/v3/push",'application/json', version=1)
 
 if __name__ == "__main__":
-    device_token = ['1a0018970aaeed0db6f','13165ffa4e00e1c1e8c']
+    device_token = ['1a0018970aaeed0db6f']
     # device_token = ['1a0018970aaeed0db6f','160a3797c80cc710456']
-    out_jump = 'out'
-    in_jump = 'in'
+    push_type = 20
+    push_code = 21
     title = '我是一个段子手'
     message = '徐小污在此，还不快快受死！'
     jpush_v3(app_key=apps['product'], device_token=device_token,
-             title=title, message=message, out_jump=out_jump, in_jump=in_jump)
+             title=title, message=message, push_type=push_type, push_code=push_code)
 
 # -=-=-=-=-=-=-=-=-=-
 # 各字段含义#####################################################
@@ -132,7 +135,7 @@ def push_message_to(app_key, app_secret, title, message, device_token):
     headers = "Content-Type: application/json"
     params = {
         "platform": ["android", "ios"],     # "platform" : "all"
-        "audience": {
+        "audience": {   # 里面至少选择一种推送方式
             # "tag": ["深圳", "广州" ],    # 推送给多个标签
             # "alias": ["4314", "892", "4531"],    # 推送给多个别名
             # "tag_and": ["女", "会员"],   # 推送给多个标签

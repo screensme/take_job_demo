@@ -93,6 +93,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
 36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
 37.公司详情-所有职位post：/company-full/job  
+38.急速招聘post/speed-job  
 ***
 #####简历状态：  
 	
@@ -1220,12 +1221,57 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     "errorcode": 1001
   }
 }```  
-####38.推送消息的状态码  
-
-push_type: 20
-push_code: 21  
-系统消息（10）
-简历投递状态（20）
-被查看（21）
-待沟通（22）
-面试（23）
+####38.急速招聘post/speed-job   
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id
+	page			Y	string		页数
+	num				Y	string		每页数量
+返回成功：（同首页和职位推荐页的返回结果）
+```{
+  "status": "success",
+  "msg": "",
+  "token": "123",
+  "data": [
+    {
+      "scale_str": "100-499人",
+      "boon": "五险一金,餐饮补助",
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
+      "job_type": "全职",
+      "job_name": "前台",
+      "job_city": "北京",
+      "salary_start": 11,
+      "company_name": "测试",
+      "salary_end": 13,
+      "trade": "互联网/电子商务",
+      "education_str": "不限",
+      "id": 214677,
+      "work_years_str": "不限",
+      "dt_update": "2016-09-12T00:00:00"
+    },
+    {
+      "scale_str": "100-499人",
+      "boon": "",
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
+      "job_type": "全职",
+      "job_name": "你好你好你好你好你好你好你好你好你好你好你好你好你好",
+      "job_city": "北京",
+      "salary_start": 12,
+      "company_name": "测试",
+      "salary_end": 12,
+      "trade": "互联网/电子商务",
+      "education_str": "不限",
+      "id": 214678,
+      "work_years_str": "不限",
+      "dt_update": "2016-09-12T00:00:00"
+    }
+  ]
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "",
+  "token": "123",
+  "data": []
+```
