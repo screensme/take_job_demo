@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-#! /usr/bin/env python2
-# encoding=utf-8
 import time, random, json, sys, os
 import requests
 sys.path.insert(0,os.path.dirname(sys.path[0]))

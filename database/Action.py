@@ -906,13 +906,13 @@ class Action(object):
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['address']
-                        search_job['company_id'] = str(search_job['company_id']) + '10'
+                        search_job['company_id'] = str(search_job['company_id']) + '01'
                     else:
                         sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['company_address']
-                        search_job['company_id'] = str(search_job['company_id']) + '01'
+                        search_job['company_id'] = str(search_job['company_id']) + '10'
                 except Exception, e:
                     self.log.info("ERROR is %s" % e)
                     search_job['company_address'] = ''
@@ -1066,12 +1066,16 @@ class Action(object):
                            'picture': []
                            }
             else:
+                pictures = search_company['GROUP_CONCAT(r.picture_name)'].split(',')
+                for p, q in enumerate(pictures):
+                    # p = "%s" % self.image + p
+                    pictures[p] = "%s" % self.image + q
                 company = {'company_id': company_id,
                            'company_des': search_company['company_des'],
                            'boon': search_company['boon'],
                            'events': search_company['events'],
                            'company_address': search_company['company_address'],
-                           'picture': search_company['GROUP_CONCAT(r.picture_name)'].split(',')
+                           'picture': pictures
                            }
 
         else:
