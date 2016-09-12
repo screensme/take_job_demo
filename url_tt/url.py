@@ -87,7 +87,7 @@ urls = [
     url(r"/position-full/job-(\w+)/token-(\w+)", PositionHandler),    # 职位详情get
     url(r"/company-full/info/company-(\w+)/token-(\w+)", CompanyBasicHandler),    # 公司详情-公司信息get
     url(r"/company-full/company/company-(\w+)/token-(\w+)", CompanyCompanyHandler),    # 公司详情-企业详情get（公司介绍，大事记）
-    url(r"/company-full/job", CompanyJobHandler),    # 公司详情-所有职位get
+    url(r"/company-full/job", CompanyJobHandler),    # 公司详情-所有职位post
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
     url(r"/resume-edit-avatar", ResumeAvatarHandler),    # 简历编辑-修改头像post

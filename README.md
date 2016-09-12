@@ -87,7 +87,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 34.修改简历头像post：/resume-edit-avatar  
 35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
 36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
-37.公司详情-所有职位get：/company-full/job/company-{company_id}/token-{token}  
+37.公司详情-所有职位post：/company-full/job  
 ***
 #####简历状态：  
 	
@@ -97,14 +97,23 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	'pass', 'info'		简历通过
 	'notify'			邀请面试(两个状态都属于面试通过)
 	'deny'				不合适	
-***  
+
 ***
 #####收藏状态：  
 	
 	名称					状态
-	0					取消收藏
-	1					已收藏/收藏成功
-	2					收藏失败
+	取消收藏				0
+	已收藏/收藏成功			1
+	收藏失败				2	
+***
+#####推送状态：  
+	
+	名称					状态
+	系统消息				10
+	简历投递状态			20
+	被查看					21
+	待沟通					22
+	面试					23
 ***
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -1140,13 +1149,11 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     "errorcode": 1001
   }
 }```  
-####37.公司详情-所有职位get：/company-full/job/company-{company_id}/token-{token}  
-
+####37.公司详情-所有职位post：/company-full/job  
 参数：
 		
 	参数名称		必填	类型		描述
 	token			Y	string		用户id
-	company_id		Y	string		公司id
 	page			Y	string		页数
 	num				Y	string		每页数量
 	job_type		Y	string		部门名称(默认请填写"全部")

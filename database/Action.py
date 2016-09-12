@@ -1031,7 +1031,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Company_company(self, company_id=str, token=str, cache_flag=int):
 
-        if company_id[-2:] == '01':
+        if company_id[-2:] == '01': # 爬虫公司
             sql_company = "select description,address from spider_company where id='%s' limit 1" % company_id[:-2]
             search_company = self.db.get(sql_company)
             self.db.close()
@@ -1052,7 +1052,7 @@ class Action(object):
                            'picture': []
                            }
 
-        elif company_id[-2:] == '10':
+        elif company_id[-2:] == '10':   # 真实公司
             sql_company = "select p.company_des,p.company_address,q.boon,q.events,GROUP_CONCAT(r.picture_name) from company_detail as p left join company_extra_info as q on p.company_user_id=q.company_user_id left join picture_attachment as r on p.company_user_id=r.company_user_id where p.id=%s limit 1" % company_id[:-2]
             self.log.info(sql_company)
             search_company = self.db.get(sql_company)
