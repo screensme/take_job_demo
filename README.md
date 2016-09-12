@@ -106,14 +106,16 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	已收藏/收藏成功			1
 	收藏失败				2	
 ***
-#####推送状态：  
+#####推送自定义返回值：  
 	
-	名称					状态
-	系统消息				10
-	简历投递状态			20
-	被查看					21
-	待沟通					22
-	面试					23
+	名称								状态
+	系统消息(push_type)				10
+	简历投递状态(push_type)			20
+
+	被查看(push_code)				21
+	待沟通(push_code)				22
+	面试(push_code)					23
+	不合适(push_code)				24
 ***
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -171,6 +173,8 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	参数名称	必填	类型		描述
 	mobile		Y	string		手机号
 	pwd			Y	string		密码
+	jiguang_id	Y	string		极光id
+	umeng_id	Y	string		友盟id
 返回失败：
 ```{
   "status": "fail",
@@ -216,6 +220,8 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	mobile		Y	string		手机号
 	pwd			Y	string		密码
 	code		Y	string		验证码
+	jiguang_id	Y	string		极光id
+	umeng_id	Y	string		友盟id
 返回成功：
 ```{
   "status": "sucess",
@@ -1209,3 +1215,12 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     "errorcode": 1001
   }
 }```  
+####38.推送消息的状态码  
+
+push_type: 20
+push_code: 21  
+系统消息（10）
+简历投递状态（20）
+被查看（21）
+待沟通（22）
+面试（23）

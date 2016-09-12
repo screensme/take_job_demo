@@ -40,6 +40,7 @@ def https_request(app_key,body, url, content_type=None,version=None, params=None
     #print url,body
     response = https.request('POST', url, data=body, params=params, headers=headers)
     #合并返回
+    print response.content
     return dict(json.loads(response.content) , **{'status_code':response.status_code})
 
 '''''
@@ -78,7 +79,7 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
             "audience": {
                 "registration_id" : device_token      # 推送给多个注册ID,['jfdksajfd54314','3j21jk321','3j2k1j32']
             },
-            "notification": {       # 通知内容体
+            "notification": {       # 通知内容体(在窗口可见的推送)
                 "android": {
                     "alert": title,
                     "title": u"招聘头条",
@@ -96,14 +97,14 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
                 }
                 }
             },
-            "message": {        # 消息内容体
-                "msg_content": message,
-                "content_type": "text",
-                "title": "msg",
-                "extras": {
-                    "key": in_jump
-                }
-            },
+            # "message": {        # 消息内容体（APP内可见的推送）
+            #     "msg_content": message,
+            #     "content_type": "text",
+            #     "title": "msg",
+            #     "extras": {
+            #         "key": in_jump
+            #     }
+            # },
             "options": {
                 "time_to_live": 86400*3,
                 "apns_production": False    # True 表示推送生产环境，False 表示要推送开发环境
