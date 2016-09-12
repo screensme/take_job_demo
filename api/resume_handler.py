@@ -34,12 +34,27 @@ class PostresumeHandler(BaseHandler):
     def post(self):
         self.log.info('+++++++++++Resume Post+++++++++++')
         self.log.info(self.get_arguments())
-        token = self.get_argument('token')
-        job_id = self.get_argument('job_id')
-
         cache_flag = self.get_cache_flag()
-        result = yield self.db.Post_resume(token, job_id, cache_flag)
-
+        try:
+            token = self.get_argument('token')
+            job_id = self.get_argument('job_id')
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Post_resume(token, job_id, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
         self.write(ObjectToString().encode(result))
         self.finish()
         return
