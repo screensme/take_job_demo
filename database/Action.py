@@ -955,35 +955,56 @@ class Action(object):
             sql_company = "select company_name,company_type,scale,address,company_trade,site_url,logo from spider_company where id='%s' limit 1" % company_id[:-2]
             search_company = self.db.get(sql_company)
             self.db.close()
-            if search_company['logo'] != '':
-                logo = "%s" % self.image + search_company['logo']
+            if search_company is None:
+                company = {'company_name': '',
+                           'company_trade': '',
+                           'company_scale': '',
+                           'company_type': '',
+                           # 'company_address': '',
+                           'company_site': '',
+                           'company_logo': ''
+                           }
             else:
-                logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-            company = {'company_name': search_company['company_name'],
-                       'company_trade': search_company['company_trade'],
-                       'company_scale': search_company['scale'],
-                       'company_type': search_company['company_type'],
-                       'company_address': search_company['address'],
-                       'company_site': search_company['site_url'],
-                       'company_logo': logo
-                       }
+                if search_company['logo'] != '':
+                    logo = "%s" % self.image + search_company['logo']
+                else:
+                    logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+
+                company = {'company_name': search_company['company_name'],
+                           'company_trade': search_company['company_trade'],
+                           'company_scale': search_company['scale'],
+                           'company_type': search_company['company_type'],
+                           # 'company_address': search_company['address'],
+                           'company_site': search_company['site_url'],
+                           'company_logo': logo
+                           }
         elif company_id[-2:] == '10':
             sql_company = "select company_name,company_trade,company_scale,company_type,company_city,company_address,company_site,company_logo from company_detail where id='%s' limit 1" % company_id[:-2]
             search_company = self.db.get(sql_company)
             self.db.close()
-            if search_company['company_logo'] != '':
-                logo = "%s" % self.image + search_company['company_logo']
+            if search_company is None:
+                company = {'company_name': '',
+                           'company_trade': '',
+                           'company_scale': '',
+                           'company_type': '',
+                           # 'company_address': '',
+                           'company_site': '',
+                           'company_logo': ''
+                           }
             else:
-                logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-            company = {'company_name': search_company['company_name'],
-                       'company_trade': search_company['company_trade'],
-                       'company_scale': search_company['company_scale'],
-                       'company_type': search_company['company_type'],
-                       # 'company_city': search_company['company_city'],
-                       'company_address': search_company['company_address'] + search_company['company_city'],
-                       'company_site': search_company['company_site'],
-                       'company_logo': logo
-                       }
+                if search_company['company_logo'] != '':
+                    logo = "%s" % self.image + search_company['company_logo']
+                else:
+                    logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                company = {'company_name': search_company['company_name'],
+                           'company_trade': search_company['company_trade'],
+                           'company_scale': search_company['company_scale'],
+                           'company_type': search_company['company_type'],
+                           # 'company_city': search_company['company_city'],
+                           # 'company_address': search_company['company_address'] + search_company['company_city'],
+                           'company_site': search_company['company_site'],
+                           'company_logo': logo
+                           }
         else:
             result = dict()
             result['status'] = 'fail'
@@ -1011,26 +1032,48 @@ class Action(object):
     def Company_company(self, company_id=str, token=str, cache_flag=int):
 
         if company_id[-2:] == '01':
-            sql_company = "select description from spider_company where id='%s' limit 1" % company_id[:-2]
+            sql_company = "select description,address from spider_company where id='%s' limit 1" % company_id[:-2]
             search_company = self.db.get(sql_company)
-            company = {'company_id': '',
-                       'company_des': search_company['description'],
-                       'boon': '',
-                       'events': '',
-                       'picture': []
-                       }
             self.db.close()
+            if search_company is None:
+                company = {'company_id': '',
+                           'company_des': '',
+                           'boon': '',
+                           'events': '',
+                           'company_address': '',
+                           'picture': []
+                           }
+            else:
+                company = {'company_id': '',
+                           'company_des': search_company['description'],
+                           'boon': '',
+                           'events': '',
+                           'company_address': search_company['address'],
+                           'picture': []
+                           }
+
         elif company_id[-2:] == '10':
-            sql_company = "select p.company_des,q.boon,q.events,GROUP_CONCAT(r.picture_name) from company_detail as p left join company_extra_info as q on p.company_user_id=q.company_user_id left join picture_attachment as r on p.company_user_id=r.company_user_id where p.id=%s limit 1" % company_id[:-2]
+            sql_company = "select p.company_des,p.company_address,q.boon,q.events,GROUP_CONCAT(r.picture_name) from company_detail as p left join company_extra_info as q on p.company_user_id=q.company_user_id left join picture_attachment as r on p.company_user_id=r.company_user_id where p.id=%s limit 1" % company_id[:-2]
             self.log.info(sql_company)
             search_company = self.db.get(sql_company)
-            company = {'company_id': company_id,
-                       'company_des': search_company['company_des'],
-                       'boon': search_company['boon'],
-                       'events': search_company['events'],
-                       'picture': search_company['GROUP_CONCAT(r.picture_name)'].split(',')
-                       }
             self.db.close()
+            if search_company is None:
+                company = {'company_id': '',
+                           'company_des': '',
+                           'boon': '',
+                           'events': '',
+                           'company_address': '',
+                           'picture': []
+                           }
+            else:
+                company = {'company_id': company_id,
+                           'company_des': search_company['company_des'],
+                           'boon': search_company['boon'],
+                           'events': search_company['events'],
+                           'company_address': search_company['company_address'],
+                           'picture': search_company['GROUP_CONCAT(r.picture_name)'].split(',')
+                           }
+
         else:
             result = dict()
             result['status'] = 'fail'

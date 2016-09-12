@@ -1094,13 +1094,12 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
   "msg": "",
   "token": "1",
   "data": {
-    "company_logo": "http://imgtest.zhaopintt.com/company_logo_1.jpeg",
-    "company_type": "民营企业/私营公司",
-    "company_scale": "500-999人",
-    "company_name": "归途如虹",
-    "company_address": "西城区-丹棱街3号中国电子大厦B座1901北京",
-    "company_site": "www.baidu.com",
-    "company_trade": "移动互联网/O2O/数据服务"
+    "company_logo": "http://imgtest.zhaopintt.com/icompany_logo_13.png",
+    "company_type": "私营/民营企业",
+    "company_scale": "50-99人",
+    "company_name": "北京鑫嵘科技有限公司",
+    "company_site": "",
+    "company_trade": ""
   }
 }```  
 返回错误:
@@ -1125,9 +1124,10 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
   "token": "1",
   "data": {
     "picture": [],
-    "company_des": "发展历程：上海德祐地产正式宣布合并。[3] \r\n■3月，中联地产与链家地产在全国范围内全面合并，旨在打造新链家万亿级房产O2O平台。[4]",
     "company_id": "",
     "boon": "",
+    "company_address": "北京朝阳区顺白路甲12号",
+    "company_des": "北京后盾计算机技术培训有限责任公司是专注于培养中国互联网优秀的程序语言专业人才的专业型培训机构。后盾网是一个致力于互联网领域建设的资深开发型团队，现多个成员在担任外资集团、企事业单位的网络顾问职务。团队还曾多次为国内外上市集团、政府机关的大型项目提供技术支持，其中包括新浪、搜狐、腾讯、保洁公司、联想、丰田、北京工商银行、FLUCK、ANSYS、长安汽车、新思路模特、中国一汽等众多大众所熟知的知名企业。从团队建设至今，我们积累了大量的团队协",
     "events": ""
   }
 }```  

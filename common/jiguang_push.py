@@ -19,14 +19,15 @@ apns_production_boolean = True
 '''
 apps={
     'test':{
-        "app_key" : u'app_key',
-        "master_secret" : u'master_secret'
+        "app_key" : 'app_key',
+        "master_secret" : 'master_secret'
     },
     'product':{
-        "app_key" : u'bcbcd55d31562e0cfef9050a',
-        "master_secret" : u'2fa2a2b35a1f58224761220f'
+        "app_key": 'bcbcd55d31562e0cfef9050a',
+        "master_secret": '2fa2a2b35a1f58224761220f'
     }
-}
+
+    }
 
 '''''
     https request jpush v3
@@ -115,15 +116,16 @@ def jpush_v3(app_key, device_token, title, message, out_jump=None, in_jump=None)
     return https_request(app_key,body, "https://api.jpush.cn/v3/push",'application/json', version=1)
 
 if __name__ == "__main__":
-    device_token = ['1a0018970aaeed0db6f']
+    device_token = ['1a0018970aaeed0db6f','13165ffa4e00e1c1e8c']
     # device_token = ['1a0018970aaeed0db6f','160a3797c80cc710456']
-    out_jump = ''
-    in_jump = ''
+    out_jump = 'out'
+    in_jump = 'in'
     title = '我是一个段子手'
     message = '徐小污在此，还不快快受死！'
     jpush_v3(app_key=apps['product'], device_token=device_token,
              title=title, message=message, out_jump=out_jump, in_jump=in_jump)
 
+# -=-=-=-=-=-=-=-=-=-
 # 各字段含义#####################################################
 def push_message_to(app_key, app_secret, title, message, device_token):
 
