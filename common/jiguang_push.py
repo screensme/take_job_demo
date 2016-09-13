@@ -119,7 +119,7 @@ def jpush_v3(app_key, device_token, title, message, push_type=None, push_code=No
 
 if __name__ == "__main__":
     # device_token = ['1a0018970aaeed0db6f']
-    device_token = ['1a0018970aaeed0db6f','160a3797c80cc710456']
+    device_token = ['13165ffa4e00e1c1e8c','160a3797c80cc710456']
     push_type = 20
     push_code = random.randint(21, 24)
     title = '欲罢不能造句'
