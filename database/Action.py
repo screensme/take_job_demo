@@ -1056,7 +1056,7 @@ class Action(object):
                         search_job['company_address'] = search_company['company_address']
                         search_job['company_id'] = str(search_job['company_id']) + '10'
                 except Exception, e:
-                    self.log.info("ERROR is %s" % e)
+                    self.log.info("-------!!!!!!!!!!!!!ERROR is %s" % e)
                     search_job['company_address'] = ''
                     # search_job['company_id'] = str(search_job['company_id']) + '01'
             try:
