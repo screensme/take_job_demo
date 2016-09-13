@@ -1208,7 +1208,7 @@ class Action(object):
                            'picture': []
                            }
             else:
-                if search_company['GROUP_CONCAT(r.picture_name)'] == []:
+                if search_company['GROUP_CONCAT(r.picture_name)'] in ([], None):
                     pictures = []
                 else:
                     pictures = search_company['GROUP_CONCAT(r.picture_name)'].split(',')
