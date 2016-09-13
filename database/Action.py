@@ -1044,13 +1044,13 @@ class Action(object):
             else:
                 try:
                     if search_job['site_name'] != 'local':
-                        sql_address = "select address from spider_company where company_name ='%s'" % search_job['company_name']
+                        sql_address = "select address from spider_company where company_id ='%s'" % search_job['company_id']
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['address']
                         search_job['company_id'] = str(search_job['company_id']) + '01'
                     else:
-                        sql_address = "select company_address from company_detail where company_name ='%s'" % search_job['company_name']
+                        sql_address = "select company_address from company_detail where company_id ='%s'" % search_job['company_id']
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['company_address']
@@ -1058,6 +1058,7 @@ class Action(object):
                 except Exception, e:
                     self.log.info("ERROR is %s" % e)
                     search_job['company_address'] = ''
+                    # search_job['company_id'] = str(search_job['company_id']) + '01'
             try:
                 if re.match(r'\d+', '%s' % token):      # 登陆
                     sql_collect = "select userid,jobid from view_user_collections where userid =%s and jobid=%s and status='favorite'" \
