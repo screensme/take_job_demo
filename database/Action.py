@@ -1044,13 +1044,13 @@ class Action(object):
             else:
                 try:
                     if search_job['site_name'] != 'local':
-                        sql_address = "select address from spider_company where company_id ='%s'" % search_job['company_id']
+                        sql_address = "select address from spider_company where id ='%s'" % search_job['company_id']
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['address']
                         search_job['company_id'] = str(search_job['company_id']) + '01'
                     else:
-                        sql_address = "select company_address from company_detail where company_id ='%s'" % search_job['company_id']
+                        sql_address = "select company_address from company_detail where id ='%s'" % search_job['company_id']
                         search_company = self.db.get(sql_address)
                         self.db.close()
                         search_job['company_address'] = search_company['company_address']
