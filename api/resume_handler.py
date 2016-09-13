@@ -155,23 +155,138 @@ class ResumeCareerHandler(BaseHandler):
         self.finish()
         return
 
-# 简历编辑-项目实践post(暂时不用)
-class ResumeItemHandler(BaseHandler):
+# 简历编辑-项目社会实践post(暂时不用)
+class ResumeExperienceHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('+++++++++++Resume Item+++++++++++')
+        self.log.info('+++++++++++Resume Experience+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
-        data['item_name'] = self.get_argument('item_name')
-        data['item_duty'] = self.get_argument('item_duty')
-        data['start_year3'] = self.get_argument('start_year3')
-        data['start_month3'] = self.get_argument('start_month3')
-        data['end_year3'] = self.get_argument('end_year3')
-        data['end_month3'] = self.get_argument('end_month3')
-        data['item_des'] = self.get_argument('item_des')
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
+        result = yield self.db.Resume_Item(token, data, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历编辑-校内职务post(暂时不用)
+class ResumeSchooljobHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Resume School job+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        data = dict()
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
+        result = yield self.db.Resume_Item(token, data, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历编辑-校内奖励post(暂时不用)
+class ResumeSchoolRewardsHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Resume School Rewards+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        data = dict()
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
+        result = yield self.db.Resume_Item(token, data, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历编辑-语言能力post(暂时不用)
+class ResumeLanguagesHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Resume Languages+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        data = dict()
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
+        result = yield self.db.Resume_Item(token, data, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历编辑-IT技能post(暂时不用)
+class ResumeSkillHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Resume Skill+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        data = dict()
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
+        result = yield self.db.Resume_Item(token, data, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 简历编辑-获得证书post(暂时不用)
+class ResumeCertificateHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Resume Certificate+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        data = dict()
+        # data['item_name'] = self.get_argument('item_name')
+        # data['item_duty'] = self.get_argument('item_duty')
+        # data['start_year3'] = self.get_argument('start_year3')
+        # data['start_month3'] = self.get_argument('start_month3')
+        # data['end_year3'] = self.get_argument('end_year3')
+        # data['end_month3'] = self.get_argument('end_month3')
+        # data['item_des'] = self.get_argument('item_des')
         result = yield self.db.Resume_Item(token, data, cache_flag)
 
         self.write(ObjectToString().encode(result))

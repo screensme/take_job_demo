@@ -118,12 +118,13 @@ def jpush_v3(app_key, device_token, title, message, push_type=None, push_code=No
     return https_request(app_key,body, "https://api.jpush.cn/v3/push",'application/json', version=1)
 
 if __name__ == "__main__":
-    device_token = ['1a0018970aaeed0db6f']
-    # device_token = ['1a0018970aaeed0db6f','160a3797c80cc710456']
+    # device_token = ['1a0018970aaeed0db6f']
+    device_token = ['1a0018970aaeed0db6f','160a3797c80cc710456']
     push_type = 20
-    push_code = 21
-    title = '我是一个段子手'
-    message = '徐小污在此，还不快快受死！'
+    push_code = random.randint(21, 24)
+    title = '欲罢不能造句'
+    # message = '老师：请用欲罢不能造个句，我一同学悠悠地来了句：“昨天我家浴霸不能用了，洗个澡冻死爹了。”'
+    message = '有个人问我：你们北京人凭什么那么牛逼？我默默的深吸了一口气，笑着看了看他。他不服，硬要学我，也深吸了一口气……享年36岁！'
     jpush_v3(app_key=apps['product'], device_token=device_token,
              title=title, message=message, push_type=push_type, push_code=push_code)
 

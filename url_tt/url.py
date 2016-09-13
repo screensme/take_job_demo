@@ -27,6 +27,7 @@ from api.user_handler import \
 from api.position_handler import \
     HomeHandler, \
     SearchHandler, \
+    SearchCompanyHandler, \
     PositionHandler, \
     FeedbackHandler, \
     HostsearchlistHandler, \
@@ -49,7 +50,6 @@ from api.resume_handler import \
     ResumeEducationHandler,\
     ResumeExpectHandler,\
     ResumeCareerHandler,\
-    ResumeItemHandler,\
     ResumeEvaluationHandler, \
     PostresumeHandler, \
     ResumeAvatarHandler
@@ -70,7 +70,9 @@ urls = [
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
     url(r"/user-info/edit", UserinfoeditHandler),    # 修改个人信息
     url(r"/user-info/avatar", UseravatareditHandler),    # 修改个人头像
-    url(r"/search", SearchHandler),  # 搜索页post
+    url(r"/search", SearchHandler),  # 搜索职位post
+    url(r"/search-company", SearchCompanyHandler),  # 搜索公司post
+    # url(r"/search/company-or-job", SearchCompanyOrJobHandler),  # 搜索公司或者职位名称post(接口用不了)
     url(r"/recommend-job", RecommendjobHandler),  # 推荐职位get
     url(r"/speed-job", SpeedjobHandler),  # 急速招聘post
     url(r"/hot_job/token-(\w+)", HostsearchlistHandler),  # 热门搜索职位列表(先写成固定的)
@@ -97,8 +99,13 @@ urls = [
     url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post(list)
     url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post
     url(r"/resume-edit-career", ResumeCareerHandler),    # 简历编辑-实习经历post(list)
-    # ### url(r"/resume-edit-item", ResumeItemHandler),    # 简历编辑-项目实践post(先不做)
-    url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post
+    # ### url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-项目社会实践post(先不做)
+    # ### url(r"/resume-edit-school_job", ResumeSchooljobHandler),    # 简历编辑-校内职务post(先不做)
+    # ### url(r"/resume-edit-school_rewards", ResumeSchoolRewardsHandler),    # 简历编辑-校内奖励post(先不做)
+    # ### url(r"/resume-edit-languages", ResumeLanguagesHandler),    # 简历编辑-语言能力post(先不做)
+    # ### url(r"/resume-edit-skill", ResumeSkillHandler),    # 简历编辑-IT技能post(先不做)
+    # ### url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post(先不做)
+    url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库

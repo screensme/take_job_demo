@@ -414,6 +414,8 @@ class Action(object):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
+        if num > 20:
+            num = 20
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -489,6 +491,82 @@ class Action(object):
             result['msg'] = '请传入查找职位或公司'
             result['data'] = {}
         else:
+            if num > 20:
+                num = 20
+            values['offset'] = int(page) * int(num)
+            values['limit'] = num
+            reques = requests.post(url=uri, json=values)
+            contect = reques.content.decode('utf-8')
+            try:
+                contect_id = sorted(eval(contect)['id_list'])
+                args = ','.join(str(x) for x in contect_id)
+                if args != '':
+                    search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                    self.db.close()
+                    for index in search_job:
+                        # 调整所有为null的值为""
+                        for ind in index:
+                            if index[ind] == None:
+                                index[ind] = ''
+                        # 薪资显示单位为K
+                        if index['company_logo'] != '':
+                            index['company_logo'] = "%s" % self.image + index['company_logo']
+                        else:
+                            index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                        index['salary_start'] = index['salary_start'] / 1000
+                        if (index['salary_end'] % 1000) >= 1:
+                            index['salary_end'] = index['salary_end'] / 1000 + 1
+                        else:
+                            index['salary_end'] = index['salary_end'] / 1000
+                        if index['job_type'] == 'fulltime':
+                            index['job_type'] = '全职'
+                        elif index['job_type'] == 'parttime':
+                            index['job_type'] = '兼职'
+                        elif index['job_type'] == 'intern':
+                            index['job_type'] = '实习'
+                        elif index['job_type'] == 'unclear':
+                            index['job_type'] = '不限'
+                else:
+                    search_job = []
+                result = dict()
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = search_job
+            except Exception, e:
+                result = dict()
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = e
+                result['data'] = []
+        raise tornado.gen.Return(result)
+
+    # 公司搜索post
+    @tornado.gen.coroutine
+    def Search_company(self, values=dict, cache_flag=int,):
+
+        uri = '%squery_company' % self.esapi
+        token = values.pop('token')
+        page = values.pop('page')
+        num = values.pop('num')
+        value = values
+        if 'job_type' in values:
+            if 'fulltime' == values['job_type']:
+                pass
+            else:
+                value['job_type'] = eval(value['job_type'])
+        if 'education' in values:
+            value['education'] = int(value['education'])
+        if value == {}:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请传入查找的公司'
+            result['data'] = {}
+        else:
+            if num > 20:
+                num = 20
             values['offset'] = int(page) * int(num)
             values['limit'] = num
             reques = requests.post(url=uri, json=values)
@@ -573,6 +651,8 @@ class Action(object):
                 pass
             else:
                 values['job_city'] = candidate['intension']['area']
+        if num > 20:
+            num = 20
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -634,6 +714,8 @@ class Action(object):
 
         uri = '%s/query_speed_jobs' % self.esapi
         values = {}
+        if num > 20:
+            num = 20
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -687,7 +769,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Host_search_list(self, token=str, cache_flag=int):
 
-        data = ['产品设计师', 'java', '测试工程师', '运营专员','运维工程师', '产品专员', '电商专员', 'PHP', 'C++', 'python']
+        data = ['运营专员', 'java', '测试工程师','运维工程师','产品专员', '电商专员', '行政专员', 'C++', '文案策划']
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -718,7 +800,8 @@ class Action(object):
     # 简历状态查看get全部
     @tornado.gen.coroutine
     def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
@@ -753,7 +836,8 @@ class Action(object):
     # 简历状态查看get被查看
     @tornado.gen.coroutine
     def Message_viewed(self, page=int, num=int, token=str,  cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
@@ -788,7 +872,8 @@ class Action(object):
     # 简历状态查看get简历通过
     @tornado.gen.coroutine
     def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
@@ -823,7 +908,8 @@ class Action(object):
     # 简历状态查看get邀请面试
     @tornado.gen.coroutine
     def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
@@ -858,7 +944,8 @@ class Action(object):
     # 简历状态查看get不合适
     @tornado.gen.coroutine
     def Message_improper(self, page=int, num=int, token=str,  cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
@@ -1121,10 +1208,13 @@ class Action(object):
                            'picture': []
                            }
             else:
-                pictures = search_company['GROUP_CONCAT(r.picture_name)'].split(',')
-                for p, q in enumerate(pictures):
-                    # p = "%s" % self.image + p
-                    pictures[p] = "%s" % self.image + q
+                if search_company['GROUP_CONCAT(r.picture_name)'] == []:
+                    pictures = []
+                else:
+                    pictures = search_company['GROUP_CONCAT(r.picture_name)'].split(',')
+                    for p, q in enumerate(pictures):
+                        # p = "%s" % self.image + p
+                        pictures[p] = "%s" % self.image + q
                 company = {'company_id': company_id,
                            'company_des': search_company['company_des'],
                            'boon': search_company['boon'],
@@ -1158,6 +1248,8 @@ class Action(object):
     # 公司详情-所有职位get  01--spider 10-local
     @tornado.gen.coroutine
     def Company_job(self, company_id=str, company_name=str, token=str, page=int, num=int, jobtype=str, cache_flag=int):
+        if num > 20:
+            num = 20
         if company_id[-2:] == '01':
             uri = '%squery_company_jobs' % self.esapi
             values = dict()
@@ -1579,9 +1671,16 @@ class Action(object):
 
     # 意见反馈
     @tornado.gen.coroutine
-    def Feed_back(self, token=str, data=dict, cache_flag=int):
+    def Feed_back(self, token=str, info=str, cache_flag=int):
 
-
+        # dt = datetime.datetime.now()
+        # job_type = "students"
+        # channel = "baidu"
+        # contents = info
+        # status = "ready"
+        # sql_feed_post = "insert into feedback(job_type, channel, contents, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s)"
+        # feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt)
+        # self.db.close()
         result = dict()
         result['status'] = 'success'
         result['token'] = token
@@ -1592,7 +1691,8 @@ class Action(object):
     # 查看收藏
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
-
+        if num > 20:
+            num = 20
         sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s offset %s"\
               % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update,company_logo",
                  token, num, (int(page) * int(num)))

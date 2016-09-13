@@ -93,7 +93,8 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
 36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
 37.公司详情-所有职位post：/company-full/job  
-38.急速招聘post/speed-job  
+38.急速招聘post：/speed-job  
+39.搜索公司名post：/search-company  
 ***
 #####简历状态：  
 	
@@ -284,7 +285,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	trade				N	string		行业
 	work_years_start(0)	N	string		工作年限
 	work_years_end(50)	N	string		工作年限
-	job_city(全国)		N	string		城市
+	job_city			N	string		城市(默认全国)
 	area				N	string		区域
 	education			N	string		'中专': 2,'大专': 3,'本科': 4,'硕士': 5,'博士': 6
 	scale_start(0)		N	string		企业规模
@@ -1221,7 +1222,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     "errorcode": 1001
   }
 }```  
-####38.急速招聘post/speed-job   
+####38.急速招聘post：/speed-job   
 参数：
 		
 	参数名称		必填	类型		描述
@@ -1275,3 +1276,62 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
   "token": "123",
   "data": []
 ```
+####39.搜索公司名post：/search-company  
+		
+	参数名称			必填	类型			描述
+	token				Y	string		用户id
+	page				Y	string		页数
+	num					Y	string		每页显示数量
+	company_name		Y	string		公司名称
+	job_type			N	string		全职:"fulltime",兼职/实习:['parttime','intern']
+	trade				N	string		行业
+	work_years_start(0)	N	string		工作年限
+	work_years_end(50)	N	string		工作年限
+	job_city			N	string		城市(默认全国)
+	area				N	string		区域
+	education			N	string		'中专': 2,'大专': 3,'本科': 4,'硕士': 5,'博士': 6
+	scale_start(0)		N	string		企业规模
+	scale_end(20000)	N	string		企业规模
+	company_type(0)		N	string 		企业性质
+	salary_start(0)		N	string		薪资范围
+	salary_end(200000)	N	string		薪资范围
+返回结果：（返回的薪资是多少多少K）
+```{
+  "status": "success",
+  "msg": "",
+  "token": "123",
+  "data": [
+    {
+      "scale_str": "规模500人以上",
+      "boon": "养老保险,失业保险,医疗保险,生育保险,工伤保险,住房公积金,包住",
+      "company_logo": "http://imgtest.zhaopintt.com/icompany_logo_2.png",
+      "job_type": "全职",
+      "job_name": "链家新房置业顾问",
+      "job_city": "北京市 东城区",
+      "salary_start": 3,
+      "company_name": "链家新房",
+      "salary_end": 5,
+      "trade": "",
+      "education_str": "高中",
+      "id": 175827,
+      "work_years_str": "经验不限",
+      "dt_update": "2016-09-06T10:16:27"
+    },
+    {
+      "scale_str": "规模500人以上",
+      "boon": "养老保险,失业保险,医疗保险,生育保险,工伤保险,住房公积金,年终奖",
+      "company_logo": "http://imgtest.zhaopintt.com/icompany_logo_16.png",
+      "job_type": "全职",
+      "job_name": "顺义链家招聘销售同业优先",
+      "job_city": "北京市 东城区",
+      "salary_start": 5,
+      "company_name": "北京链家房地产经纪有限公司 -h7f",
+      "salary_end": 8,
+      "trade": "中介服务",
+      "education_str": "高中",
+      "id": 98647,
+      "work_years_str": "经验不限",
+      "dt_update": "2015-11-26T00:00:00"
+    }
+  ]
+}```  

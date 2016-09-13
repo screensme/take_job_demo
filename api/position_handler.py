@@ -20,7 +20,7 @@ class HomeHandler(BaseHandler):
         self.finish()
         return
 
-# 首页搜索
+# 首页搜索职位
 class SearchHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
@@ -33,6 +33,60 @@ class SearchHandler(BaseHandler):
         num = self.get_argument('num')
         last = self.get_arguments()
         if 'job_name' not in last:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请输入搜索内容!'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+        result = yield self.db.Search_job(last, token, page, num, cache_flag,)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 搜索公司
+class SearchCompanyHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Search Company+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        # page = self.get_argument('page')
+        # num = self.get_argument('num')
+        values = self.get_arguments()
+        if 'company_name' not in values:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '请输入搜索内容!'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+        result = yield self.db.Search_company(values, cache_flag,)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 搜索公司或者职位
+class SearchCompanyOrJobHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++Search Company Or Job+++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        last = self.get_arguments()
+        if 'company_name' not in last:
             result = dict()
             result['status'] = 'fail'
             result['token'] = token
@@ -90,9 +144,9 @@ class FeedbackHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         data = dict()
-        data['email'] = self.get_argument('email')
-        data['info'] = self.get_argument('info')
-        result = yield self.db.Feed_back(token, data, cache_flag)
+        email = self.get_argument('email')
+        info = self.get_argument('info')
+        result = yield self.db.Feed_back(token, info, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
