@@ -38,7 +38,7 @@ class CompanyCompanyHandler(BaseHandler):
     def get(self, company_id, token):
         self.log.info('+++++++++++Company all job+++++++++++')
         if company_id[:1] == '0':
-            company = {'company_id': '',
+            company = {'company_id': company_id,
                        'company_des': '',
                        'boon': '',
                        'events': '',

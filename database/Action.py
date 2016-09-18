@@ -1056,7 +1056,7 @@ class Action(object):
                         search_job['company_address'] = search_company['company_address']
                         search_job['company_id'] = str(search_job['company_id']) + '10'
                 except Exception, e:
-                    self.log.info("-------!!!!!!!!!!!!!ERROR is %s" % e)
+                    self.log.info("-------!!!!!!!!!!!!! Position_full, ERROR is %s" % e)
                     search_job['company_address'] = ''
                     # search_job['company_id'] = str(search_job['company_id']) + '01'
             try:
@@ -1081,7 +1081,7 @@ class Action(object):
                     search_job['collect'] = 2
                     search_job['resume_post'] = 2
             except Exception, e:
-                self.log.info('ERROR is %s' % e)
+                self.log.info('============Position_full, ERROR is %s' % e)
 
         result = dict()
         result['status'] = 'success'
@@ -1179,7 +1179,7 @@ class Action(object):
             search_company = self.db.get(sql_company)
             self.db.close()
             if search_company is None:
-                company = {'company_id': '',
+                company = {'company_id': company_id,
                            'company_des': '',
                            'boon': '',
                            'events': '',
@@ -1187,7 +1187,7 @@ class Action(object):
                            'picture': []
                            }
             else:
-                company = {'company_id': '',
+                company = {'company_id': company_id,
                            'company_des': search_company['description'],
                            'boon': '',
                            'events': '',
@@ -1201,7 +1201,7 @@ class Action(object):
             search_company = self.db.get(sql_company)
             self.db.close()
             if search_company is None:
-                company = {'company_id': '',
+                company = {'company_id': company_id,
                            'company_des': '',
                            'boon': '',
                            'events': '',
