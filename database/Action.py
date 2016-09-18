@@ -1672,21 +1672,30 @@ class Action(object):
 
     # 意见反馈
     @tornado.gen.coroutine
-    def Feed_back(self, token=str, info=str, cache_flag=int):
+    def Feed_back(self, token=str, info=str, email=str, cache_flag=int):
 
-        # dt = datetime.datetime.now()
-        # job_type = "students"
-        # channel = "baidu"
-        # contents = info
-        # status = "ready"
-        # sql_feed_post = "insert into feedback(job_type, channel, contents, status, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s)"
-        # feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt)
-        # self.db.close()
+        dt = datetime.datetime.now()
+        job_type = "students"
+        channel = "school"
+        contents = info
+        email = email
+        status = "ready"
+        sql_feed_post = "insert into feedback(job_type,channel,contents,status,dt_create,dt_update,email) values(%s,%s,%s,%s,%s,%s,%s)"
+        try:
+            feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt, email)
+            self.db.close()
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '数据添加不成功'
+            result['data'] = {'errorcode': 10}
+            raise tornado.gen.Return(result)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = {}
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 查看收藏

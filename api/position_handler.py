@@ -143,10 +143,12 @@ class FeedbackHandler(BaseHandler):
         self.log.info('+++++++++++Feedback+++++++++++')
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        data = dict()
-        email = self.get_argument('email')
         info = self.get_argument('info')
-        result = yield self.db.Feed_back(token, info, cache_flag)
+        try:
+            email = self.get_argument('email')
+        except Exception,e:
+            email = ''
+        result = yield self.db.Feed_back(token, info, email, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
