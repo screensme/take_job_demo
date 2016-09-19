@@ -1713,7 +1713,7 @@ class Action(object):
                               'update_url': ''}
             raise tornado.gen.Return(result)
         else:
-            sql_version = "select version from App_version order by id desc"
+            sql_version = "select version from App_version order by id desc limit 1"
             try:
                 version_post = self.db.get(sql_version)
                 self.db.close()
