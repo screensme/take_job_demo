@@ -135,25 +135,6 @@ class SpeedjobHandler(BaseHandler):
         self.finish()
         return
 
-# 意见反馈post
-class FeedbackHandler(BaseHandler):
-    @gen.coroutine
-    @tornado.web.asynchronous
-    def post(self):
-        self.log.info('+++++++++++Feedback+++++++++++')
-        cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
-        info = self.get_argument('info')
-        try:
-            email = self.get_argument('email')
-        except Exception,e:
-            email = ''
-        result = yield self.db.Feed_back(token, info, email, cache_flag)
-
-        self.write(ObjectToString().encode(result))
-        self.finish()
-        return
-
 # 职位详情get
 class PositionHandler(BaseHandler):
     @gen.coroutine

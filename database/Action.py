@@ -1694,9 +1694,54 @@ class Action(object):
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
+        result['msg'] = '反馈成功'
         result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
+
+    # 获取版本,自动更新（仅Android）
+    @tornado.gen.coroutine
+    def Get_Version(self, Version=str, cache_flag=int):
+
+        result = dict()
+        version_get = Version.split('.')
+        if len(version_get) != 3:
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '版本号格式有误'
+            result['data'] = {'errorcode': 10,
+                              'isupdate': 0,
+                              'update_url': ''}
+            raise tornado.gen.Return(result)
+        else:
+            sql_version = "select version from App_version order by id desc"
+            try:
+                version_post = self.db.get(sql_version)
+                self.db.close()
+                self.log.info('-------------------Search version end--')
+                version_sql = version_post['version'].split('.')
+                isupdate = 0
+                for num in xrange(len(version_get)):
+                    if version_get[num] > version_sql[num]:
+                        isupdate = 1
+                        break
+
+            except Exception, e:
+                result['status'] = 'fail'
+                result['token'] = ''
+                result['msg'] = '数据添加不成功'
+                result['data'] = {'errorcode': 10,
+                                  'isupdate': 0,
+                                  'update_url': ''}
+                raise tornado.gen.Return(result)
+            result['status'] = 'success'
+            result['token'] = ''
+            result['msg'] = ''
+            result['data'] = {'errorcode': 0,
+                              'isupdate': isupdate,
+                              'update_url': 'www.baidu.com'
+                              }
+            raise tornado.gen.Return(result)
+
 
     # 查看收藏
     @tornado.gen.coroutine

@@ -29,7 +29,6 @@ from api.position_handler import \
     SearchHandler, \
     SearchCompanyHandler, \
     PositionHandler, \
-    FeedbackHandler, \
     HostsearchlistHandler, \
     HotcityHandler, \
     RecommendjobHandler, \
@@ -53,6 +52,10 @@ from api.resume_handler import \
     ResumeEvaluationHandler, \
     PostresumeHandler, \
     ResumeAvatarHandler
+
+from api.tools_handler import \
+    FeedbackHandler, \
+    GetVersionHandler
 
 from api.Edit_database import \
     EditdatabaseHandler, \
@@ -107,6 +110,7 @@ urls = [
     # ### url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post(先不做)
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
+    url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！

@@ -95,6 +95,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 37.公司详情-所有职位post：/company-full/job  
 38.急速招聘post：/speed-job  
 39.搜索公司名post：/search-company  
+40.获取版本,自动更新post（仅Android）：/get-version  
 ***
 #####简历状态：  
 	
@@ -782,8 +783,26 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
+	info		Y	string		反馈的消息内容
+	email		N	string		反馈用户的邮箱（选填）
 返回成功：
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
+```{
+  "status": "success",
+  "msg": "反馈成功",
+  "token": "111",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "请输入反馈的内容",
+  "token": "",
+  "data": {
+    "errorcode": 1000
+  }
+}```
 ####23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
 参数：
 		
@@ -1335,3 +1354,30 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     }
   ]
 }```  
+####40.获取版本,自动更新post（仅Android）：/get-version  
+参数：
+		
+	参数名称		必填	类型		描述
+	Version			Y	string		版本号(大写V，格式：1.0.2)
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "",
+  "data": {
+    "errorcode": 0,		(0表示成功)
+    "update_url": "www.baidu.com",		（下载地址）
+    "isupdate": 1		（1表示需要更新，0表示不需要更新）
+  }
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "非安卓手机",
+  "token": "",
+  "data": {
+    "errorcode": 1000,
+    "update_url": "",
+    "isupdate": 0
+  }
+}```
