@@ -126,14 +126,8 @@ class SpeedjobHandler(BaseHandler):
         self.log.info('+++++++++++Speed job+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
-        page = self.get_argument('page')
-        num = self.get_argument('num')
-        try:
-            job_type = self.get_argument('job_type')
-        except Exception, e:
-            job_type = ''
-        result = yield self.db.Speed_job(token, job_type, page, num, cache_flag,)
+        value = self.get_arguments()
+        result = yield self.db.Speed_job(value, cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()

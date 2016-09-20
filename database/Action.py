@@ -710,10 +710,14 @@ class Action(object):
 
     # 急速招聘
     @tornado.gen.coroutine
-    def Speed_job(self, token=str, job_type=str, page=int, num=int, cache_flag=int,):
+    def Speed_job(self, value=dict, cache_flag=int,):
 
         uri = '%s/query_speed_jobs' % self.esapi
         values = {}
+        token = value['token']
+        num = value['num']
+        page = value['page']
+        job_type = value['job_type']
         if int(num) > 20:
             num = 20
         if job_type != '':
