@@ -424,7 +424,7 @@ class Action(object):
         contect_id = sorted(eval(contect)['id_list'])
         args = ','.join(str(x) for x in contect_id)
 
-        sql_job = "SELECT id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo " \
+        sql_job = "SELECT id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num " \
                   "FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc " % args
         try:
             search_job = self.db.query(sql_job)
@@ -502,7 +502,7 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                     self.db.close()
                     for index in search_job:
                         # 调整所有为null的值为""
@@ -576,7 +576,7 @@ class Action(object):
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                                             %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                     self.db.close()
                     for index in search_job:
                         # 调整所有为null的值为""
@@ -670,7 +670,7 @@ class Action(object):
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)"
-                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                 self.db.close()
                 for index in search_job:
                     for ind in index:
@@ -732,7 +732,7 @@ class Action(object):
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
+                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num',args))
                 self.db.close()
                 for n, index in enumerate(search_job):
                     # 调整所有为null的值为""
