@@ -1723,7 +1723,7 @@ class Action(object):
                               'update_url': ''}
             raise tornado.gen.Return(result)
         else:
-            sql_version = "select version from App_version order by id desc limit 1"
+            sql_version = "select version,app_file from App_version where status!='delete' order by id desc limit 1 "
             try:
                 version_post = self.db.get(sql_version)
                 self.db.close()
@@ -1748,7 +1748,7 @@ class Action(object):
             result['msg'] = ''
             result['data'] = {'errorcode': 0,
                               'isupdate': isupdate,
-                              'update_url': 'www.baidu.com'
+                              'update_url': self.image + version_post['app_file']
                               }
             raise tornado.gen.Return(result)
 
