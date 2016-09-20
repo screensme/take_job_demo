@@ -1020,7 +1020,7 @@ class Action(object):
     def Position_full(self, job_id=str, token=str, cache_flag=int):
 
         sql_job = "select %s from jobs_hot_es_test where id ='%s'"\
-                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo,company_id",job_id)
+                  % ("site_name,salary_start,salary_end,job_name,job_city,job_type,boon,education_str,company_name,trade,company_type,scale_str,position_des,dt_update,company_logo,company_id,need_num",job_id)
         search_job = self.db.get(sql_job)
         self.db.close()
         if search_job == None:
