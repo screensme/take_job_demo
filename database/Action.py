@@ -414,7 +414,7 @@ class Action(object):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
-        if num > 20:
+        if int(num) > 20:
             num = 20
         values['offset'] = int(page) * int(num)
         values['limit'] = num
@@ -491,7 +491,7 @@ class Action(object):
             result['msg'] = '请传入查找职位或公司'
             result['data'] = {}
         else:
-            if num > 20:
+            if int(num) > 20:
                 num = 20
             values['offset'] = int(page) * int(num)
             values['limit'] = num
@@ -565,7 +565,7 @@ class Action(object):
             result['msg'] = '请传入查找的公司'
             result['data'] = {}
         else:
-            if num > 20:
+            if int(num) > 20:
                 num = 20
             values['offset'] = int(page) * int(num)
             values['limit'] = num
@@ -651,7 +651,7 @@ class Action(object):
                 pass
             else:
                 values['job_city'] = candidate['intension']['area']
-        if num > 20:
+        if int(num) > 20:
             num = 20
         values['offset'] = int(page) * int(num)
         values['limit'] = num
@@ -710,12 +710,13 @@ class Action(object):
 
     # 急速招聘
     @tornado.gen.coroutine
-    def Speed_job(self, token=str, page=int, num=int, cache_flag=int,):
+    def Speed_job(self, token=str, job_type=str, page=int, num=int, cache_flag=int,):
 
         uri = '%s/query_speed_jobs' % self.esapi
         values = {}
-        if num > 20:
+        if int(num) > 20:
             num = 20
+        values['job_type'] = job_type
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
@@ -727,16 +728,19 @@ class Action(object):
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo' ,args))
                 self.db.close()
-                for index in search_job:
+                for n, index in enumerate(search_job):
                     # 调整所有为null的值为""
                     for ind in index:
                         if index[ind] == None:
                             index[ind] = ''
-                    # 薪资显示单位为K
+                    # 添加图片
+                    index['speed_image'] = "%s" % self.image + 'speed_job_%s.png' % n
+                    # 公司logo
                     if index['company_logo'] != '':
                         index['company_logo'] = "%s" % self.image + index['company_logo']
                     else:
                         index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                    # 薪资显示单位为K
                     index['salary_start'] = index['salary_start'] / 1000
                     if (index['salary_end'] % 1000) >= 1:
                         index['salary_end'] = index['salary_end'] / 1000 + 1
@@ -800,7 +804,7 @@ class Action(object):
     # 简历状态查看get全部
     @tornado.gen.coroutine
     def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
@@ -836,7 +840,7 @@ class Action(object):
     # 简历状态查看get被查看
     @tornado.gen.coroutine
     def Message_viewed(self, page=int, num=int, token=str,  cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
@@ -872,7 +876,7 @@ class Action(object):
     # 简历状态查看get简历通过
     @tornado.gen.coroutine
     def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
@@ -908,7 +912,7 @@ class Action(object):
     # 简历状态查看get邀请面试
     @tornado.gen.coroutine
     def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
@@ -944,7 +948,7 @@ class Action(object):
     # 简历状态查看get不合适
     @tornado.gen.coroutine
     def Message_improper(self, page=int, num=int, token=str,  cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
@@ -1249,7 +1253,7 @@ class Action(object):
     # 公司详情-所有职位get  01--spider 10-local
     @tornado.gen.coroutine
     def Company_job(self, company_id=str, company_name=str, token=str, page=int, num=int, jobtype=str, cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         if company_id[-2:] == '01':
             uri = '%squery_company_jobs' % self.esapi
@@ -1746,7 +1750,7 @@ class Action(object):
     # 查看收藏
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):
-        if num > 20:
+        if int(num) > 20:
             num = 20
         sql = "select %s from view_user_collections where userid =%s and status='favorite' order by dt_update desc limit %s offset %s"\
               % ("collection_id, userid, jobid, job_name, company_name, company_type, job_type, job_city, boon, work_years_str, trade, scale_str, salary_start, salary_end, education_str, dt_update,company_logo",

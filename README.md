@@ -1248,41 +1248,44 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	token			Y	string		用户id
 	page			Y	string		页数
 	num				Y	string		每页数量
+	job_type		Y	string		全职:"fulltime",兼职/实习['parttime','intern']
 返回成功：（同首页和职位推荐页的返回结果）
 ```{
   "status": "success",
   "msg": "",
-  "token": "123",
+  "token": "111",
   "data": [
     {
-      "scale_str": "100-499人",
-      "boon": "五险一金,餐饮补助",
-      "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
+      "scale_str": "20-99人",
+      "boon": "股权激励,通讯补贴,绩效奖金,年奖季奖,餐饮补助,加班补贴,补充保险",
+      "speed_image": "http://imgtest.zhaopintt.com/speed_job_0.png",
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_595.jpeg",
       "job_type": "全职",
-      "job_name": "前台",
+      "job_name": "人事专员",
       "job_city": "北京",
-      "salary_start": 11,
-      "company_name": "测试",
-      "salary_end": 13,
+      "salary_start": 3,
+      "company_name": "联创锐峰科技有限公司",
+      "salary_end": 5,
       "trade": "互联网/电子商务",
-      "education_str": "不限",
-      "id": 214677,
+      "education_str": "本科",
+      "id": 214670,
       "work_years_str": "不限",
       "dt_update": "2016-09-12T00:00:00"
     },
     {
-      "scale_str": "100-499人",
-      "boon": "",
-      "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
+      "scale_str": "20-99人",
+      "boon": "绩效奖金,通讯补贴,餐饮补助",
+      "speed_image": "http://imgtest.zhaopintt.com/speed_job_1.png",
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_595.jpeg",
       "job_type": "全职",
-      "job_name": "你好你好你好你好你好你好你好你好你好你好你好你好你好",
+      "job_name": "前端开发工程师",
       "job_city": "北京",
-      "salary_start": 12,
-      "company_name": "测试",
-      "salary_end": 12,
+      "salary_start": 2,
+      "company_name": "联创锐峰科技有限公司",
+      "salary_end": 3,
       "trade": "互联网/电子商务",
-      "education_str": "不限",
-      "id": 214678,
+      "education_str": "硕士",
+      "id": 214673,
       "work_years_str": "不限",
       "dt_update": "2016-09-12T00:00:00"
     }
