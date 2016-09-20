@@ -714,14 +714,11 @@ class Action(object):
 
         uri = '%s/query_speed_jobs' % self.esapi
         values = {}
-        token = value['token']
+        token = value.pop('token')
         num = value['num']
         page = value['page']
-        job_type = value['job_type']
         if int(num) > 20:
             num = 20
-        if job_type != '':
-            values['job_type'] = job_type
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)
