@@ -716,7 +716,8 @@ class Action(object):
         values = {}
         if int(num) > 20:
             num = 20
-        values['job_type'] = job_type
+        if job_type != '':
+            values['job_type'] = job_type
         values['offset'] = int(page) * int(num)
         values['limit'] = num
         reques = requests.post(url=uri, json=values)

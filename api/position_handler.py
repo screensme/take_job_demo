@@ -132,7 +132,7 @@ class SpeedjobHandler(BaseHandler):
         try:
             job_type = self.get_argument('job_type')
         except Exception, e:
-            job_type = 'fulltime'
+            job_type = ''
         result = yield self.db.Speed_job(token, job_type, page, num, cache_flag,)
 
         self.write(ObjectToString().encode(result))
