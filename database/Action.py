@@ -713,15 +713,19 @@ class Action(object):
     def Speed_job(self, value=dict, cache_flag=int,):
 
         uri = '%s/query_speed_jobs' % self.esapi
-        values = {}
         token = value.pop('token')
-        num = value['num']
-        page = value['page']
+        num = value.pop('num')
+        page = value.pop('page')
         if int(num) > 20:
             num = 20
-        values['offset'] = int(page) * int(num)
-        values['limit'] = num
-        reques = requests.post(url=uri, json=values)
+        if 'job_type' in value:
+            if 'fulltime' == value['job_type']:
+                pass
+            else:
+                value['job_type'] = eval(value['job_type'])
+        value['offset'] = int(page) * int(num)
+        value['limit'] = num
+        reques = requests.post(url=uri, json=value)
         contect = reques.content.decode('utf-8')
         try:
             contect_id = sorted(eval(contect)['id_list'])
