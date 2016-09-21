@@ -125,7 +125,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	面试(push_code)					23
 	不合适(push_code)				24
 ***
-#####首页点击全职兼职： 调用接口： /search  
+#####首页点击全职兼职： 调用接口post： /search  
 参数：
 		
 	参数名称			必填	类型			描述
