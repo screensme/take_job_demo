@@ -41,7 +41,8 @@ from api.sms_handler import \
 from api.company_handler import \
     CompanyBasicHandler, \
     CompanyJobHandler, \
-    CompanyCompanyHandler
+    CompanyCompanyHandler, \
+    Job500companyHandler
 
 from api.resume_handler import \
     ResumeHandler,\
@@ -70,6 +71,7 @@ urls = [
     url(r"/auth/forgetpwd", ForgetpwdHandler),  # 忘记，找回密码
     url(r"/auth/editpwd", UpdatePwdHandler),    # 修改密码post
     url(r"/sendsms", SendSmsHandler),   # 发送短信验证码
+    url(r"/job_500company/page-(\d+)/num-(\d+)/token-(\w+)", Job500companyHandler),   # 发送短信验证码
     # url(r"/sendsms/verify/mobile-(\w+)/code-(\w+)", VerifySmsHandler),    # 校验短信验证码(不用)
     url(r"/user-info/edit", UserinfoeditHandler),    # 修改个人信息
     url(r"/user-info/avatar", UseravatareditHandler),    # 修改个人头像

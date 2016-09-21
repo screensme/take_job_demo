@@ -1351,6 +1351,36 @@ class Action(object):
         result['data'] = job
         raise tornado.gen.Return(result)
 
+    # 500强公司链接
+    @tornado.gen.coroutine
+    def Job_500_Company(self, page=int, num=int, token=str, cache_flag=int):
+        if int(num) > 20:
+            num = 20
+
+        sql = "select %s from job_500company where f_home>0 order by top_ranking limit %s offset %s" \
+              % ("company_name,logo,logo_mobile,logo_mobile,url,f_home", num, (int(page) * int(num)))
+        try:
+            company_500 = self.db.query(sql)
+            self.db.close()
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '服务器错误'
+            result['data'] = {'errorcode': 500}
+            raise tornado.gen.Return(result)
+        for index in company_500:
+            index['logo'] = self.image + index['logo']
+            if index['logo_mobile'] == None:
+                index['logo_mobile'] = index['logo']
+
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = company_500
+        raise tornado.gen.Return(result)
+
     # 简历查看
     @tornado.gen.coroutine
     def Resume_view(self, token=str, cache_flag=int):

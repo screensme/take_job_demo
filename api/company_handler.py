@@ -85,3 +85,16 @@ class CompanyJobHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# 公司详情-所有职位get
+class Job500companyHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, page, num, token):
+        self.log.info('+++++++++++ company 500 +++++++++++')
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.Job_500_Company(page, num, token, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

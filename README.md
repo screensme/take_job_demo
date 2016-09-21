@@ -96,6 +96,7 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 38.急速招聘post：/speed-job  
 39.搜索公司名post：/search-company  
 40.获取版本,自动更新post（仅Android）：/get-version  
+41.500强公司get：/job_500company/page-{page}/num-{num}/token-{token}  
 ***
 #####简历状态：  
 	
@@ -1398,4 +1399,33 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     "update_url": "",
     "isupdate": 0
   }
-}```
+}```  
+####41.500强公司get：/job_500company/page-{page}/num-{num}/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	page			Y	string		页数（0开始）
+	num				Y	string		每页数量
+	token			Y	string		用户id
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "11",
+  "data": [
+    {
+      "url": "https://campus.alibaba.com/index.htm",
+      "logo": "http://imgtest.zhaopintt.com/job_500company_logo_32.png",
+      "f_home": 1,
+      "company_name": "阿里巴巴",
+      "logo_mobile": "http://imgtest.zhaopintt.com/job_500company_logo_32.png"
+    },
+    {
+      "url": "http://career.cmbchina.com/",
+      "logo": "http://imgtest.zhaopintt.com/job_500company_logo_55.png",
+      "f_home": 2,
+      "company_name": "招商银行",
+      "logo_mobile": "http://imgtest.zhaopintt.com/job_500company_logo_55.png"
+    }
+  ]
+}```  
