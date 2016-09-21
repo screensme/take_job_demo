@@ -410,28 +410,37 @@ class Action(object):
 
     # 首页
     @tornado.gen.coroutine
-    def Home_info(self, page=int, num=int, token=str, cache_flag=int):
+    def Home_info(self, page=int, num=int, token=str, datas='', cache_flag=int):
 
         uri = '%squery_new_job' % self.esapi
         values = dict()
         if int(num) > 20:
             num = 20
         values['offset'] = int(page) * int(num)
-        values['limit'] = num
+        values['limit'] = int(num)
+        if 'job_type' in datas:
+            if 'fulltime' == datas['job_type']:
+                pass
+            else:
+                values['job_type'] = eval(datas['job_type'])
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
         self.log.info('id_list = %s' % contect)
-        contect_id = sorted(eval(contect)['id_list'])
-        args = ','.join(str(x) for x in contect_id)
+        try:
+            contect_id = sorted(eval(contect)['id_list'])
+            args = ','.join(str(x) for x in contect_id)
+        except Exception, e:
+            result = dict()
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = '没有搜索结果'
+            result['data'] = []
+            raise tornado.gen.Return(result)
 
         sql_job = "SELECT id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num " \
                   "FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc " % args
-        try:
-            search_job = self.db.query(sql_job)
-        except Exception, e:
-            self.log.info("-------------db error, reconnect, home info---------")
-            self.db.reconnect()
-            search_job = self.db.query(sql_job)
+
+        search_job = self.db.query(sql_job)
         self.db.close()
         for index in search_job:
             # 调整所有为null的值为""
@@ -466,12 +475,12 @@ class Action(object):
 
     # 首页搜索
     @tornado.gen.coroutine
-    def Search_job(self, values=dict, token=str, page=int, num=int, cache_flag=int,):
+    def Search_job(self, values=dict, cache_flag=int,):
 
         uri = '%squery_job' % self.esapi
-        a = values.pop('token')
-        b = values.pop('page')
-        c = values.pop('num')
+        token = values.pop('token')
+        page = values.pop('page')
+        num = values.pop('num')
         value = values
         if 'job_type' in values:
             if 'fulltime' == values['job_type']:

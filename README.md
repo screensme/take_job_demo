@@ -125,6 +125,16 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 	面试(push_code)					23
 	不合适(push_code)				24
 ***
+#####首页点击全职兼职： 调用接口： /search  
+参数：
+		
+	参数名称			必填	类型			描述
+	token				Y	string		用户id
+	page				Y	string		页数
+	num					Y	string		每页显示数量
+	job_type			Y	string		全职:"fulltime",兼职/实习:['parttime','intern']
+返回结果--同其他搜索结果
+***
 ##接口介绍
 ####1.首页get：/home/page-{page}/num-{num}/token-{token}  
 参数：

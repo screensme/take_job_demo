@@ -15,7 +15,7 @@ class HomeHandler(BaseHandler):
     def get(self, page, num, token):
         cache_flag = self.get_cache_flag()
         self.log.info('+++++++++++Home page+++++++++++')
-        result = yield self.db.Home_info(page, num, token, cache_flag)
+        result = yield self.db.Home_info(page, num, token, cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()
         return
@@ -28,20 +28,17 @@ class SearchHandler(BaseHandler):
         self.log.info('+++++++++++Search+++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
-        page = self.get_argument('page')
-        num = self.get_argument('num')
+        # token = self.get_argument('token')
+        # page = self.get_argument('page')
+        # num = self.get_argument('num')
         last = self.get_arguments()
         if 'job_name' not in last:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '请输入搜索内容!'
-            result['data'] = {}
-            self.write(ObjectToString().encode(result))
-            self.finish()
-            return
-        result = yield self.db.Search_job(last, token, page, num, cache_flag,)
+            page = last['page']
+            num = last['num']
+            token = last['token']
+            result = yield self.db.Home_info(page, num, token, last, cache_flag)
+        else:
+            result = yield self.db.Search_job(last, cache_flag,)
 
         self.write(ObjectToString().encode(result))
         self.finish()
