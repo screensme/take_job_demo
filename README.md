@@ -1507,7 +1507,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
             "rewards_info":"组织宣传学习“五四”精神，加强班风学风建设，等等，班级一致获得院领导好"
         },
         {
-            "end_time":"",
+            "end_time":"",		# 这个传空
             "start_time":"2015.03",
             "rewards_name":"根据业务需求",
             "school_name":"根据",
@@ -1515,6 +1515,15 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         }
     ]
 ```  
+返回成功：
+```{
+  "status": "success",
+  "msg": "校内奖励修改成功",
+  "token": "170",
+  "data": {
+    "errorcode": 0
+  }
+}```  
 ####45.简历编辑-获得证书post：/resume-edit-certificate  
 参数：
 		
