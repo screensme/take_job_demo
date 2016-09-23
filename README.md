@@ -69,7 +69,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 13.职位详情get：/position-full/job-{job_id}/token-{token}  
-xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}  
+14.公司详情get：/company-full/company-{company_id}/token-{token}  
 15.个人信息页get(基本信息)：/me/token-{token}  
 16.简历查看get：/resume-view/token-{token}  
 17.简历编辑-基本信息post：/resume-edit-basic  
@@ -97,6 +97,10 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
 39.搜索公司名post：/search-company  
 40.获取版本,自动更新post（仅Android）：/get-version  
 41.500强公司get：/job_500company/page-{page}/num-{num}/token-{token}  
+42.简历编辑-项目社会实践post：/resume-edit-experience  
+43.简历编辑-校内职务post：/resume-edit-school_job  
+44.简历编辑-校内奖励post：/resume-edit-school_rewards  
+45.简历编辑-获得证书post：/resume-edit-certificate  
 ***
 #####简历状态：  
 	
@@ -1429,3 +1433,102 @@ xxx不用14.公司详情get：/company-full/company-{company_id}/token-{token}
     }
   ]
 }```  
+####42.简历编辑-项目社会实践post：/resume-edit-experience  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	experience	Y	string		用户的项目经历，注意格式如下
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
+```[
+        {
+            "project_name":"田园考古",
+            "end_time":"2016.02",
+            "title":"组长",
+            "start_time":"2015.02",
+            "description":"1、技术开发中心Sqlserver技术支持
+        }
+    ]
+```  
+返回成功：
+```{
+  "status": "success",
+  "msg": "项目经历修改成功",
+  "token": "170",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+####43.简历编辑-校内职务post：/resume-edit-school_job  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	education	Y	string		用户的教育经历，注意格式如下
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
+```[
+        {
+            "job_info":"1、技术开发中心Sqlserver技术支持； 2、数据库环境安装、升级，日常管理，性能优化和监控，调优，备份，恢复测试，迁移，故障处理等； 3、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理；",
+            "start_time":"2013.07",
+            "end_time":"2014.09",
+            "job_name":"学生会主席",
+            "school_name":"北大"
+        },
+        {
+            "job_info":"1、技术开发中心Sqlserver技术支持； 2、数据库环境安装、升级，日常管理，性能优化和监控，调优，备份，恢复测试，迁移，故障处理等； 3、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理；",
+            "start_time":"2014.03",
+            "end_time":"2016.03",
+            "job_name":"学生会",
+            "school_name":"根据业务需求"
+        }
+    ]
+```  
+```{
+  "status": "success",
+  "msg": "校内职位修改成功",
+  "token": "170",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+####44.简历编辑-校内奖励post：/resume-edit-school_rewards  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	education	Y	string		用户的教育经历，注意格式如下
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
+```[
+        {
+            "end_time":"",
+            "start_time":"2013.09",
+            "rewards_name":"二等奖",
+            "school_name":"北京大学",
+            "rewards_info":"组织宣传学习“五四”精神，加强班风学风建设，等等，班级一致获得院领导好"
+        },
+        {
+            "end_time":"",
+            "start_time":"2015.03",
+            "rewards_name":"根据业务需求",
+            "school_name":"根据",
+            "rewards_info":"1、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理； 2、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理； 1 1 1"
+        }
+    ]
+```  
+####45.简历编辑-获得证书post：/resume-edit-certificate  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	education	Y	string		用户的教育经历，注意格式如下
+<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
+```[
+    {
+        "school":"是对的",
+        "start_time":"2015.02",
+        "major":"是的",
+        "degree":"博士以上",
+        "end_time":"2016.02"
+    }
+]
+```  

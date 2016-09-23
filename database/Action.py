@@ -1394,6 +1394,15 @@ class Action(object):
                 search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
             else:
                 pass
+            try:
+                for cert in search_resume['candidate_cv']['certificate']:
+                    if cert['证书图片'] != '':
+                        cert['证书图片'] = "%s" % self.image + cert['证书图片']
+                    else:
+                        pass
+            except KeyError, e:
+                self.log.info('----------- User candidate_cv certificate image fail')
+                pass
         except Exception, e:
             pass
         if search_resume == None:
@@ -1668,14 +1677,174 @@ class Action(object):
 
     # 简历编辑-项目实践post(这个接口不用了)
     @tornado.gen.coroutine
-    def Resume_Item(self, token=str, data=dict, cache_flag=int):
+    def Resume_experience(self, token=str, experience=str, cache_flag=int):
 
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        # 新建
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            data = eval(experience)
+            cv_dict_default['experience'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         token, "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+            self.db.close()
+        # 修改
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+            data = eval(experience)
+            basic_resume['experience'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            self.db.close()
 
+            # # 判断简历是否能投简历,1可以,0不可以
+            # J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = '这个接口不用了'
-        result['data'] = {}
+        result['msg'] = '项目经历修改成功'
+        result['data'] = {'errorcode': 0,}
+        raise tornado.gen.Return(result)
+
+    # 简历编辑-校内工作post(这个接口不用了)
+    @tornado.gen.coroutine
+    def Resume_Schooljob(self, token=str, school_job=str, cache_flag=int):
+
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        # 新建
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            data = eval(school_job)
+            cv_dict_default['school_job'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         token, "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+            self.db.close()
+        # 修改
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+            data = eval(school_job)
+            basic_resume['school_job'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            self.db.close()
+
+            # # 判断简历是否能投简历,1可以,0不可以
+            # J_post = self.Judgment_resume(token=token)
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '校内职位修改成功'
+        result['data'] = {'errorcode': 0,}
+        raise tornado.gen.Return(result)
+
+    # 简历编辑-校内奖励post(这个接口不用了)
+    @tornado.gen.coroutine
+    def Resume_school_rewards(self, token=str, school_rewards=str, cache_flag=int):
+
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        # 新建
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            data = eval(school_rewards)
+            cv_dict_default['school_rewards'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         token, "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+            self.db.close()
+        # 修改
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+            data = eval(school_rewards)
+            basic_resume['school_rewards'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            self.db.close()
+
+            # # 判断简历是否能投简历,1可以,0不可以
+            # J_post = self.Judgment_resume(token=token)
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '校内奖励修改成功'
+        result['data'] = {'errorcode': 0,}
+        raise tornado.gen.Return(result)
+
+    # 简历编辑-获得证书post(这个接口不用了)
+    @tornado.gen.coroutine
+    def Resume_Certificate(self, token=str, certificate=str, cache_flag=int):
+
+        sql = "select * from candidate_cv where user_id=%s" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        # 新建
+        if search_user is None:
+            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            age = ""
+            degree = ""
+            school = ""
+            major = ""
+            data = eval(certificate)
+            cv_dict_default['certificate'] = data
+            json_cv = json.dumps(cv_dict_default)
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            edit_resume = self.db.insert(sqll,
+                                         token, "", 'public', "", "",
+                                         age, degree, school, major, json_cv,
+                                         dt_create, dt_update)
+            self.db.close()
+        # 修改
+        else:
+            basic_resume = json.loads(search_user['candidate_cv'])
+            data = eval(certificate)
+            basic_resume['certificate'] = data
+            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
+            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
+            self.db.close()
+
+            # # 判断简历是否能投简历,1可以,0不可以
+            # J_post = self.Judgment_resume(token=token)
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '获得证书修改成功'
+        result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
     # 简历编辑-自我评价post

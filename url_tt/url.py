@@ -52,7 +52,11 @@ from api.resume_handler import \
     ResumeCareerHandler,\
     ResumeEvaluationHandler, \
     PostresumeHandler, \
-    ResumeAvatarHandler
+    ResumeAvatarHandler, \
+    ResumeExperienceHandler,\
+    ResumeSchooljobHandler, \
+    ResumeSchoolRewardsHandler, \
+    ResumeCertificateHandler
 
 from api.tools_handler import \
     FeedbackHandler, \
@@ -104,12 +108,12 @@ urls = [
     url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post(list)
     url(r"/resume-edit-expect", ResumeExpectHandler),    # 简历编辑-职业意向post
     url(r"/resume-edit-career", ResumeCareerHandler),    # 简历编辑-实习经历post(list)
-    # ### url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-项目社会实践post(先不做)
-    # ### url(r"/resume-edit-school_job", ResumeSchooljobHandler),    # 简历编辑-校内职务post(先不做)
-    # ### url(r"/resume-edit-school_rewards", ResumeSchoolRewardsHandler),    # 简历编辑-校内奖励post(先不做)
-    # ### url(r"/resume-edit-languages", ResumeLanguagesHandler),    # 简历编辑-语言能力post(先不做)
-    # ### url(r"/resume-edit-skill", ResumeSkillHandler),    # 简历编辑-IT技能post(先不做)
-    # ### url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post(先不做)
+    url(r"/resume-edit-experience", ResumeExperienceHandler),    # 简历编辑-项目社会实践post(先不做)
+    url(r"/resume-edit-school_job", ResumeSchooljobHandler),    # 简历编辑-校内职务post(先不做)
+    url(r"/resume-edit-school_rewards", ResumeSchoolRewardsHandler),    # 简历编辑-校内奖励post(先不做)
+    # ### url(r"/resume-edit-languages", ResumeLanguagesHandler),    # 简历编辑-语言能力post(已经不用)
+    # ### url(r"/resume-edit-skill", ResumeSkillHandler),    # 简历编辑-IT技能post(已经不用)
+    url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post(先不做)
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
