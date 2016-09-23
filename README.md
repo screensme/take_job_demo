@@ -1464,7 +1464,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	education	Y	string		用户的教育经历，注意格式如下
+	school_job	Y	string		用户的校内职务，注意格式如下
 <font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
 ```[
         {
@@ -1496,7 +1496,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	education	Y	string		用户的教育经历，注意格式如下
+	school_rewards	Y	string		用户的校内奖励，注意格式如下
 <font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
 ```[
         {
@@ -1525,19 +1525,3 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 ####45.简历编辑-获得证书post：/resume-edit-certificate  
-参数：
-		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-	education	Y	string		用户的教育经历，注意格式如下
-<font color=blue>（education本身是list格式，将这个list转换为string格式传过来）如下</font>  
-```[
-    {
-        "school":"是对的",
-        "start_time":"2015.02",
-        "major":"是的",
-        "degree":"博士以上",
-        "end_time":"2016.02"
-    }
-]
-```  
