@@ -427,7 +427,7 @@ class Action(object):
         contect = reques.content.decode('utf-8')
         self.log.info('id_list = %s' % contect)
         try:
-            contect_id = sorted(eval(contect)['id_list'])
+            contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
         except Exception, e:
             result = dict()
@@ -507,7 +507,7 @@ class Action(object):
             reques = requests.post(url=uri, json=values)
             contect = reques.content.decode('utf-8')
             try:
-                contect_id = sorted(eval(contect)['id_list'])
+                contect_id = sorted(json.loads(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
@@ -581,7 +581,7 @@ class Action(object):
             reques = requests.post(url=uri, json=values)
             contect = reques.content.decode('utf-8')
             try:
-                contect_id = sorted(eval(contect)['id_list'])
+                contect_id = sorted(json.loads(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
                     search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
@@ -667,7 +667,7 @@ class Action(object):
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
         try:
-            contect_id = sorted(eval(contect)['id_list'])
+            contect_id = sorted(json.loads(contect)['id_list'])
             if contect_id == []:
                 uri = '%squery_new_job' % self.esapi
                 val = dict()
@@ -675,7 +675,7 @@ class Action(object):
                 val['limit'] = num
                 reques = requests.post(url=uri, json=val)
                 contect = reques.content.decode('utf-8')
-                contect_id = sorted(eval(contect)['id_list'])
+                contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)"
@@ -737,7 +737,7 @@ class Action(object):
         reques = requests.post(url=uri, json=value)
         contect = reques.content.decode('utf-8')
         try:
-            contect_id = sorted(eval(contect)['id_list'])
+            contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
                 search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
@@ -1279,7 +1279,7 @@ class Action(object):
             reques = requests.post(url=uri, json=values)
             contect = reques.content.decode('utf-8')
             self.log.info('id_list = %s' % contect)
-            contect_id = sorted(eval(contect)['id_list'])
+            contect_id = sorted(json.loads(contect)['id_list'])
             if contect_id == []:
                 search_job = []
             else:
@@ -1877,7 +1877,7 @@ class Action(object):
 
         # # 判断简历是否能投简历,1可以,0不可以
         # J_post = self.Judgment_resume(token=token)
-
+        
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '获得证书修改成功'
@@ -1903,7 +1903,7 @@ class Action(object):
 
         # # 判断简历是否能投简历,1可以,0不可以
         # J_post = self.Judgment_resume(token=token)
-
+        
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '获得证书删除成功'
