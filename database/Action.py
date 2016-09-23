@@ -1394,7 +1394,32 @@ class Action(object):
                 search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
             else:
                 pass
+        except Exception, e:
+            pass
+        if search_resume == None:
+            search_resume = {}
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_resume
+        raise tornado.gen.Return(result)
+
+    # 简历查看v1
+    @tornado.gen.coroutine
+    def Resume_V1_view(self, cv_id=str, token=str, cache_flag=int):
+
+        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        search_resume = self.db.get(sql_resume)
+        self.db.close()
+        try:
+            search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
+            if search_resume['candidate_cv']['basic']['avatar'] != '':
+                search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
+            else:
+                pass
             try:
+                sql_certificate = "select * from candidate_cert where user_id=%s and cv_id=%s" % (token, cv_id)
                 for cert in search_resume['candidate_cv']['certificate']:
                     if cert['证书图片'] != '':
                         cert['证书图片'] = "%s" % self.image + cert['证书图片']

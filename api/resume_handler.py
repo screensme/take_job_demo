@@ -26,6 +26,25 @@ class ResumeHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+# 简历查看get
+class ResumeV1Handler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, cv_id, token):
+        self.log.info('+++++++++++ResumeV1 get+++++++++++')
+        cache_flag = self.get_cache_flag()
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Resume_V1_view(cv_id, token, cache_flag)
+
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
 
 # 简历投递post
 class PostresumeHandler(BaseHandler):
@@ -258,7 +277,10 @@ class ResumeCertificateHandler(BaseHandler):
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        certificate = self.get_argument('certificate')
+        cv_id = self.get_argument('cv_id')
+        certificate_id = self.get_argument('certificate_id')
+        certificate_name = self.get_argument('certificate_name')
+        certificate_image = self.get_argument('certificate_image')
         result = yield self.db.Resume_Certificate(token, certificate, cache_flag)
 
         self.write(ObjectToString().encode(result))

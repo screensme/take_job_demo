@@ -46,6 +46,7 @@ from api.company_handler import \
 
 from api.resume_handler import \
     ResumeHandler,\
+    ResumeV1Handler,\
     ResumeBasicHandler,\
     ResumeEducationHandler,\
     ResumeExpectHandler,\
@@ -103,6 +104,7 @@ urls = [
     url(r"/company-full/job", CompanyJobHandler),    # 公司详情-所有职位post
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
+    url(r"/resume-view/v1/cv-(\w+),token-(\w+)", ResumeV1Handler),    # 简历查看get
     url(r"/resume-edit-avatar", ResumeAvatarHandler),    # 简历编辑-修改头像post
     url(r"/resume-edit-basic", ResumeBasicHandler),    # 简历编辑-基本信息post
     url(r"/resume-edit-education", ResumeEducationHandler),    # 简历编辑-教育经历post(list)

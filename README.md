@@ -767,7 +767,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	career		Y	string		用户的实习经历，注意格式如下
-<font color=blue>（career本身是list格式，将这个list转换为string格式传过来）如下</font>
+<font color=blue>（career本身是list格式，将这个list转换为string格式传过来）如下</font>  
 ```[
     {
         "duty":"进入渣打银行总部参观实习",
