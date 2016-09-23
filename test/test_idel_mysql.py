@@ -38,7 +38,7 @@ def idel_post():
         for u in url_tuple:
             response = requests.post(url=u, data=datas)
             contect = response.content.decode('utf-8')
-            print u +contect
+            print u + contect
             time.sleep(3)
 if __name__ == "__main__":
     # tornado.ioloop.IOLoop.current().run_sync(http_fetch())

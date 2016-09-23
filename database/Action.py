@@ -1354,8 +1354,8 @@ class Action(object):
     # 500强公司链接
     @tornado.gen.coroutine
     def Job_500_Company(self, page=int, num=int, token=str, cache_flag=int):
-        if int(num) > 20:
-            num = 20
+        if int(num) > 30:
+            num = 30
 
         sql = "select %s from job_500company where f_home>0 order by top_ranking limit %s offset %s" \
               % ("company_name,logo,logo_mobile,logo_mobile,url,f_home", num, (int(page) * int(num)))
@@ -2094,10 +2094,10 @@ class Action(object):
             cursor.execute("show global status like 'Threads_connected';")
             Currently = cursor.fetchone()
             self.db.close()
-            print("mysql当前最大连接数 ：%s" % Currently[1])
+            print("Now Mysql max connect ：%s" % Currently[1])
             result = dict()
             result['status'] = 'sucess'
             result['token'] = ''
-            result['msg'] = '心跳'
+            result['msg'] = 'Heartbeat!'
             result['data'] = Currently[1]
             raise tornado.gen.Return(result)
