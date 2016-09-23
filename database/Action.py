@@ -1408,9 +1408,14 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_V1_view(self, cv_id=str, token=str, cache_flag=int):
 
-        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
-        search_resume = self.db.get(sql_resume)
-        self.db.close()
+        if cv_id == 'Noneid':
+            sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+            search_resume = self.db.get(sql_resume)
+            self.db.close()
+        else:
+            sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
+            search_resume = self.db.get(sql_resume)
+            self.db.close()
         try:
             search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
             if search_resume['candidate_cv']['basic']['avatar'] != '':

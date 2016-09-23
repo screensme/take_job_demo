@@ -769,7 +769,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id	
 	career		Y	string		用户的实习经历，注意格式如下
 <font color=blue>（career本身是list格式，将这个list转换为string格式传过来）如下</font>  
-```[
+```
+[
     {
         "duty":"进入渣打银行总部参观实习",
         "area":"北京",
@@ -1534,7 +1535,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token				Y	string		用户id	
 	cv_id				Y	string		用户简历id
 	certificate_name	Y	string		证书名称
-	certificate_image	Y	string		证书图片名字
+	certificate_image	Y	string		证书图片名字()
 
 简历编辑-编辑获得证书put：/resume-edit-certificate  
 参数：
@@ -1543,7 +1544,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token				Y	string		用户id	
 	certificate_id		Y	string		用户简历id
 	certificate_name	Y	string		证书名称
-	certificate_image	Y	string		证书图片名字
+	certificate_image	Y	string		证书图片名字()
 
 简历编辑-删除获得证书delete：/resume-edit-certificate  
 参数：
@@ -1551,8 +1552,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	参数名称			必填	类型		描述
 	token				Y	string		用户id	
 	cv_id				Y	string		用户简历id
-	certificate_name	Y	string		证书名称
-	certificate_image	Y	string		证书图片名字
+
 返回成功：
 ```{
   "status": "success",
@@ -1567,7 +1567,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称			必填	类型		描述
 	token				Y	string		用户id	
-	cv_id				Y	string		用户简历id
+	cv_id				Y	string		用户简历id(现在传这个'Noneid')
 返回成功：（证书"certificate"有变化）
 ```{
   "status": "success",
@@ -1578,7 +1578,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "user_id": 170,
     "candidate_cv": {
       "intension": {
-        "status": "兼职\\\\\\/实习",
+        "status": "兼职/实习",
         "expect_salary": "5k-10k",
         "title": "php",
         "trade": "互联网",
