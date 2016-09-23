@@ -1535,7 +1535,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token				Y	string		用户id	
 	cv_id				Y	string		用户简历id
 	certificate_name	Y	string		证书名称
-	certificate_image	Y	string		证书图片名字()
+	certificate_image	Y	string		证书图片名字(cert_token_时间戳.png)
 
 简历编辑-编辑获得证书put：/resume-edit-certificate  
 参数：
@@ -1544,7 +1544,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token				Y	string		用户id	
 	certificate_id		Y	string		用户简历id
 	certificate_name	Y	string		证书名称
-	certificate_image	Y	string		证书图片名字()
+	certificate_image	Y	string		证书图片名字(cert_token_时间戳.png)
 
 简历编辑-删除获得证书delete：/resume-edit-certificate  
 参数：
