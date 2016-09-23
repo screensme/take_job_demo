@@ -268,9 +268,9 @@ class ResumeSkillHandler(BaseHandler):
         self.finish()
         return
 
-# 简历编辑-获得证书post
+# 简历编辑-获得证书(post,put,delete)
 class ResumeCertificateHandler(BaseHandler):
-
+    # 新建证书
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
@@ -286,7 +286,7 @@ class ResumeCertificateHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
-
+    # 修改证书
     @gen.coroutine
     @tornado.web.asynchronous
     def put(self):
@@ -302,7 +302,7 @@ class ResumeCertificateHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
-
+    # 删除证书
     @gen.coroutine
     @tornado.web.asynchronous
     def delete(self):

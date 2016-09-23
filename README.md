@@ -1525,15 +1525,50 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "errorcode": 0
   }
 }```  
-####45.简历编辑-获得证书post：/resume-edit-certificate  
+####45.简历编辑-获得证书(post,put,delete)：/resume-edit-certificate  
 
+简历编辑-新建获得证书post：/resume-edit-certificate  
+参数：
+		
+	参数名称			必填	类型		描述
+	token				Y	string		用户id	
+	cv_id				Y	string		用户简历id
+	certificate_name	Y	string		证书名称
+	certificate_image	Y	string		证书图片名字
+
+简历编辑-编辑获得证书put：/resume-edit-certificate  
+参数：
+		
+	参数名称			必填	类型		描述
+	token				Y	string		用户id	
+	certificate_id		Y	string		用户简历id
+	certificate_name	Y	string		证书名称
+	certificate_image	Y	string		证书图片名字
+
+简历编辑-删除获得证书delete：/resume-edit-certificate  
+参数：
+		
+	参数名称			必填	类型		描述
+	token				Y	string		用户id	
+	cv_id				Y	string		用户简历id
+	certificate_name	Y	string		证书名称
+	certificate_image	Y	string		证书图片名字
+返回成功：
+```{
+  "status": "success",
+  "msg": "获得证书新建成功",
+  "token": "170",
+  "data": {
+    "errorcode": 0
+  }
+}```
 ####46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
 参数：
 		
-	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-	cv_id		Y	string		用户简历id
-返回成功：
+	参数名称			必填	类型		描述
+	token				Y	string		用户id	
+	cv_id				Y	string		用户简历id
+返回成功：（证书"certificate"有变化）
 ```{
   "status": "success",
   "msg": "",
@@ -1565,7 +1600,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
           "school": "石家庄rrrrrr"
         }
       ],
-      "certificate": [
+      "certificate": [				# 这里有变化
         {
           "certificate_name": "英语专业四级",
           "id": 1,
@@ -1666,3 +1701,4 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "id": 167
   }
 }```
+

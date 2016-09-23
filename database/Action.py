@@ -425,7 +425,6 @@ class Action(object):
                 values['job_type'] = eval(datas['job_type'])
         reques = requests.post(url=uri, json=values)
         contect = reques.content.decode('utf-8')
-        self.log.info('id_list = %s' % contect)
         try:
             contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
@@ -1881,7 +1880,7 @@ class Action(object):
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '获得证书修改成功'
-        result['data'] = edit_resume
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 简历编辑-删除获得证书delete
@@ -1907,7 +1906,7 @@ class Action(object):
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '获得证书删除成功'
-        result['data'] = edit_resume
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 简历编辑-自我评价post
