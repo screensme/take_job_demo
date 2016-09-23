@@ -1419,12 +1419,15 @@ class Action(object):
             else:
                 pass
             try:
-                sql_certificate = "select * from candidate_cert where user_id=%s and cv_id=%s" % (token, cv_id)
-                for cert in search_resume['candidate_cv']['certificate']:
-                    if cert['证书图片'] != '':
-                        cert['证书图片'] = "%s" % self.image + cert['证书图片']
-                    else:
-                        pass
+                sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s and cv_id=%s" % (token, cv_id)
+                search_cert = self.db.query(sql_certificate)
+                self.db.close()
+                if search_cert is not None:
+                    for i in search_cert:
+                        i['certificate_image'] = self.image + i['certificate_image']
+                    search_resume['candidate_cv']['certificate'] = search_cert
+                else:
+                    search_resume['candidate_cv']['certificate'] = []
             except KeyError, e:
                 self.log.info('----------- User candidate_cv certificate image fail')
                 pass
@@ -1829,46 +1832,81 @@ class Action(object):
         result['data'] = {'errorcode': 0,}
         raise tornado.gen.Return(result)
 
-    # 简历编辑-获得证书post(这个接口不用了)
+    # 简历新建-获得证书post
     @tornado.gen.coroutine
-    def Resume_Certificate(self, token=str, certificate=str, cache_flag=int):
+    def Resume_Certificate_addnew(self, token=str, cv_id=str, certificate_name=str, certificate_image=str, cache_flag=int):
 
-        sql = "select * from candidate_cv where user_id=%s" % token
-        search_user = self.db.get(sql)
-        self.db.close()
-        # 新建
-        if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            data = eval(certificate)
-            cv_dict_default['certificate'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
-        # 修改
-        else:
-            basic_resume = json.loads(search_user['candidate_cv'])
-            data = eval(certificate)
-            basic_resume['certificate'] = data
-            dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
-            edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
-            self.db.close()
-
-            # # 判断简历是否能投简历,1可以,0不可以
-            # J_post = self.Judgment_resume(token=token)
         result = dict()
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sqlll = 'insert into candidate_cert(user_id,cv_id,certificate_name,certificate_image,dt_create,dt_update) values(%s,%s,%s,%s,%s,%s)'
+        try:
+            edit_resume = self.db.insert(sqlll, token, cv_id, certificate_name, certificate_image, dt, dt)
+            self.db.close()
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '服务器错误'
+            result['data'] = {'errorcode': 1000}
+            raise tornado.gen.Return(result)
+
+        # # 判断简历是否能投简历,1可以,0不可以
+        # J_post = self.Judgment_resume(token=token)
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '获得证书新建成功'
+        result['data'] = {'errorcode': 0}
+        raise tornado.gen.Return(result)
+
+    # 简历编辑-获得证书put
+    @tornado.gen.coroutine
+    def Resume_Certificate(self, token=str, certificate_id=str, certificate_name=str, certificate_image=str, cache_flag=int):
+
+        result = dict()
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
+        try:
+            edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
+            self.db.close()
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '服务器错误'
+            result['data'] = {'errorcode': 1000}
+            raise tornado.gen.Return(result)
+
+        # # 判断简历是否能投简历,1可以,0不可以
+        # J_post = self.Judgment_resume(token=token)
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '获得证书修改成功'
+        result['data'] = edit_resume
+        raise tornado.gen.Return(result)
+
+    # 简历编辑-删除获得证书delete
+    @tornado.gen.coroutine
+    def Resume_Certificate_delete(self, token=str, certificate_id=str, cache_flag=int):
+
+        result = dict()
+        dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sqlll = 'delete from candidate_cert where id=%s and user_id=%s' % (certificate_id, token)
+        try:
+            edit_resume = self.db.execute(sqlll)
+            self.db.close()
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '服务器错误'
+            result['data'] = {'errorcode': 1000}
+            raise tornado.gen.Return(result)
+
+        # # 判断简历是否能投简历,1可以,0不可以
+        # J_post = self.Judgment_resume(token=token)
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '获得证书删除成功'
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 

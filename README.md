@@ -101,6 +101,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 43.简历编辑-校内职务post：/resume-edit-school_job  
 44.简历编辑-校内奖励post：/resume-edit-school_rewards  
 45.简历编辑-获得证书post：/resume-edit-certificate  
+46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
 ***
 #####简历状态：  
 	
@@ -1525,3 +1526,143 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 ####45.简历编辑-获得证书post：/resume-edit-certificate  
+
+####46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	cv_id		Y	string		用户简历id
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "170",
+  "data": {
+    "openlevel": "public",
+    "user_id": 170,
+    "candidate_cv": {
+      "intension": {
+        "status": "兼职\\\\\\/实习",
+        "expect_salary": "5k-10k",
+        "title": "php",
+        "trade": "互联网",
+        "area": "上海ysyeyey"
+      },
+      "education": [
+        {
+          "start_time": "2012.02",
+          "end_time": "2014.09",
+          "major": "sdafasd",
+          "degree": "本科",
+          "school": "aaaaaaeeeeee"
+        },
+        {
+          "start_time": "2011.09",
+          "end_time": "2015.06",
+          "major": "计算机科学与技术",
+          "degree": "本科",
+          "school": "石家庄rrrrrr"
+        }
+      ],
+      "certificate": [
+        {
+          "certificate_name": "英语专业四级",
+          "id": 1,
+          "certificate_image": "avatar_1"
+        },
+        {
+          "certificate_name": "英语专业流级",
+          "id": 2,
+          "certificate_image": "avatar_2"
+        }
+      ],
+      "extra": {
+        "description": "",
+        "title": ""
+      },
+      "career": [
+        {
+          "duty": "",
+          "area": "",
+          "start_time": "",
+          "title": "",
+          "trade": "",
+          "end_time": "",
+          "company": ""
+        }
+      ],
+      "school_job": [
+        {
+          "job_info": "1、技术开发中心Sqlserver技术支持； 2、数据库环境安装、升级，日常管理，性能优化和监控，调优，备份，恢复测试，迁移，故障处理等； 3、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理；",
+          "start_time": "2013.07",
+          "end_time": "2014.09",
+          "job_name": "学生会主席",
+          "school_name": "北大"
+        },
+        {
+          "job_info": "1、技术开发中心Sqlserver技术支持； 2、数据库环境安装、升级，日常管理，性能优化和监控，调优，备份，恢复测试，迁移，故障处理等； 3、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理；",
+          "start_time": "2014.03",
+          "end_time": "2016.03",
+          "job_name": "学生会",
+          "school_name": "根据业务需求"
+        }
+      ],
+      "experience": [
+        {
+          "title": "组长",
+          "start_time": "2015.02",
+          "project_name": "田园考古",
+          "description": "1、技术开发中心Sqlserver技术支持； 2、数据库环境安装、升级，日常管理，性能优化和监控，调优，备份，恢复测试，迁移，故障处理等； 3、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理；",
+          "end_time": "2016.02"
+        }
+      ],
+      "languages": [
+        {
+          "readwrite": "",
+          "language_name": "",
+          "hear": ""
+        }
+      ],
+      "basic": {
+        "politics_status": "团员",
+        "gender": "男",
+        "marital_status": "未婚",
+        "phonenum": "15801616013",
+        "birthday": "1990",
+        "avatar": "",
+        "current_area": "33333",
+        "education": "本科",
+        "email": "xsn@huoban.io",
+        "name": "徐帅楠"
+      },
+      "skill": [
+        {
+          "skill_time": "",
+          "skill_name": "",
+          "skill_level": ""
+        }
+      ],
+      "school_rewards": [
+        {
+          "start_time": "2013.09",
+          "school_name": "北京大学",
+          "end_time": "",
+          "rewards_name": "二等奖",
+          "rewards_info": "组织宣传学习“五四”精神，加强班风学风建设，等等，班级一致获得院领导好"
+        },
+        {
+          "start_time": "2015.03",
+          "school_name": "根据",
+          "end_time": "",
+          "rewards_name": "根据业务需求",
+          "rewards_info": "1、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理； 2、根据业务需求，参与数据库的架构设计和数据结构的优化、模型设计、容量等管理； 1 1 1"
+        }
+      ]
+    },
+    "allow_post": 0,
+    "dt_update": "2016-09-23T15:46:26",
+    "dt_create": "2016-08-25T14:26:21",
+    "id": 167
+  }
+}```

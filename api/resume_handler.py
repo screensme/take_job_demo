@@ -268,20 +268,50 @@ class ResumeSkillHandler(BaseHandler):
         self.finish()
         return
 
-# 简历编辑-获得证书post(暂时不用)
+# 简历编辑-获得证书post
 class ResumeCertificateHandler(BaseHandler):
+
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('+++++++++++Resume Certificate+++++++++++')
+        self.log.info('+++++++++++ Resume Certificate Add new +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         cv_id = self.get_argument('cv_id')
+        certificate_name = self.get_argument('certificate_name')
+        certificate_image = self.get_argument('certificate_image')
+        result = yield self.db.Resume_Certificate_addnew(token, cv_id, certificate_name, certificate_image, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def put(self):
+        self.log.info('+++++++++++ Resume Certificate Edit +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
         certificate_id = self.get_argument('certificate_id')
         certificate_name = self.get_argument('certificate_name')
         certificate_image = self.get_argument('certificate_image')
-        result = yield self.db.Resume_Certificate(token, certificate, cache_flag)
+        result = yield self.db.Resume_Certificate(token, certificate_id, certificate_name, certificate_image, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def delete(self):
+        self.log.info('+++++++++++ Resume Certificate Delete!!!!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        certificate_id = self.get_argument('certificate_id')
+        result = yield self.db.Resume_Certificate_delete(token, certificate_id, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
