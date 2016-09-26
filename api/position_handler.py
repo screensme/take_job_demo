@@ -32,7 +32,7 @@ class SearchHandler(BaseHandler):
         # page = self.get_argument('page')
         # num = self.get_argument('num')
         last = self.get_arguments()
-        if 'job_name' not in last:
+        if ('job_name' not in last) or ('job_name' == ''):
             page = last['page']
             num = last['num']
             token = last['token']
