@@ -27,19 +27,25 @@ def http_fetch():
             print ('---------------------We idel mysql. Fail, time=%s' % datetime.datetime.now())
 
 def idel_post():
-    # url = "http://%s/%s" % ("127.0.0.1:8889", "idel_database" )
-    # url4 = "http://%s/%s" % ("182.92.99.38:9004", "idel_database" )
-    url1 = "http://%s/%s" % ("182.92.99.38:9002", "idel_database" )
-    url2 = "http://%s/%s" % ("182.92.99.38:9001", "idel_database" )
-    url3 = "http://%s/%s" % ("182.92.99.38:9000", "idel_database" )
+    url1 = "http://%s/%s" % ("127.0.0.1:8889", "idel_database" )
+    url2 = "http://%s/%s" % ("127.0.0.1:8889", "idel_database" )
+    url3 = "http://%s/%s" % ("127.0.0.1:8889", "idel_database" )
+    # url1 = "http://%s/%s" % ("182.92.99.38:9002", "idel_database" )
+    # url2 = "http://%s/%s" % ("182.92.99.38:9001", "idel_database" )
+    # url3 = "http://%s/%s" % ("182.92.99.38:9000", "idel_database" )
     url_tuple = [url1, url2, url3]
     datas = {'key': "心跳线2016-9-9"}
     while True:
-        for u in url_tuple:
-            response = requests.post(url=u, data=datas)
-            contect = response.content.decode('utf-8')
-            print u + contect
-            time.sleep(3)
+        try:
+            for u in url_tuple:
+                response = requests.post(url=u, data=datas)
+                contect = response.content.decode('utf-8')
+                print u + contect
+                time.sleep(3)
+        except Exception, e:
+            print 'Hearbeat error = %s' % e
+            continue
+
 if __name__ == "__main__":
     # tornado.ioloop.IOLoop.current().run_sync(http_fetch())
     idel_post()

@@ -2314,7 +2314,7 @@ class Action(object):
             cursor.execute("show global status like 'Threads_connected';")
             Currently = cursor.fetchone()
             self.db.close()
-            print("Now Mysql max connect ：%s" % Currently[1])
+
             result = dict()
             result['status'] = 'sucess'
             result['token'] = ''
