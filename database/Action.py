@@ -1412,33 +1412,46 @@ class Action(object):
             sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
             search_resume = self.db.get(sql_resume)
             self.db.close()
+            self.log.info("resume v1 ---- step 1")
         else:
             sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
             search_resume = self.db.get(sql_resume)
             self.db.close()
+            self.log.info("resume v1 ---- step 1+++")
         try:
-            search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
-            if search_resume['candidate_cv']['basic']['avatar'] != '':
-                search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
-            else:
-                pass
-            try:
-                sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s and cv_id=%s" % (token, cv_id)
-                search_cert = self.db.query(sql_certificate)
-                self.db.close()
-                if search_cert is not None:
-                    for i in search_cert:
-                        i['certificate_image'] = self.image + i['certificate_image']
-                    search_resume['candidate_cv']['certificate'] = search_cert
+            if search_resume is not None:
+                search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
+                if search_resume['candidate_cv']['basic']['avatar'] != '':
+                    search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
                 else:
-                    search_resume['candidate_cv']['certificate'] = []
-            except KeyError, e:
-                self.log.info('----------- User candidate_cv certificate image fail')
-                pass
+                    pass
+                try:
+                    if cv_id == 'Noneid':
+                        sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s" % (token,)
+                    else:
+                        sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s and cv_id=%s" % (token, cv_id)
+
+                    search_cert = self.db.query(sql_certificate)
+                    self.db.close()
+                    self.log.info("resume v1 ---- step 2")
+
+                    if search_cert is not None:
+                        for i in search_cert:
+                            i['certificate_image'] = self.image + i['certificate_image']
+                        search_resume['candidate_cv']['certificate'] = search_cert
+                    else:
+                        search_resume['candidate_cv']['certificate'] = []
+                except KeyError, e:
+                    self.log.info('----------- User candidate_cv certificate image fail')
+                    pass
+            else:
+                self.log.info('-------------- user is not have candidate_cv !!')
         except Exception, e:
-            pass
+            self.log.info('----------- User candidate_cv certificate image fail')
         if search_resume == None:
-            search_resume = {}
+            search_resume = {'certificate_name': '',
+                             'certificate_image': '',
+                             'id': ''}
         result = dict()
         result['status'] = 'success'
         result['token'] = token
