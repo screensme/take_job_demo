@@ -1578,7 +1578,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "openlevel": "public",
     "user_id": 170,
-	"userclass": "网络"		(新添加的字段，班级)
+	"userclass": "网络"		
     "candidate_cv": {
       "intension": {
         "status": "兼职/实习",
@@ -1591,6 +1591,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         {
           "start_time": "2012.02",
           "end_time": "2014.09",
+		  "classroom": '计算机2008届',		(新添加的字段，班级)
           "major": "sdafasd",
           "degree": "本科",
           "school": "aaaaaaeeeeee"
@@ -1598,6 +1599,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         {
           "start_time": "2011.09",
           "end_time": "2015.06",
+		  "classroom": '计算机2008届',		(新添加的字段，班级)
           "major": "计算机科学与技术",
           "degree": "本科",
           "school": "石家庄rrrrrr"

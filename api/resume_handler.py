@@ -301,12 +301,12 @@ class ResumeCertificateHandler(BaseHandler):
 class ResumeDelCertificateHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def delete(self):
+    def delete(self, certificate_id, token):
         self.log.info('+++++++++++ Resume Certificate Delete!!!!! +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        token = self.get_argument('token')
-        certificate_id = self.get_argument('certificate_id')
+        # token = self.get_argument('token')
+        # certificate_id = self.get_argument('certificate_id')
         result = yield self.db.Resume_Certificate_delete(token, certificate_id, cache_flag)
 
         self.write(ObjectToString().encode(result))

@@ -1412,12 +1412,12 @@ class Action(object):
             sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
             search_resume = self.db.get(sql_resume)
             self.db.close()
-            self.log.info("resume v1 ---- step 1")
+            self.log.info("resume v1 -Noneid--- step 1")
         else:
             sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
             search_resume = self.db.get(sql_resume)
             self.db.close()
-            self.log.info("resume v1 ---- step 1+++")
+            self.log.info("resume v1 -Haveid--- step 1+++")
         try:
             if search_resume is not None:
                 search_resume['candidate_cv'] = json.loads(search_resume['candidate_cv'])
@@ -1425,8 +1425,12 @@ class Action(object):
                     search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
                 else:
                     pass
-                if search_resume['userclass'] == None:
-                    search_resume['userclass'] = ''
+                for uclass in search_resume['candidate_cv']['education']:
+                    if 'classroom' not in uclass:
+                        uclass['classroom'] = ''
+                    else:
+                        pass
+                #     search_resume['userclass'] = ''
                 try:
                     if cv_id == 'Noneid':
                         sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s" % (token,)
@@ -1447,15 +1451,10 @@ class Action(object):
                     self.log.info('----------- User candidate_cv certificate image fail')
                     pass
             else:
+                search_resume = {}
                 self.log.info('-------------- user is not have candidate_cv !!')
         except Exception, e:
-            self.log.info('----------- User candidate_cv certificate image fail')
-        if search_resume == None:
-            # search_resume = [{'certificate_name': '',
-            #                  'certificate_image': '',
-            #                  'id': ''}]
-            search_resume = []
-            self.log.info('--------- search_resume is none !!')
+            self.log.info('----------- Fail User candidate_cv certificate=%s' % e)
         result = dict()
         result['status'] = 'success'
         result['token'] = token
