@@ -29,6 +29,7 @@ cv_dict_default = {
             'major': '',
             'start_time': '',
             'end_time': '',
+            'classroom': '',
             'degree': '',
         },
     ],

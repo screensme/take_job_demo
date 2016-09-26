@@ -1447,6 +1447,7 @@ class Action(object):
                         search_resume['candidate_cv']['certificate'] = search_cert
                     else:
                         search_resume['candidate_cv']['certificate'] = []
+                    self.log.info("resume v1 ---- step 3")
                 except KeyError, e:
                     self.log.info('----------- User candidate_cv certificate image fail')
                     pass
