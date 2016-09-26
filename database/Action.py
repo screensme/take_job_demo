@@ -1846,7 +1846,7 @@ class Action(object):
         try:
             if certificate_image == '':
                 sqlll = 'update candidate_cert set certificate_name=%s,dt_update=%s where id=%s and user_id=%s'
-                edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
+                edit_resume = self.db.update(sqlll, certificate_name, dt, certificate_id, token)
                 self.db.close()
             else:
                 sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
