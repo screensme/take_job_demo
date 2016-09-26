@@ -1449,9 +1449,11 @@ class Action(object):
         except Exception, e:
             self.log.info('----------- User candidate_cv certificate image fail')
         if search_resume == None:
-            search_resume = {'certificate_name': '',
-                             'certificate_image': '',
-                             'id': ''}
+            # search_resume = [{'certificate_name': '',
+            #                  'certificate_image': '',
+            #                  'id': ''}]
+            search_resume = []
+            self.log.info('--------- search_resume is none !!')
         result = dict()
         result['status'] = 'success'
         result['token'] = token
