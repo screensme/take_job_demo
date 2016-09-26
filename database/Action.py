@@ -1650,22 +1650,12 @@ class Action(object):
         self.db.close()
         # 新建
         if search_user is None:
-            data = eval(expect)
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            userclass = ""
-            cv_dict_default['intension'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", userclass, "",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '职业意向出错'
+            result['data'] = {"errorcode": 1000}
+            raise tornado.gen.Return(result)
         # 修改
         else:
             expect_resume = json.loads(search_user['candidate_cv'])
@@ -1694,22 +1684,12 @@ class Action(object):
         self.db.close()
         # 新建
         if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            userclass = ""
-            data = eval(career)
-            cv_dict_default['career'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", userclass, "",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '实习经历出错'
+            result['data'] = {"errorcode": 1000}
+            raise tornado.gen.Return(result)
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1738,22 +1718,12 @@ class Action(object):
         self.db.close()
         # 新建
         if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            userclass = ""
-            data = eval(experience)
-            cv_dict_default['experience'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", userclass, "",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '项目实践出错'
+            result['data'] = {"errorcode": 1000}
+            raise tornado.gen.Return(result)
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1782,22 +1752,12 @@ class Action(object):
         self.db.close()
         # 新建
         if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            userclass = ""
-            data = eval(school_job)
-            cv_dict_default['school_job'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", userclass,"",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '校内工作出错'
+            result['data'] = {"errorcode": 1000}
+            raise tornado.gen.Return(result)
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1826,22 +1786,12 @@ class Action(object):
         self.db.close()
         # 新建
         if search_user is None:
-            dt_create = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            dt_update = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            age = ""
-            degree = ""
-            school = ""
-            major = ""
-            userclass = ""
-            data = eval(school_rewards)
-            cv_dict_default['school_rewards'] = data
-            json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass,sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", userclass,"",
-                                         age, degree, school, major, json_cv,
-                                         dt_create, dt_update)
-            self.db.close()
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '职业意向出错'
+            result['data'] = {"errorcode": 1000}
+            raise tornado.gen.Return(result)
         # 修改
         else:
             basic_resume = json.loads(search_user['candidate_cv'])
@@ -1893,14 +1843,18 @@ class Action(object):
 
         result = dict()
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        if certificate_image == '':
-            sqlll = 'update candidate_cert set certificate_name=%s,dt_update=%s where id=%s and user_id=%s'
-        else:
-            sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
         try:
-            edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
-            self.db.close()
+            if certificate_image == '':
+                sqlll = 'update candidate_cert set certificate_name=%s,dt_update=%s where id=%s and user_id=%s'
+                edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
+                self.db.close()
+            else:
+                sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
+
+                edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
+                self.db.close()
         except Exception, e:
+            self.log.info('-----!!!!!----%s' % e)
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '服务器错误'
@@ -1927,6 +1881,7 @@ class Action(object):
             edit_resume = self.db.execute(sqlll)
             self.db.close()
         except Exception, e:
+            self.log.info('-----!!!!!----%s' % e)
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '服务器错误'
