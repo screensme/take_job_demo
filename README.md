@@ -100,8 +100,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 42.简历编辑-项目社会实践post：/resume-edit-experience  
 43.简历编辑-校内职务post：/resume-edit-school_job  
 44.简历编辑-校内奖励post：/resume-edit-school_rewards  
-45.简历编辑-获得证书post：/resume-edit-certificate  
+45.简历编辑-获得证书post,put：/resume-edit-certificate  
+简历编辑-删除获得证书delete：/resume-del-certificate/cert-{certificate_id}/token-{token}  
 46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
+
 ***
 #####简历状态：  
 	
@@ -1546,12 +1548,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	certificate_name	Y	string		证书名称
 	certificate_image	Y	string		证书图片名字(cert_token_时间戳.png)
 
-简历编辑-删除获得证书delete：/resume-edit-certificate  
+简历编辑-删除获得证书delete：/resume-del-certificate/cert-{certificate_id}/token-{token}  
 参数：
 		
 	参数名称			必填	类型		描述
 	token				Y	string		用户id	
-	cv_id				Y	string		用户简历id
+	certificate_id		Y	string		用户简历id
 
 返回成功：
 ```{

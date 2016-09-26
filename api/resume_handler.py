@@ -296,7 +296,9 @@ class ResumeCertificateHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
     # 删除证书
+class ResumeDelCertificateHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def delete(self):
