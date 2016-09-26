@@ -88,18 +88,12 @@ class ResumeBasicHandler(BaseHandler):
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
         basic = self.get_argument('basic')
-        # data['education'] = self.get_argument('education')
-        # data['birthday'] = self.get_argument('birthday')
-        # data['politics_status'] = self.get_argument('politics_status')
-        # data['gender'] = self.get_argument('gender')
-        # data['current_area'] = self.get_argument('current_area')
-        # data['name'] = self.get_argument('name')
-        # data['phonenum'] = self.get_argument('phonenum')
-        # data['email'] = self.get_argument('email')
-        # # data['avatar'] = self.get_argument('avatar')
-        # data['marital_status'] = self.get_argument('marital_status')
+        try:
+            userclass = self.get_argument('userclass')
+        except Exception,e:
+            userclass = ''
 
-        result = yield self.db.Resume_Basic(token, basic, cache_flag)
+        result = yield self.db.Resume_Basic(token, basic, userclass, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

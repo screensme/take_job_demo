@@ -1384,7 +1384,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_view(self, token=str, cache_flag=int):
 
-        sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
         search_resume = self.db.get(sql_resume)
         self.db.close()
         try:
@@ -1409,12 +1409,12 @@ class Action(object):
     def Resume_V1_view(self, cv_id=str, token=str, cache_flag=int):
 
         if cv_id == 'Noneid':
-            sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+            sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
             search_resume = self.db.get(sql_resume)
             self.db.close()
             self.log.info("resume v1 ---- step 1")
         else:
-            sql_resume = "SELECT id,user_id,openlevel,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
+            sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
             search_resume = self.db.get(sql_resume)
             self.db.close()
             self.log.info("resume v1 ---- step 1+++")
@@ -1425,6 +1425,8 @@ class Action(object):
                     search_resume['candidate_cv']['basic']['avatar'] = "%s" % self.image + search_resume['candidate_cv']['basic']['avatar']
                 else:
                     pass
+                if search_resume['userclass'] == None:
+                    search_resume['userclass'] = ''
                 try:
                     if cv_id == 'Noneid':
                         sql_certificate = "select id,certificate_name,certificate_image from candidate_cert where user_id=%s" % (token,)
@@ -1501,7 +1503,7 @@ class Action(object):
 
     # 简历编辑-基本信息post
     @tornado.gen.coroutine
-    def Resume_Basic(self, token=str, basic=str, cache_flag=int):
+    def Resume_Basic(self, token=str, basic=str, userclass=str, cache_flag=int):
         self.log.info('+++++++++++Resume edit 2222222222+++++++++++')
         sql = "select * from candidate_cv where user_id=%s" % token
         search_user = self.db.get(sql)
@@ -1521,12 +1523,13 @@ class Action(object):
             data['avatar'] = ""
             cv_dict_default['basic'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            self.log.info( "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" %(token, data['name'], 'public', data['name'], data['gender'],
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            self.log.info( "insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                           %(token, data['name'], 'public', data['name'], userclass, data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update))
             edit_resume = self.db.insert(sqll,
-                                         token, data['name'], 'public', data['name'], data['gender'],
+                                         token, data['name'], 'public', data['name'], userclass, data['gender'],
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1560,9 +1563,9 @@ class Action(object):
             high_edu = data['education']
             # age = int(nowyear) - int(data['birthday'])
             age = ""
-            sqlll = 'update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
-            self.log.info('update candidate_cv set resume_name=%s,username=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s' % (resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token))
-            edit_resume = self.db.update(sqlll, resume_name, username, sex, age, high_edu, json.dumps(basic_resume), dt, token)
+            sqlll = 'update candidate_cv set resume_name=%s,username=%s,userclass=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
+            self.log.info('update candidate_cv set resume_name=%s,username=%s,userclass=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s' % (resume_name, username, userclass, sex, age, high_edu, json.dumps(basic_resume), dt, token))
+            edit_resume = self.db.update(sqlll, resume_name, username, userclass, sex, age, high_edu, json.dumps(basic_resume), dt, token)
             self.db.close()
             # 判断简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
@@ -1589,15 +1592,17 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             data = eval(education)
             cv_dict_default['education'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            self.log.info("insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (token, "", 'public', "", "",
-                                         age, degree, school, major, json_cv,
-                                         dt, dt))
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass,sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            self.log.info("insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                          % (token, "", 'public', "", userclass, "",
+                             age, degree, school, major, json_cv,
+                             dt, dt))
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass, "",
                                          age, degree, school, major, json_cv,
                                          dt, dt)
             self.db.close()
@@ -1652,11 +1657,12 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             cv_dict_default['intension'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass, "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1694,12 +1700,13 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             data = eval(career)
             cv_dict_default['career'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass, "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1737,12 +1744,13 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             data = eval(experience)
             cv_dict_default['experience'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass, "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1780,12 +1788,13 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             data = eval(school_job)
             cv_dict_default['school_job'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass,"",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1823,12 +1832,13 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             data = eval(school_rewards)
             cv_dict_default['school_rewards'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, userclass,sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass,"",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()
@@ -1883,7 +1893,10 @@ class Action(object):
 
         result = dict()
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
+        if certificate_image == '':
+            sqlll = 'update candidate_cert set certificate_name=%s,dt_update=%s where id=%s and user_id=%s'
+        else:
+            sqlll = 'update candidate_cert set certificate_name=%s,certificate_image=%s,dt_update=%s where id=%s and user_id=%s'
         try:
             edit_resume = self.db.update(sqlll, certificate_name, certificate_image, dt, certificate_id, token)
             self.db.close()
@@ -1944,11 +1957,12 @@ class Action(object):
             degree = ""
             school = ""
             major = ""
+            userclass = ""
             cv_dict_default['extra'] = data
             json_cv = json.dumps(cv_dict_default)
-            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqll = "insert into candidate_cv(user_id, resume_name, openlevel, username,userclass, sex, age, edu, school, major, candidate_cv, dt_create, dt_update) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             edit_resume = self.db.insert(sqll,
-                                         token, "", 'public', "", "",
+                                         token, "", 'public', "", userclass, "",
                                          age, degree, school, major, json_cv,
                                          dt_create, dt_update)
             self.db.close()

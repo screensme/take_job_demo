@@ -1576,6 +1576,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "openlevel": "public",
     "user_id": 170,
+	"userclass": "网络"		(新添加的字段，班级)
     "candidate_cv": {
       "intension": {
         "status": "兼职/实习",
@@ -1600,7 +1601,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
           "school": "石家庄rrrrrr"
         }
       ],
-      "certificate": [				# 这里有变化
+      "certificate": [				(这里有变化)
         {
           "certificate_name": "英语专业四级",
           "id": 1,
