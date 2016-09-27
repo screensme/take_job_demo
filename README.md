@@ -12,45 +12,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         <th>状态</th>
 		<th>动作</th>
       </tr>
-      <tr>
-        <td>2016-8.21</td>
-        <td>创建</td>
-		<td>新建基本接口，post有可能不可用</td>
-      </tr>
-	<tr>
-        <td>8.23</td>
-        <td>修改</td>
-		<td>接口连接数据库，返回的json会有变化</td>
-	</tr>
-	<tr>
-        <td>8.24</td>
-        <td>修改</td>
-		<td>消息(简历状态)-待沟通-->改为-已通知;消息页和消息通知接口修改，数据变更;职位详情，url改变，需要传职位id；公司详情，url改变，需要传公司id。首页和搜索页url改变，都需要增加两个参数页数page和每页显示数量num</td>
-	</tr>
-	<tr>
-        <td>8.25</td>
-        <td>修改</td>
-		<td>修改简历基本信息，所有简历状态的接口，都加了两个参数page，和num，修改简历完成，注意查看要传的数据的格式；简历编辑（实习经历）的url有变化；查看收藏，增加取消收藏</td>
-	</tr>
-	<tr>
-        <td>8.26</td>
-        <td>增-改</td>
-		<td>增加接口查看收藏，收藏取消收藏，在首页和搜索，增加了字段，公司company_logo，显示职位状态(全职，兼职，实习，不限);简历投递接口完成</td>
-	</tr>
-	<tr>
-        <td>8.27</td>
-        <td>增-改</td>
-		<td>增加短信验证接口；注册和忘记密码，需要多传一个参数code；修改密码接口，传的mobile改为token；搜索接口，查找职位状态job_type；修改登录返回数据</td>
-	</tr>
-	<tr>
-        <td>8.28</td>
-        <td>改</td>
-		<td>简历修改基本信息和教育背景，不成功的bug；首页和搜索返回的薪资字段改变salary_start，salary_end，返回的都是多少多少K</td>
-	</tr>
+
 	<tr>
         <td>9.7-9.12</td>
         <td>增-改</td>
 		<td>注册、登陆增加了umeng_id和jiguang_id。新建-公司详情的3个接口。新建修改个人头像和简历头像的两个接口</td>
+	</tr>
+	<tr>
+        <td>9.27</td>
+        <td>增-改</td>
+		<td>1.修改了登陆返回的结果，新增umeng_id,jiguang_id,mobile_type,mobile_version,app_version字段，在急速入职中显示佣金根据是否为校园代理proxy_user判断；2.新增，职为我来接口；3.新增，申请成为校园代理接口。</td>
 	</tr>
     </table>
 </div>
@@ -103,7 +74,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 45.简历编辑-获得证书post,put：/resume-edit-certificate  
 简历编辑-删除获得证书delete：/resume-del-certificate/cert-{certificate_id}/token-{token}  
 46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
-
+47.职为我来post：/job-for-me  
+48.申请成为校园代理post：/application-proxy-user/token-{token}  
 ***
 #####简历状态：  
 	
@@ -204,13 +176,19 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "登陆成功",
-  "token": 170,
+  "token": 230,
   "data": {
-    "user_name": "屌先生",
-	"cv_name": "屌先生",	(简历中的姓名，判断是否重新填写简历用)
-    "id": 170,
-    "avatar": "",
-    "sex": "男"
+    "app_version": "9.3.3",		(招聘头条APP版本号)
+    "proxy_user": 1,			(1=校园代理,0=普通用户,2=申请代理,3=申请被拒绝)
+    "mobile_version": "1.0.1",		(iphone手机版本)
+    "mobile_type": "iphone",		(手机型号)
+    "umeng_id": "umengid",
+    "sex": "",
+    "cv_name": "123456",		(判断是否需要重新填写简历用)
+    "jiguang_id": "jiguangid",
+    "user_name": "",
+    "id": 230,
+    "avatar": ""			(头像)
   }
 }```  
 ####3.登出get：/auth/logout/token-{token}
@@ -1608,12 +1586,12 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "certificate": [				(这里有变化)
         {
           "certificate_name": "英语专业四级",
-          "id": 1,
+          "id": 1,						(证书id，会用到字段为certificate_id)
           "certificate_image": "avatar_1"
         },
         {
           "certificate_name": "英语专业流级",
-          "id": 2,
+          "id": 2,						(证书id，会用到字段为certificate_id)
           "certificate_image": "avatar_2"
         }
       ],
@@ -1703,7 +1681,37 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "allow_post": 0,
     "dt_update": "2016-09-23T15:46:26",
     "dt_create": "2016-08-25T14:26:21",
-    "id": 167
+    "id": 167						(简历的id，会用到字段名称cv_id)
   }
-}```
-
+}```  
+####47.职为我来post：/job-for-me  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	page		Y	string		页数
+	num			Y	string		每页数量（num>=20，显示20）
+返回结果数据结构同首页  
+####48.申请成为校园代理post：/application-proxy-user/token-{token}  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+返回结果：
+```{
+  "status": "success",
+  "msg": "申请成功，我们会尽快联系您",
+  "token": "231",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "已经申请校园代理，请不要重复提交",
+  "token": "231",
+  "data": {
+    "errorcode": 0
+  }
+}```  

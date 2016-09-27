@@ -63,7 +63,8 @@ from api.resume_handler import \
 
 from api.tools_handler import \
     FeedbackHandler, \
-    GetVersionHandler
+    GetVersionHandler, \
+    ApplicationProxyHandler
 
 from api.Edit_database import \
     EditdatabaseHandler, \
@@ -120,7 +121,8 @@ urls = [
     url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post
     url(r"/resume-del-certificate/cert-(\w+)/token-(\w+)", ResumeDelCertificateHandler),    # 简历编辑-删除证书post
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
-    url(r"/job-for-me", JobForMeHandler),    # 职为我来post
+    url(r"/job-for-me", JobForMeHandler),    # 职为你来post
+    url(r"/application-proxy-user/token-(\w+)", ApplicationProxyHandler),    # 申请成为校园代理post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
     #   ####################################################################################

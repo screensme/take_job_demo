@@ -111,9 +111,10 @@ class Action(object):
 
     # 用户登陆
     @tornado.gen.coroutine
-    def User_login(self, mobile=str, pwd=str, jiguang_id=str, umeng_id=str, cache_flag=int):
+    def User_login(self, mobile=str, pwd=str, jiguang_id=str, umeng_id=str,
+                   app_version=str, mobile_version=str, mobile_type=str, cache_flag=int):
         result = dict()
-        sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id from candidate_user where phonenum=%s" % mobile
+        sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id,proxy_user,mobile_type,mobile_version,app_version from candidate_user where phonenum=%s" % mobile
         try:
             search_mobile = self.db.get(sql)
         except Exception, e:
@@ -126,10 +127,6 @@ class Action(object):
                 result['token'] = ''
                 result['msg'] = '没有此用户!'
                 result['data'] = {}
-        elif (search_mobile['umeng_id'] is None) and (search_mobile['jiguang_id'] is None):
-            sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s where phonenum=%s"
-            self.db.update(sql_umeng_jg, jiguang_id, umeng_id, mobile)
-            self.db.close()
         else:
             if search_mobile['password'] == bcrypt.hashpw(pwd.encode('utf-8'), search_mobile['password'].encode('utf-8')):
                 # 查询用户的简历一个字段,判断用户登录是否跳回简历填写页面
@@ -153,9 +150,25 @@ class Action(object):
                     search_mobile['avatar'] = "%s" % self.image + search_mobile['avatar']
                 else:
                     pass
+
+                if (jiguang_id != '') and (umeng_id != ''):
+                    sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s where phonenum=%s"
+                    self.db.update(sql_umeng_jg, jiguang_id, umeng_id, mobile)
+                    self.db.close()
+                    search_mobile['jiguang_id'] = jiguang_id
+                    search_mobile['umeng_id'] = umeng_id
+                if (app_version != '') and (mobile_version != '') and (mobile_type != ''):
+                    sql_app_mobile = "update candidate_user set app_version=%s,mobile_version=%s,mobile_type=%s where phonenum=%s"
+                    self.db.update(sql_app_mobile, app_version, mobile_version, mobile_type, mobile)
+                    self.db.close()
+                    search_mobile['app_version'] = app_version
+                    search_mobile['mobile_version'] = mobile_version
+                    search_mobile['mobile_type'] = mobile_type
+                # 修改所有为None的数据为""
+                for ind in search_mobile:
+                    if search_mobile[ind] == None:
+                        search_mobile[ind] = ''
                 search_mobile.pop('password')
-                search_mobile.pop('jiguang_id')
-                search_mobile.pop('umeng_id')
 
                 result['status'] = 'success'
                 result['msg'] = '登陆成功'
@@ -166,6 +179,7 @@ class Action(object):
                 result['token'] = ''
                 result['msg'] = '密码错误!'
                 result['data'] = {}
+
         raise tornado.gen.Return(result)
 
     # 用户登出
@@ -783,7 +797,7 @@ class Action(object):
             result['data'] = []
         raise tornado.gen.Return(result)
 
-    # 职为我来post
+    # 职为你来post
     @tornado.gen.coroutine
     def Job_For_Me(self, token=str, page=str, num=str, cache_flag=int,):
 
@@ -2072,6 +2086,45 @@ class Action(object):
                               }
             raise tornado.gen.Return(result)
 
+    # 申请成为校园代理post
+    @tornado.gen.coroutine
+    def Application_proxy_user(self, token=str, cache_flag=int):
+
+        result = dict()
+        sql_user = "select id,proxy_user from candidate_user where id=%s" % token
+        search_user = self.db.get(sql_user)
+        self.db.close()
+        if search_user is None:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '没有此用户'
+            result['data'] = {'errorcode': 0,
+                              }
+        else:
+            if search_user['proxy_user'] != 0:
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '已经申请校园代理，请不要重复提交'
+                result['data'] = {'errorcode': 0,
+                                  }
+            else:
+                try:
+                    sql_update = "update candidate_user set proxy_user=%s where id=%s"
+                    update_user = self.db.update(sql_update, 2, token)
+
+                    self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
+                    result['status'] = 'success'
+                    result['token'] = token
+                    result['msg'] = '申请成功，我们会尽快联系您'
+                    result['data'] = {'errorcode': 0,
+                                      }
+                except Exception, e:
+                    result['status'] = 'fail'
+                    result['token'] = token
+                    result['msg'] = e
+                    result['data'] = {'errorcode': 1000,
+                                      }
+        raise tornado.gen.Return(result)
 
     # 查看收藏
     @tornado.gen.coroutine

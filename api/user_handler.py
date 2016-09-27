@@ -100,7 +100,14 @@ class LoginHandler(BaseHandler):
         except Exception, e:
             data['jiguang_id'] = ""
             data['umeng_id'] = ""
-
+        try:
+            app_version = self.get_argument('app_version')
+            mobile_version = self.get_argument('mobile_version')
+            mobile_type = self.get_argument('mobile_type')
+        except Exception, e:
+            app_version = ""
+            mobile_version = ""
+            mobile_type = ""
         if len(data['mobile']) != 11:
             result = dict()
             result['status'] = 'fail'
@@ -113,6 +120,9 @@ class LoginHandler(BaseHandler):
                                               pwd=data['pwd'],
                                               jiguang_id=data['jiguang_id'],
                                               umeng_id=data['umeng_id'],
+                                              app_version=app_version,
+                                              mobile_version=mobile_version,
+                                              mobile_type=mobile_type,
                                               cache_flag=cache_flag)
         self.write(ObjectToString().encode(result))
         self.finish()

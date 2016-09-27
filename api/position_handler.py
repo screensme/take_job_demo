@@ -130,7 +130,7 @@ class SpeedjobHandler(BaseHandler):
         self.finish()
         return
 
-# 职为我来post
+# 职为你来post
 class JobForMeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
