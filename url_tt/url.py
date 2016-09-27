@@ -32,7 +32,8 @@ from api.position_handler import \
     HostsearchlistHandler, \
     HotcityHandler, \
     RecommendjobHandler, \
-    SpeedjobHandler
+    SpeedjobHandler, \
+    JobForMeHandler
 
 from api.sms_handler import \
     SendSmsHandler, \
@@ -119,6 +120,7 @@ urls = [
     url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post
     url(r"/resume-del-certificate/cert-(\w+)/token-(\w+)", ResumeDelCertificateHandler),    # 简历编辑-删除证书post
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
+    url(r"/job-for-me", JobForMeHandler),    # 职为我来post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
     #   ####################################################################################

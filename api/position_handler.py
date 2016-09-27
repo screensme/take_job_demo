@@ -130,6 +130,23 @@ class SpeedjobHandler(BaseHandler):
         self.finish()
         return
 
+# 职为我来post
+class JobForMeHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Job For Me +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        result = yield self.db.Job_For_Me(token, page, num, cache_flag,)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # 职位详情get
 class PositionHandler(BaseHandler):
     @gen.coroutine

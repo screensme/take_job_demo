@@ -783,6 +783,67 @@ class Action(object):
             result['data'] = []
         raise tornado.gen.Return(result)
 
+    # 职为我来post
+    @tornado.gen.coroutine
+    def Job_For_Me(self, token=str, page=str, num=str, cache_flag=int,):
+
+        uri = '%squery_priority_jobs' % self.esapi
+        if int(num) > 20:
+            num = 20
+        value = dict()
+        value['priority'] = 50
+        value['offset'] = int(page) * int(num)
+        value['limit'] = num
+        reques = requests.post(url=uri, json=value)
+        contect = reques.content.decode('utf-8')
+        try:
+            contect_id = sorted(json.loads(contect)['id_list'])
+            args = ','.join(str(x) for x in contect_id)
+            if args != '':
+                search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num',args))
+                self.db.close()
+                for n, index in enumerate(search_job):
+                    # 调整所有为null的值为""
+                    for ind in index:
+                        if index[ind] == None:
+                            index[ind] = ''
+                    # 添加图片
+                    # index['speed_image'] = "%s" % self.image + 'speed_job_%s.png' % n
+                    # 公司logo
+                    if index['company_logo'] != '':
+                        index['company_logo'] = "%s" % self.image + index['company_logo']
+                    else:
+                        index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                    # 薪资显示单位为K
+                    index['salary_start'] = index['salary_start'] / 1000
+                    if (index['salary_end'] % 1000) >= 1:
+                        index['salary_end'] = index['salary_end'] / 1000 + 1
+                    else:
+                        index['salary_end'] = index['salary_end'] / 1000
+                    if index['job_type'] == 'fulltime':
+                        index['job_type'] = '全职'
+                    elif index['job_type'] == 'parttime':
+                        index['job_type'] = '兼职'
+                    elif index['job_type'] == 'intern':
+                        index['job_type'] = '实习'
+                    elif index['job_type'] == 'unclear':
+                        index['job_type'] = '不限'
+            else:
+                search_job = []
+            result = dict()
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = search_job
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = e
+            result['data'] = []
+        raise tornado.gen.Return(result)
+
     # 热门搜索
     @tornado.gen.coroutine
     def Host_search_list(self, token=str, cache_flag=int):
@@ -1267,8 +1328,8 @@ class Action(object):
     # 公司详情-所有职位get  01--spider 10-local
     @tornado.gen.coroutine
     def Company_job(self, company_id=str, company_name=str, token=str, page=int, num=int, jobtype=str, cache_flag=int):
-        if int(num) > 20:
-            num = 20
+        if int(num) > 100:
+            num = 100
         if company_id[-2:] == '01':
             uri = '%squery_company_jobs' % self.esapi
             values = dict()
