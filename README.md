@@ -184,6 +184,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "mobile_type": "iphone",		(手机型号)
     "umeng_id": "umengid",
     "sex": "",
+	"job_id": 0,				(登陆后跳转的职位，0=没有)
     "cv_name": "123456",		(判断是否需要重新填写简历用)
     "jiguang_id": "jiguangid",
     "user_name": "",
