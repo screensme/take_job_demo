@@ -2109,8 +2109,9 @@ class Action(object):
                                   }
             else:
                 try:
-                    sql_update = "update candidate_user set proxy_user=%s where id=%s"
-                    update_user = self.db.update(sql_update, 2, token)
+                    tt = datetime.datetime.now()
+                    sql_update = "update candidate_user set proxy_user=%s dt_update=%s where id=%s"
+                    update_user = self.db.update(sql_update, 2, tt, token)
 
                     self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
                     result['status'] = 'success'
