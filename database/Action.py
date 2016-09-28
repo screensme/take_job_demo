@@ -2351,39 +2351,39 @@ class Action(object):
                         self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
                         return 0
                     else:
-                        if user_cv['intension']['title'] == '':
+                        # if user_cv['intension']['title'] == '':
+                        #     # 状态写为0
+                        #     allow_0 = self.db.update(up_status, 0, token)
+                        #     self.db.close()
+                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
+                        #     return 0
+                        # else:
+                        if user_cv['career'] == []:
                             # 状态写为0
                             allow_0 = self.db.update(up_status, 0, token)
                             self.db.close()
-                            self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
+                            self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
                             return 0
                         else:
-                            if user_cv['career'] == []:
+                            if user_cv['career'][0]['end_time'] == '':
                                 # 状态写为0
                                 allow_0 = self.db.update(up_status, 0, token)
                                 self.db.close()
-                                self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
+                                self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
                                 return 0
                             else:
-                                if user_cv['career'][0]['end_time'] == '':
+                                if user_cv['extra']['description'] == '':
                                     # 状态写为0
                                     allow_0 = self.db.update(up_status, 0, token)
                                     self.db.close()
-                                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
+                                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
                                     return 0
                                 else:
-                                    if user_cv['extra']['description'] == '':
-                                        # 状态写为0
-                                        allow_0 = self.db.update(up_status, 0, token)
-                                        self.db.close()
-                                        self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
-                                        return 0
-                                    else:
-                                        # 状态写为1
-                                        allow_1 = self.db.update(up_status, 1, token)
-                                        self.db.close()
-                                        self.log.info("candidate_cv allow_post=1")
-                                        return 1
+                                    # 状态写为1
+                                    allow_1 = self.db.update(up_status, 1, token)
+                                    self.db.close()
+                                    self.log.info("candidate_cv allow_post=1")
+                                    return 1
 # ########################################################################
 
     # 修改数据，慎用
@@ -2428,6 +2428,7 @@ class Action(object):
             cursor.execute("show global status like 'Threads_connected';")
             Currently = cursor.fetchone()
             self.db.close()
+            self.db.execute('')
 
             result = dict()
             result['status'] = 'sucess'
