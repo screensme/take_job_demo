@@ -114,7 +114,7 @@ class Action(object):
     def User_login(self, mobile=str, pwd=str, jiguang_id=str, umeng_id=str,
                    app_version=str, mobile_version=str, mobile_type=str, cache_flag=int):
         result = dict()
-        sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id,proxy_user,mobile_type,mobile_version,app_version from candidate_user where phonenum=%s" % mobile
+        sql = "select id,password,user_name,sex,avatar,jiguang_id,umeng_id,proxy_user,mobile_type,mobile_version,app_version,job_id from candidate_user where phonenum=%s" % mobile
         try:
             search_mobile = self.db.get(sql)
         except Exception, e:
