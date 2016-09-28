@@ -152,14 +152,14 @@ class Action(object):
                     pass
 
                 if (jiguang_id != '') and (umeng_id != ''):
-                    sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s where phonenum=%s"
-                    self.db.update(sql_umeng_jg, jiguang_id, umeng_id, mobile)
+                    sql_umeng_jg = "update candidate_user set jiguang_id=%s,umeng_id=%s,job_id=%s where phonenum=%s"
+                    self.db.update(sql_umeng_jg, jiguang_id, umeng_id, 0, mobile)
                     self.db.close()
                     search_mobile['jiguang_id'] = jiguang_id
                     search_mobile['umeng_id'] = umeng_id
                 if (app_version != '') and (mobile_version != '') and (mobile_type != ''):
-                    sql_app_mobile = "update candidate_user set app_version=%s,mobile_version=%s,mobile_type=%s where phonenum=%s"
-                    self.db.update(sql_app_mobile, app_version, mobile_version, mobile_type, mobile)
+                    sql_app_mobile = "update candidate_user set app_version=%s,mobile_version=%s,mobile_type=%s,job_id=%s where phonenum=%s"
+                    self.db.update(sql_app_mobile, app_version, mobile_version, mobile_type, 0, mobile)
                     self.db.close()
                     search_mobile['app_version'] = app_version
                     search_mobile['mobile_version'] = mobile_version
@@ -174,6 +174,8 @@ class Action(object):
                 result['msg'] = '登陆成功'
                 result['token'] = search_mobile['id']
                 result['data'] = search_mobile
+
+                sql_del = "update candidate_user set job_id=%s"
             else:
                 result['status'] = 'fail'
                 result['token'] = ''
