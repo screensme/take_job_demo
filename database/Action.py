@@ -2431,7 +2431,7 @@ class Action(object):
             cursor.execute("show global status like 'Threads_connected';")
             Currently = cursor.fetchone()
             self.db.close()
-            self.db.execute('')
+            # self.db.execute('')
 
             result = dict()
             result['status'] = 'sucess'
