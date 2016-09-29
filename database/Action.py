@@ -754,6 +754,7 @@ class Action(object):
         try:
             contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
+            self.log.info(contect_id)
             if args != '':
                 if re.match(r'\d+', '%s' % token):
                     is_proxy_user = "select proxy_user from candidate_user where id=%s" % token
