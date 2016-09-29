@@ -75,7 +75,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 简历编辑-删除获得证书delete：/resume-del-certificate/cert-{certificate_id}/token-{token}  
 46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
 47.职为我来post：/job-for-me  
-48.申请成为校园代理post：/application-proxy-user/token-{token}  
+48.申请成为校园代理get：/application-proxy-user/token-{token}  
 ***
 #####简历状态：  
 	
@@ -1693,7 +1693,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页数量（num>=20，显示20）
 返回结果数据结构同首页  
-####48.申请成为校园代理post：/application-proxy-user/token-{token}  
+####48.申请成为校园代理get：/application-proxy-user/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
