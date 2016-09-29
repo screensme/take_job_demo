@@ -2096,7 +2096,7 @@ class Action(object):
                 version_sql = version_post['version'].split('.')
                 isupdate = 0
                 for num in xrange(len(version_get)):
-                    if version_get[num] > version_sql[num]:
+                    if version_get[num] < version_sql[num]:
                         isupdate = 1
                         break
 
