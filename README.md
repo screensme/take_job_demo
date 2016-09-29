@@ -1261,7 +1261,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     {
       "scale_str": "100-499人",
       "boon": "五险一金",
-	  "commission": 0,			(佣金字段，0=没有佣金，校园代理有此字段)
+	  "commission": 0,			(佣金字段，0=没有佣金，一般用户看到字段值为"")
       "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
       "job_type": "全职",
       "need_num": 12,
@@ -1279,7 +1279,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     {
       "scale_str": "100-499人",
       "boon": "五险一金",
-	  "commission": 0,			(佣金字段，0=没有佣金，校园代理有此字段)
+	  "commission": 0,			(佣金字段，0=没有佣金，一般用户看到字段值为"")
       "company_logo": "http://imgtest.zhaopintt.com/company_logo_596.jpeg",
       "job_type": "全职",
       "need_num": 12,
