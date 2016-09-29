@@ -755,18 +755,24 @@ class Action(object):
             contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
-                is_proxy_user = "select proxy_user from candidate_user where id=%s" % token
-                search_proxy = self.db.get(is_proxy_user)
-                if search_proxy['proxy_user'] == 1:
-                    select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission'
-                    query_sql = "SELECT %s FROM jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
-                                % (select_type, args)
-                    search_job = self.db.query(query_sql)
+                if re.match(r'\d+', '%s' % token):
+                    is_proxy_user = "select proxy_user from candidate_user where id=%s" % token
+                    search_proxy = self.db.get(is_proxy_user)
+                    if search_proxy['proxy_user'] == 1:
+                        select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission'
+                        query_sql = "SELECT %s FROM jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
+                                    % (select_type, args)
+                        search_job = self.db.query(query_sql)
+                    else:
+                        select_type = 'id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num'
+                        query_sql = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
+                        search_job = self.db.query(query_sql)
+                    self.db.close()
                 else:
                     select_type = 'id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num'
                     query_sql = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
                     search_job = self.db.query(query_sql)
-                self.db.close()
+                    self.db.close()
                 for n, index in enumerate(search_job):
                     # 调整所有为null的值为""
                     for ind in index:
