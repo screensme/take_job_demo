@@ -772,6 +772,10 @@ class Action(object):
                     for ind in index:
                         if index[ind] == None:
                             index[ind] = ''
+                    if index.has_key('commission'):
+                        pass
+                    else:
+                        index['commission'] = ''
                     # 添加图片
                     index['speed_image'] = "%s" % self.image + 'speed_job_%s.png' % n
                     # 公司logo
@@ -793,11 +797,6 @@ class Action(object):
                         index['job_type'] = '实习'
                     elif index['job_type'] == 'unclear':
                         index['job_type'] = '不限'
-                    try:
-                        if not index['commission']:
-                            index['commission'] = ''
-                    except Exception, e:
-                        index['commission'] = ''
             else:
                 search_job = []
             result = dict()
@@ -2089,7 +2088,7 @@ class Action(object):
                               'update_url': ''}
             raise tornado.gen.Return(result)
         else:
-            sql_version = "select version,app_file from App_version where status!='delete' order by id desc limit 1 "
+            sql_version = "select version,app_file from app_version where status!='delete' order by id desc limit 1 "
             try:
                 version_post = self.db.get(sql_version)
                 self.db.close()
