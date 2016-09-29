@@ -898,9 +898,9 @@ class Action(object):
         if int(num) > 20:
             num = 20
         sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_post as p on k.id=p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
                  token, num, (int(page) * int(num)))
         try:
             boss_profile = self.db.query(sql)
@@ -915,6 +915,9 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
@@ -936,7 +939,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
@@ -951,6 +954,9 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
@@ -972,7 +978,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
@@ -987,6 +993,9 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
@@ -1008,7 +1017,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
@@ -1023,6 +1032,9 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
@@ -1044,7 +1056,7 @@ class Action(object):
         sql = "select %s from jobs_hot_es_test as k " \
               "left join candidate_post as p on k.id = p.job_id " \
               "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
-              % ("job_id,company_type,salary_start,salary_end,scale_str,job_city,company_name,boon,education_str,job_name,work_years_str,p.status,p.dt_update,company_logo",
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
                  token, num, (int(page) * int(num)))
         try:
             search_status = self.db.query(sql)
@@ -1059,6 +1071,9 @@ class Action(object):
                     index['salary_end'] = index['salary_end'] / 1000 + 1
                 else:
                     index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
             status = 'success'
         except Exception, e:
             self.log.info('ERROR is %s' % e[1])
