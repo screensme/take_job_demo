@@ -781,7 +781,7 @@ class Action(object):
                     if index.has_key('commission'):
                         pass
                     else:
-                        index['commission'] = ''
+                        index['commission'] = 0
                     # 添加图片
                     index['speed_image'] = "%s" % self.image + 'speed_job_%s.png' % n
                     # 公司logo
