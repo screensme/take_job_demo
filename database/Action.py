@@ -2137,32 +2137,40 @@ class Action(object):
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '没有此用户'
-            result['data'] = {'errorcode': 0,
+            result['data'] = {'errorcode': 10,
                               }
         else:
             if search_user['proxy_user'] != 0:
                 result['status'] = 'fail'
                 result['token'] = token
                 result['msg'] = '已经申请校园代理，请不要重复提交'
-                result['data'] = {'errorcode': 0,
+                result['data'] = {'errorcode': 20,
                                   }
             else:
-                try:
-                    tt = datetime.datetime.now()
-                    sql_update = "update candidate_user set proxy_user=%s,dt_update=%s where id=%s"
-                    update_user = self.db.update(sql_update, 2, tt, token)
+                J_post = self.Judgment_resume(token=token)
+                if J_post:
+                    try:
+                        tt = datetime.datetime.now()
+                        sql_update = "update candidate_user set proxy_user=%s,dt_update=%s where id=%s"
+                        update_user = self.db.update(sql_update, 2, tt, token)
 
-                    self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
-                    result['status'] = 'success'
-                    result['token'] = token
-                    result['msg'] = '申请成功，我们会尽快联系您'
-                    result['data'] = {'errorcode': 0,
-                                      }
-                except Exception, e:
+                        self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
+                        result['status'] = 'success'
+                        result['token'] = token
+                        result['msg'] = '申请成功，我们会尽快联系您'
+                        result['data'] = {'errorcode': 0,
+                                          }
+                    except Exception, e:
+                        result['status'] = 'fail'
+                        result['token'] = token
+                        result['msg'] = e
+                        result['data'] = {'errorcode': 1000,
+                                          }
+                else:
                     result['status'] = 'fail'
                     result['token'] = token
-                    result['msg'] = e
-                    result['data'] = {'errorcode': 1000,
+                    result['msg'] = '请将简历填写完整后申请成为合伙人'
+                    result['data'] = {'errorcode': 50,
                                       }
         raise tornado.gen.Return(result)
 
