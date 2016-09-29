@@ -755,8 +755,16 @@ class Action(object):
             contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
-                search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
-                                         %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num',args))
+                is_proxy_user = "select proxy_user from candidate_user where id=%s" % token
+                search_proxy = self.db.get(is_proxy_user)
+                if search_proxy['proxy_user'] == 1:
+                    select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission'
+                    query_sql = "SELECT %s FROM jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
+                                % (select_type, args)
+                else:
+                    select_type = 'id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num'
+                    query_sql = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
+                search_job = self.db.query(query_sql)
                 self.db.close()
                 for n, index in enumerate(search_job):
                     # 调整所有为null的值为""
@@ -2071,6 +2079,7 @@ class Action(object):
             result['msg'] = '版本号格式有误'
             result['data'] = {'errorcode': 10,
                               'isupdate': 0,
+                              'version': '',
                               'update_url': ''}
             raise tornado.gen.Return(result)
         else:
@@ -2092,6 +2101,7 @@ class Action(object):
                 result['msg'] = '数据添加不成功'
                 result['data'] = {'errorcode': 10,
                                   'isupdate': 0,
+                                  'version': '',
                                   'update_url': ''}
                 raise tornado.gen.Return(result)
             result['status'] = 'success'
@@ -2099,6 +2109,7 @@ class Action(object):
             result['msg'] = ''
             result['data'] = {'errorcode': 0,
                               'isupdate': isupdate,
+                              'version': version_post['version'],
                               'update_url': self.image + version_post['app_file']
                               }
             raise tornado.gen.Return(result)
