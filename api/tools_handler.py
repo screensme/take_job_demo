@@ -43,11 +43,11 @@ class GetVersionHandler(BaseHandler):
         self.log.info('+++++++++++Get Version+++++++++++')
         cache_flag = self.get_cache_flag()
         UserAgent = self.request.headers['User-Agent']
-        print UserAgent
         device = 0 if "Mobile" in UserAgent or "Android" in UserAgent else 1
         # Version = self.get_argument('Version')
         if not device:
             Version = self.get_argument('Version')
+            self.log.info(self.get_arguments())
             result = yield self.db.Get_Version(Version, cache_flag)
         else:
             result = dict()
