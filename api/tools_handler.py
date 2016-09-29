@@ -43,6 +43,7 @@ class GetVersionHandler(BaseHandler):
         self.log.info('+++++++++++Get Version+++++++++++')
         cache_flag = self.get_cache_flag()
         UserAgent = self.request.headers['User-Agent']
+        print UserAgent
         device = 0 if "Mobile" in UserAgent or "Android" in UserAgent else 1
         # Version = self.get_argument('Version')
         if not device:
@@ -55,6 +56,7 @@ class GetVersionHandler(BaseHandler):
             result['msg'] = '非安卓手机'
             result['data'] = {'errorcode': 1000,
                               'isupdate': 0,
+                              'version': '',
                               'update_url': ''}
         self.write(ObjectToString().encode(result))
         self.finish()

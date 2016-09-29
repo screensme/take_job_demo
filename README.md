@@ -1375,6 +1375,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0,		(0表示成功)
     "update_url": "www.baidu.com",		（下载地址）
+	'version': "1.0.9"
     "isupdate": 1		（1表示需要更新，0表示不需要更新）
   }
 }```  
@@ -1386,6 +1387,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 1000,
     "update_url": "",
+	'version': '',
     "isupdate": 0
   }
 }```  
