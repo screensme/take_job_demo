@@ -2399,7 +2399,7 @@ class Action(object):
                         self.db.close()
                         self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
                         return 0
-                    else:
+                    else:   # 职业意向
                         # if user_cv['intension']['title'] == '':
                         #     # 状态写为0
                         #     allow_0 = self.db.update(up_status, 0, token)
@@ -2407,32 +2407,32 @@ class Action(object):
                         #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
                         #     return 0
                         # else:
-                        if user_cv['career'] == []:
-                            # 状态写为0
-                            allow_0 = self.db.update(up_status, 0, token)
-                            self.db.close()
-                            self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
-                            return 0
-                        else:
-                            if user_cv['career'][0]['end_time'] == '':
-                                # 状态写为0
-                                allow_0 = self.db.update(up_status, 0, token)
-                                self.db.close()
-                                self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
-                                return 0
-                            else:
-                                if user_cv['extra']['description'] == '':
-                                    # 状态写为0
-                                    allow_0 = self.db.update(up_status, 0, token)
-                                    self.db.close()
-                                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
-                                    return 0
-                                else:
-                                    # 状态写为1
-                                    allow_1 = self.db.update(up_status, 1, token)
-                                    self.db.close()
-                                    self.log.info("candidate_cv allow_post=1")
-                                    return 1
+                        # if user_cv['career'] == []: # 实习经历
+                        #     # 状态写为0
+                        #     allow_0 = self.db.update(up_status, 0, token)
+                        #     self.db.close()
+                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
+                        #     return 0
+                        # else:
+                        #     if user_cv['career'][0]['end_time'] == '':
+                        #         # 状态写为0
+                        #         allow_0 = self.db.update(up_status, 0, token)
+                        #         self.db.close()
+                        #         self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
+                        #         return 0
+                        #     else:
+                        # if user_cv['extra']['description'] == '':
+                        #     # 状态写为0
+                        #     allow_0 = self.db.update(up_status, 0, token)
+                        #     self.db.close()
+                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
+                        #     return 0
+                        # else:
+                            # 状态写为1
+                        allow_1 = self.db.update(up_status, 1, token)
+                        self.db.close()
+                        self.log.info("candidate_cv allow_post=1")
+                        return 1
 # ########################################################################
 
     # 修改数据，慎用
