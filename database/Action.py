@@ -760,7 +760,7 @@ class Action(object):
                     is_proxy_user = "select proxy_user from candidate_user where id=%s" % token
                     search_proxy = self.db.get(is_proxy_user)
                     if search_proxy['proxy_user'] == 1:
-                        select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission'
+                        select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission,d.commission_type'
                         query_sql = "SELECT %s FROM jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
                                     % (select_type, args)
                         search_job = self.db.query(query_sql)
@@ -783,6 +783,10 @@ class Action(object):
                         pass
                     else:
                         index['commission'] = 0
+                    if index.has_key('commission_type'):
+                        pass
+                    else:
+                        index['commission_type'] = '0'
                     # 添加图片
                     index['speed_image'] = "%s" % self.image + 'speed_job_%s.png' % n
                     # 公司logo
