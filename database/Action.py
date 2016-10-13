@@ -2251,14 +2251,14 @@ class Action(object):
         result = dict()
         num = 20 if int(num) > 20 else int(num)
         if int(company_id) == 0:
-            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_logo" \
+            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_name,c.company_logo" \
                       " from company_jd as a left join activity_detail as b on a.id=b.company_jd_id left join company_detail as c on a.company_user_id=c.company_user_id" \
                       " where b.active_id ='%s' order by dt_update desc limit %s offset %s" % (active_id, num, (int(page) * int(num)))
             search_job = self.db.query(sql_job)
             self.db.close()
             self.log.info("activity,company==0 ++++++++++"+sql_job)
         else:
-            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_logo" \
+            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_name,c.company_logo" \
                       " from company_jd as a left join activity_detail as b on a.id=b.company_jd_id left join company_detail as c on a.company_user_id=c.company_user_id" \
                       " where b.company_id ='%s' order by dt_update desc limit %s offset %s" % (company_id, num, (int(page) * int(num)))
             search_job = self.db.query(sql_job)
