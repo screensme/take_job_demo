@@ -195,3 +195,38 @@ class HotcityHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# 活动列表get
+class ActivityListGetHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self):
+        self.log.info('+++++++++++ Activity List +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        result = yield self.db.Activity_List(cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 活动post(显示company/显示job)
+class ActivityHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Activity info +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        active_id = self.get_argument('active_id')
+        token = self.get_argument('token')
+        key_type = self.get_argument('key_type')
+        company_id = self.get_argument('company_id')
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        if key_type == 'company':
+            result = yield self.db.Activity_Company(active_id, token, page, num, cache_flag)
+        else:
+            result = yield self.db.Activity_Job(active_id, token, page, num, company_id, cache_flag)
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

@@ -13,6 +13,12 @@ MY_SQL = {
                       'user': 'probie_test',
                       'pwd': 'tt_probie'
                       },
+    'mysql-waitest': {'host': '182.92.202.243:3306',
+                      # 'port': '',
+                      'db': 'rcat_test',
+                      'user': 'probie_test',
+                      'pwd': 'tt_probie'
+                      },
     'mysql-waiwang': {'host': '182.92.99.38:3306',
                       # 'port': '',
                       'db': 'rcat_test',
@@ -29,6 +35,9 @@ MY_SQL = {
 ES_API = {
     'esapi-neiwang': {
         'url': 'http://192.168.12.146:8000/'
+    },
+    'esapi-waitest': {
+        'url': 'http://182.92.202.243:8000/'
     },
     'esapi-waiwang': {
         'url': 'http://182.92.99.38:8000/'
@@ -56,6 +65,12 @@ REDIS = {
     },
     'redis-neiwang': {
         'host': '192.168.12.146',
+        'port': 6379,
+        'password': '',
+        'db': 1
+    },
+    'redis-waitest': {
+        'host': '182.92.202.243',
         'port': 6379,
         'password': '',
         'db': 1

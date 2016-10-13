@@ -23,6 +23,11 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         <td>增-改</td>
 		<td>1.修改了登陆返回的结果，新增umeng_id,jiguang_id,mobile_type,mobile_version,app_version字段，在急速入职中显示佣金根据是否为校园代理proxy_user判断；2.新增，职为我来接口；3.新增，申请成为校园代理接口。</td>
 	</tr>
+	<tr>
+        <td>10.13</td>
+        <td>增</td>
+		<td>1.增加了活动接口，活动中公司列表 或者 活动中职位列表 的接口</td>
+	</tr>
     </table>
 </div>
 
@@ -76,6 +81,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
 47.职为我来post：/job-for-me  
 48.申请成为校园代理get：/application-proxy-user/token-{token}  
+49.活动列表get：/activity-list  
+50.活动详情post(显示公司/显示职位)：/activity  
 ***
 #####简历状态：  
 	
@@ -1722,3 +1729,107 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "errorcode": 20		(10=没有此用户,20=重复提交,50=简历不完整,1000=服务器错误)
   }
 }```  
+####49.活动列表get：/activity-list  
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "",
+  "data": [
+    {
+      "status": "open",
+      "active_color": "#99343",
+      "start_time": "2016-10-11T00:00:00",
+      "active_city": "北京",
+      "active_name": "2016秋季招聘会",
+      "active_img": "http://imgtest.zhaopintt.com/activiry_1.jpeg",
+      "end_time": "2016-10-14T00:00:00",
+      "dt_create": "2016-10-11T12:05:47",
+      "id": 1,		(活动id)
+      "dt_update": "2016-10-11T12:08:37"
+    },
+    {
+      "status": "open",
+      "active_color": "#87656",
+      "start_time": "2016-10-11T00:00:00",
+      "active_city": "全国",
+      "active_name": "华北会计专场招聘会",
+      "active_img": "http://imgtest.zhaopintt.com/activiry_2.jpeg",
+      "end_time": "2016-10-14T00:00:00",
+      "dt_create": "2016-10-11T12:07:38",
+      "id": 2,
+      "dt_update": "2016-10-11T12:08:27"
+    }
+  ]
+}```
+####50.活动详情post(显示公司/显示职位)：/activity  
+参数：
+		
+	参数名称	必填	类型		描述
+	active_id			Y	string		活动id	
+	company_id	Y	string		公司id	(点击公司查看职位列表填写公司id,公司列表填写0)
+	token		Y	string		用户id	
+	key_type	Y	string		company或job(company显示公司列表,job显示职位列表)	
+	page		Y	string		页数	
+	num			Y	string		每页数量	
+返回公司列表：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "company_scale": "20人以下",
+      "company_name": "测试公司1",
+      "company_address": "中关村",
+      "company_id": 12,
+      "company_logo": "http://imgtest.zhaopintt.com/icompany_logo_13.png",
+      "company_type": "国有企业",
+      "company_site": "",
+      "company_trade": "互联网/电子商务"
+    }
+  ]
+}```
+
+返回职位列表：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "job_id": 214113,
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_2.png",
+      "job_type": "兼职",
+      "need_num": 1,
+      "job_city": "北京",
+      "salary_start": 10,
+      "dt_update": "2016-07-29T17:44:59",
+      "salary_end": 20,
+      "education": "1",
+      "job_name": "Python"
+    }
+  ]
+}```
+
+点击公司查看职位列表：
+```
+{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "job_id": 214113,
+      "company_logo": "http://imgtest.zhaopintt.com/company_logo_2.png",
+      "job_type": "兼职",
+      "need_num": 1,
+      "job_city": "北京",
+      "salary_start": 10,
+      "dt_update": "2016-07-29T17:44:59",
+      "salary_end": 20,
+      "education": "1",
+      "job_name": "Python"
+    }
+  ]
+}```

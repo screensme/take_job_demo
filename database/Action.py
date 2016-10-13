@@ -2179,6 +2179,120 @@ class Action(object):
                                       }
         raise tornado.gen.Return(result)
 
+    # 活动列表get
+    @tornado.gen.coroutine
+    def Activity_List(self, cache_flag=int):
+
+        result = dict()
+        # tt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        dt = datetime.datetime.now()
+        sql_list = "select * from activity where status='open' and end_time>'%s'" % (dt,)
+        self.log.info("select * from activity where status='open' and end_time>'%s'" % (dt,))
+        search_list = self.db.query(sql_list)
+        self.db.close()
+        if search_list is not None:
+            for index in search_list:
+                index['active_img'] = self.image + index['active_img']
+        result['status'] = 'success'
+        result['token'] = ''
+        result['msg'] = ''
+        result['data'] = search_list
+        raise tornado.gen.Return(result)
+
+    # 活动post,显示company公司列表
+    @tornado.gen.coroutine
+    def Activity_Company(self, _id=str, token=str, page=str, num=str, cache_flag=int):
+
+        result = dict()
+        num = 20 if int(num) > 20 else int(num)
+        sql_active = "select distinct company_id from activity_detail where active_id=%s order by draw_order desc limit %s offset %s" % (_id, int(num), int(page) * int(num))
+        search_company = self.db.query(sql_active)
+        self.db.close()
+        if search_company is not None:
+            for num, company_search in enumerate(search_company):
+                sql_company_info = "select * from company_detail where id=%s" % company_search['company_id']
+                company_info = self.db.get(sql_company_info)
+                self.db.close()
+                if company_info is None:
+                    search_company[num] = {'company_name': '',
+                                           'company_trade': '',
+                                           'company_scale': '',
+                                           'company_type': '',
+                                           'company_address': '',
+                                           'company_site': '',
+                                           'company_logo': '',
+                                           'company_id': company_search['company_id']
+                                           }
+                else:
+                    if company_info['company_logo'] != '':
+                        logo = "%s" % self.image + company_info['company_logo']
+                    else:
+                        logo = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                    search_company[num] = {'company_name': company_info['company_name'],
+                                           'company_trade': company_info['company_trade'],
+                                           'company_scale': company_info['company_scale'],
+                                           'company_type': company_info['company_type'],
+                                           'company_address': company_info['company_address'],
+                                           'company_site': company_info['company_site'],
+                                           'company_logo': logo,
+                                           'company_id': company_search['company_id']
+                                           }
+
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = search_company
+        raise tornado.gen.Return(result)
+
+    # 活动post,显示job职位列表
+    @tornado.gen.coroutine
+    def Activity_Job(self, active_id=str, token=str, page=str, num=str, company_id=str, cache_flag=int):
+
+        result = dict()
+        num = 20 if int(num) > 20 else int(num)
+        if int(company_id) == 0:
+            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_logo" \
+                      " from company_jd as a left join activity_detail as b on a.id=b.company_jd_id left join company_detail as c on a.company_user_id=c.company_user_id" \
+                      " where b.active_id ='%s' order by dt_update desc limit %s offset %s" % (active_id, num, (int(page) * int(num)))
+            search_job = self.db.query(sql_job)
+            self.db.close()
+            self.log.info("activity,company==0 ++++++++++"+sql_job)
+        else:
+            sql_job = "select a.job_name,a.job_city,a.es_id,a.education,a.job_type,a.salary_start,a.salary_end,a.job_city,a.need_num,a.dt_update,c.company_logo" \
+                      " from company_jd as a left join activity_detail as b on a.id=b.company_jd_id left join company_detail as c on a.company_user_id=c.company_user_id" \
+                      " where b.company_id ='%s' order by dt_update desc limit %s offset %s" % (company_id, num, (int(page) * int(num)))
+            search_job = self.db.query(sql_job)
+            self.db.close()
+            self.log.info("activity,company!=0 ++++++++++"+sql_job)
+        if search_job is not None:
+
+            for index in search_job:
+                index['job_id'] = index.pop('es_id')
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                # 修改字段为汉字
+                if index['job_type'] == 'fulltime':
+                    index['job_type'] = '全职'
+                elif index['job_type'] == 'parttime':
+                    index['job_type'] = '兼职'
+                elif index['job_type'] == 'intern':
+                    index['job_type'] = '实习'
+                elif index['job_type'] == 'unclear':
+                    index['job_type'] = '不限'
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = search_job
+        raise tornado.gen.Return(result)
+
     # 查看收藏
     @tornado.gen.coroutine
     def view_user_collections(self, page=int, num=int, token=str, cache_flag=int):

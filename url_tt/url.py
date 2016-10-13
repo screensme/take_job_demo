@@ -33,7 +33,9 @@ from api.position_handler import \
     HotcityHandler, \
     RecommendjobHandler, \
     SpeedjobHandler, \
-    JobForMeHandler
+    JobForMeHandler, \
+    ActivityListGetHandler, \
+    ActivityHandler
 
 from api.sms_handler import \
     SendSmsHandler, \
@@ -125,6 +127,8 @@ urls = [
     url(r"/application-proxy-user/token-(\w+)", ApplicationProxyHandler),    # 申请成为校园代理post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
+    url(r"/activity-list", ActivityListGetHandler),    # 活动列表get
+    url(r"/activity", ActivityHandler),    # 活动post
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！
