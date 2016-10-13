@@ -1767,7 +1767,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	active_id			Y	string		活动id	
-	company_id	Y	string		公司id	(点击单个公司查看职位列表填写公司id,公司列表填写0)
+	company_id	Y	string		公司id	(点击单个公司查看职位列表填写公司id,其他填写0)
 	token		Y	string		用户id	
 	key_type	Y	string		company或job(company显示公司列表,job显示职位列表)	
 	page		Y	string		页数	
@@ -1801,6 +1801,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_id": 214113,
       "company_logo": "http://imgtest.zhaopintt.com/company_logo_2.png",
       "job_type": "兼职",
+      "company_name": "hello worldasf",
       "need_num": 1,
       "job_city": "北京",
       "salary_start": 10,
@@ -1823,6 +1824,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_id": 214113,
       "company_logo": "http://imgtest.zhaopintt.com/company_logo_2.png",
       "job_type": "兼职",
+      "company_name": "hello worldasf",
       "need_num": 1,
       "job_city": "北京",
       "salary_start": 10,
