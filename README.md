@@ -1742,7 +1742,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "start_time": "2016-10-11T00:00:00",
       "active_city": "北京",
       "active_name": "2016秋季招聘会",
-      "active_img": "http://imgtest.zhaopintt.com/activiry_1.jpeg",
+	  "active_little_img": "",		(手机端小图)
+      "active_img": "http://imgtest.zhaopintt.com/activiry_1.jpeg",	(活动大图)
       "end_time": "2016-10-14T00:00:00",
       "dt_create": "2016-10-11T12:05:47",
       "id": 1,		(活动id)
@@ -1754,7 +1755,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "start_time": "2016-10-11T00:00:00",
       "active_city": "全国",
       "active_name": "华北会计专场招聘会",
-      "active_img": "http://imgtest.zhaopintt.com/activiry_2.jpeg",
+	  "active_little_img": "",		(手机端小图)
+      "active_img": "http://imgtest.zhaopintt.com/activiry_2.jpeg",	(活动大图)
       "end_time": "2016-10-14T00:00:00",
       "dt_create": "2016-10-11T12:07:38",
       "id": 2,

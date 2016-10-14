@@ -2200,6 +2200,7 @@ class Action(object):
                     index['active_little_img'] = self.image + index['active_little_img']
                 else:
                     index['active_little_img'] = ''
+                    continue
         result['status'] = 'success'
         result['token'] = ''
         result['msg'] = ''
