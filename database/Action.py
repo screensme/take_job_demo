@@ -2192,7 +2192,14 @@ class Action(object):
         self.db.close()
         if search_list is not None:
             for index in search_list:
-                index['active_img'] = self.image + index['active_img']
+                if index['active_img'] is not None:
+                    index['active_img'] = self.image + index['active_img']
+                else:
+                    index['active_img'] = ''
+                if index['active_little_img'] is not None:
+                    index['active_little_img'] = self.image + index['active_little_img']
+                else:
+                    index['active_little_img'] = ''
         result['status'] = 'success'
         result['token'] = ''
         result['msg'] = ''
