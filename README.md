@@ -83,6 +83,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 48.申请成为校园代理get：/application-proxy-user/token-{token}  
 49.活动列表get：/activity-list  
 50.活动详情post(显示公司/显示职位)：/activity  
+51.工资走势图-post：/salary_trend_list  
+52.工资区间图-post：/salary_tantile_list  
+53.学历分布图-post：/edu_tantile_list  
+54.工作年限分布图-post：/exp_tantile_list  
 ***
 #####简历状态：  
 	
@@ -1836,4 +1840,210 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "Python"
     }
   ]
-}```
+}```  
+
+####51.工资走势图-post：/salary_trend_list  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "salary_trend_list": [
+      {
+        "legend": "2015年11月",
+        "value": 16174
+      },
+      {
+        "legend": "2015年12月",
+        "value": 15513
+      },
+      {
+        "legend": "2016年1月",
+        "value": 15426
+      },
+      {
+        "legend": "2016年2月",
+        "value": 15808
+      },
+      {
+        "legend": "2016年3月",
+        "value": 16636
+      },
+      {
+        "legend": "2016年4月",
+        "value": 16358
+      },
+      {
+        "legend": "2016年5月",
+        "value": 15890
+      },
+      {
+        "legend": "2016年6月",
+        "value": 15973
+      },
+      {
+        "legend": "2016年7月",
+        "value": 16443
+      },
+      {
+        "legend": "2016年8月",
+        "value": 16713
+      },
+      {
+        "legend": "2016年9月",
+        "value": 15306
+      },
+      {
+        "legend": "2016年10月",
+        "value": 16052
+      }
+    ],
+    "search": "python"
+  }
+}```  
+
+####52.工资区间图-post：/salary_tantile_list  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "search": "python",
+    "avg_salary": 14960,
+    "salary_tantile_list": [
+      {
+        "legend": "3k以下",
+        "value": 1.03
+      },
+      {
+        "legend": "3k-5k",
+        "value": 2.06
+      },
+      {
+        "legend": "5k-8k",
+        "value": 5.5
+      },
+      {
+        "legend": "8k-12k",
+        "value": 46.05
+      },
+      {
+        "legend": "12k-15k",
+        "value": 5.5
+      },
+      {
+        "legend": "15k-20k",
+        "value": 27.15
+      },
+      {
+        "legend": "20k-25k",
+        "value": 10.31
+      },
+      {
+        "legend": "25k-30k",
+        "value": 1.72
+      },
+      {
+        "legend": "30k-40k",
+        "value": 0.34
+      },
+      {
+        "legend": "40k-50k",
+        "value": 0.34
+      },
+      {
+        "legend": "50k以上",
+        "value": 0
+      }
+    ]
+  }
+}```  
+
+####53.学历分布图-post：/edu_tantile_list  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "search": "python",
+    "edu_tantile_list": [
+      {
+        "legend": "中专",
+        "value": 7.4
+      },
+      {
+        "legend": "大专",
+        "value": 22.19
+      },
+      {
+        "legend": "本科",
+        "value": 69.45
+      },
+      {
+        "legend": "硕士",
+        "value": 0.96
+      },
+      {
+        "legend": "博士",
+        "value": 0
+      }
+    ]
+  }
+}```  
+
+####54.工作年限分布图-post：/exp_tantile_list  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "exp_tantile_list": [
+      {
+        "legend": "应届毕业生",
+        "value": 5.59
+      },
+      {
+        "legend": "1-3年",
+        "value": 52.8
+      },
+      {
+        "legend": "3-5年",
+        "value": 38.46
+      },
+      {
+        "legend": "5-10年",
+        "value": 3.15
+      },
+      {
+        "legend": "10年以上",
+        "value": 0
+      }
+    ],
+    "avg_work_years": 2,
+    "search": "python"
+  }
+}```  

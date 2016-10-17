@@ -35,7 +35,11 @@ from api.position_handler import \
     SpeedjobHandler, \
     JobForMeHandler, \
     ActivityListGetHandler, \
-    ActivityHandler
+    ActivityHandler, \
+    SalaryTrendHandler, \
+    SalaryTantileHandler, \
+    EduTantileHandler, \
+    ExpTantileHandler
 
 from api.sms_handler import \
     SendSmsHandler, \
@@ -129,6 +133,10 @@ urls = [
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
     url(r"/activity-list", ActivityListGetHandler),    # 活动列表get
     url(r"/activity", ActivityHandler),    # 活动post
+    url(r"/salary_trend_list", SalaryTrendHandler),    # 工资走势图
+    url(r"/salary_tantile_list", SalaryTantileHandler),    # 工资区间图
+    url(r"/edu_tantile_list", EduTantileHandler),    # 学历分布图
+    url(r"/exp_tantile_list", ExpTantileHandler),    # 工作年限分布图
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！

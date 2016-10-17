@@ -6,6 +6,7 @@ import json
 from api.base_handler import BaseHandler
 import tornado
 from common.tools import args404, ObjectToString
+import re
 
 
 # 首页
@@ -230,3 +231,97 @@ class ActivityHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# -----------------------------------职业导航---start------------------
+# 工资走势图
+class SalaryTrendHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ salary_trend_list !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.salary_trend_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 工资区间图
+class SalaryTantileHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ salary_tantile_list !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.salary_tantile_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 学历分布图
+class EduTantileHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ edu_tantile_list !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.edu_tantile_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+# 工作年限分布图
+class ExpTantileHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ exp_tantile_list !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.exp_tantile_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+# -----------------------------------职业导航---end------------------

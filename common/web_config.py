@@ -51,6 +51,9 @@ IMAGE_URL = {
     'image-neiwang': {
         'url': 'http://imgtest.zhaopintt.com/'
     },
+    'image-waitest': {
+        'url': 'http://imgtest.zhaopintt.com/'
+    },
     'image-waiwang': {
         'url': 'http://images.zhaopintt.com/'
     }

@@ -2179,6 +2179,201 @@ class Action(object):
                                       }
         raise tornado.gen.Return(result)
 
+    # # 职业导航
+    # @tornado.gen.coroutine
+    # def MajorList(self, major=str, token=str, cache_flag=int):
+    #     result = dict()
+    #
+    #     user_code = None
+    #     seo = None
+    #     sql_seo = "select * from seo where seo_type=%s and seo_page=%s and isshow=%s"\
+    #               % ('candidate', 'major_list', 'yes')
+    #     try:
+    #         seo = self.db.get(sql_seo)
+    #         self.db.close()
+    #     except Exception as e:
+    #         self.log.info(e)
+    #
+    #     seo_cahe = self.cacheredis.get('candidate_major_list')
+    #     if seo_cahe is None:
+    #         seo_cahe = seo
+    #         self.cacheredis.set('candidate_major_list', seo, ex=24*60*60)
+    #
+    #     sql_user = "select * from candidate_user where id=%s" % (token,)
+    #     is_proxy_user = self.db.get(sql_user)
+    #     self.db.close()
+    #     if is_proxy_user is None:
+    #         result = dict()
+    #         result['status'] = 'fail'
+    #         result['token'] = token
+    #         result['msg'] = '用户不存在'
+    #         result['data'] = {}
+    #     else:
+    #         if is_proxy_user['proxy_user'] != 1:
+    #             sql_code = "select * from invite_user where user_id=%s" % (token,)
+    #             try:
+    #                 user_code = self.db.get(sql_code)
+    #                 self.db.close()
+    #             except Exception ,e:
+    #                 result = {'major': '',
+    #                           'major_list': [],
+    #                           'major_first': [],
+    #                           'major_second': [],
+    #                           'head_list': [],
+    #                           'hot_job_list_top': [],
+    #                           'code': 0,
+    #                           'order_code': '/invitecode',
+    #                           'seo': seo,
+    #                           }
+    #                 raise tornado.gen.Return(result)
+    #
+    #     major_list_file = 'RcatAPP/helpers/major_list.json'
+    #     major_list = self.cacheredis.get('major_list')
+    #     if major_list is None:
+    #         with open(major_list_file) as f:
+    #             major_list = json.load(f)
+    #             self.cacheredis.set('major_list', major_list, ex=24 * 60 * 60)
+    #
+    #     major_map_file = 'RcatAPP/helpers/major_map.json'
+    #
+    #     major_map = self.cacheredis.get('major_map')
+    #     if major_map is None:
+    #         with open(major_map_file) as f:
+    #             major_map = json.load(f)
+    #             self.cacheredis.set('major_map', major_map, ex=24 * 60 * 60)
+    #
+    #     # 判断缓存中是否有数据
+    #     major_top_dict = self.cacheredis.get('{major}_job_top_dict'.format(major=major))
+    #
+    #     if major_top_dict is None:
+    #         # 请求数据
+    #         job_list = major_map.get(major, None)
+    #         if job_list is not None:
+    #
+    #             try:
+    #                 total = len(job_list)
+    #                 sep_num = total - total // 3
+    #                 job_first_list = job_list[:sep_num]
+    #                 job_second_list = job_list[sep_num:]
+    #
+    #                 major_first_list = cs_api.query_multi_job_top(*job_first_list)
+    #                 major_second_list = cs_api.query_multi_job_top(*job_second_list)
+    #                 major_top_dict = {
+    #                     'first': major_first_list,
+    #                     'second': major_second_list
+    #                 }
+    #                 cache.set('{major}_job_top_dict'.format(major=major), major_top_dict, timeout=24 * 60 * 60)
+    #             except Exception as e:
+    #                 logger.exception(e)
+    #                 major_top_dict = {
+    #                     'first': [],
+    #                     'second': [],
+    #                 }
+    #         else:
+    #             major_top_dict = {
+    #                 'first': [],
+    #                 'second': [],
+    #             }
+    #
+    #     trade = request.args.get('trade', '不限').strip()
+    #     work_years = request.args.get('work_years', '应届').strip()
+    #     payload = {
+    #
+    #         'trade': trade,
+    #         'work_years': work_years,
+    #     }
+    #     data_list = cache.get(trade + work_years)
+    #     if data_list is None:
+    #         data_list = cs_api.query_trade_top(**payload)
+    #         cache.set(trade + work_years, data_list, timeout=12 * 60 * 60)
+    #
+    #     # hot job_list
+    #     hot_job_list = ['产品经理', 'HRBP', 'UI', '运营专员', '市场策划', '律师助理',
+    #                     '行政管理', '会计', '人力资源专员', '招聘专员']
+    #
+    #     hot_job_list_top = cache.get('hot_job_list_top')
+    #     if hot_job_list_top is None:
+    #         hot_job_list_top = cs_api.query_multi_job_top(*hot_job_list)
+    #         hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
+    #         cache.set('hot_job_list_top', hot_job_list_top, timeout=24 * 7 * 60 * 60)
+    #
+    #     ret = {
+    #         'major': major,
+    #         'major_list': major_list,
+    #         'major_first': major_top_dict['first'],
+    #         'major_second': major_top_dict['second'],
+    #         'head_list': data_list,
+    #         'hot_job_list_top': hot_job_list_top,
+    #         'code': 1,
+    #         'order_code': '',
+    #         'seo': seo,
+    #     }
+    #     if user_agent.is_mobile or 'MicroMessenger' in ua_string:
+    #         return abort(404)
+    #     return render_template('candidate_tpl/major_list.html', **ret)
+
+    # 工资走势图
+    @tornado.gen.coroutine
+    def salary_trend_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = {
+            'search': job,
+'salary_trend_list': [{'legend': '2015年11月', 'value': 16174}, {'legend': '2015年12月', 'value': 15513}, {'legend': '2016年1月', 'value': 15426}, {'legend': '2016年2月', 'value': 15808}, {'legend': '2016年3月', 'value': 16636}, {'legend': '2016年4月', 'value': 16358}, {'legend': '2016年5月', 'value': 15890}, {'legend': '2016年6月', 'value': 15973}, {'legend': '2016年7月', 'value': 16443}, {'legend': '2016年8月', 'value': 16713}, {'legend': '2016年9月', 'value': 15306}, {'legend': '2016年10月', 'value': 16052}],
+}
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 工资区间图
+    @tornado.gen.coroutine
+    def salary_tantile_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = {
+            'search': job,
+'salary_tantile_list': [{'legend': '3k以下', 'value': 1.03}, {'legend': '3k-5k', 'value': 2.06}, {'legend': '5k-8k', 'value': 5.5}, {'legend': '8k-12k', 'value': 46.05}, {'legend': '12k-15k', 'value': 5.5}, {'legend': '15k-20k', 'value': 27.15}, {'legend': '20k-25k', 'value': 10.31}, {'legend': '25k-30k', 'value': 1.72}, {'legend': '30k-40k', 'value': 0.34}, {'legend': '40k-50k', 'value': 0.34}, {'legend': '50k以上', 'value': 0}],
+'avg_salary': 14960,
+}
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 学历分布图
+    @tornado.gen.coroutine
+    def edu_tantile_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = {
+'search': job,
+'edu_tantile_list': [{'legend': '中专', 'value': 7.4}, {'legend': '大专', 'value': 22.19}, {'legend': '本科', 'value': 69.45}, {'legend': '硕士', 'value': 0.96}, {'legend': '博士', 'value': 0}],
+}
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 工作年限分布图
+    @tornado.gen.coroutine
+    def exp_tantile_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = {
+'avg_work_years': 2.0,
+'search': job,
+'exp_tantile_list': [{'legend': '应届毕业生', 'value': 5.59}, {'legend': '1-3年', 'value': 52.8}, {'legend': '3-5年', 'value': 38.46}, {'legend': '5-10年', 'value': 3.15}, {'legend': '10年以上', 'value': 0}],
+}
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
     # 活动列表get
     @tornado.gen.coroutine
     def Activity_List(self, cache_flag=int):
