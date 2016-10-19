@@ -91,6 +91,19 @@ REDIS = {
         'db': 1
     }
 }
+
+BASE_URL = {
+    'BASE_URL-neiwang': {
+        'url': 'http://192.168.33.10:8000/',
+        },
+    'BASE_URL-waitest': {
+        'url': 'http://182.92.202.243:5000/',
+        },
+    'BASE_URL-waiwang': {
+        'url': 'http://182.92.99.38:8888/',
+    }
+}
+
 REDIS_URL = 'redis://23fef09bdd5a4810:Rcat123ABCD@23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com/1'
 # user / password @ ip:port / db
 # 23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com ---> 100.114.45.27

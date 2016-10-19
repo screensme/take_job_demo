@@ -2312,6 +2312,61 @@ class Action(object):
     #         return abort(404)
     #     return render_template('candidate_tpl/major_list.html', **ret)
 
+    # 职业导航首页
+    @tornado.gen.coroutine
+    def pro_navigation_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = {
+            'major_list': [{'major_name': 'highsalary'},
+                           {'major_name': 'hotjob'}],
+            'trade_list': [{'id': 1, 'trade_name': '银行'},
+                           {'id': 2, 'trade_name': '食品/饮料'},
+                           {'id': 3, 'trade_name': '智能硬件'}
+                           ]
+            }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 高薪职位排行榜
+    @tornado.gen.coroutine
+    def Rank_high_salary(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 热门职位排行榜
+    @tornado.gen.coroutine
+    def rank_hot_job(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = [{'job_name': 'UI', 'salary_avg': 4827}, {'job_name': '运营专员', 'salary_avg': 5278}, {'job_name': '市场策划', 'salary_avg': 4171}, {'job_name': '行政管理', 'salary_avg': 4145}, {'job_name': '会计', 'salary_avg': 5124}, {'job_name': '人力资源专员', 'salary_avg': 4042}, {'job_name': '招聘专员', 'salary_avg': 4235}]
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 行业职位排行榜
+    @tornado.gen.coroutine
+    def rank_trade(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
     # 工资走势图
     @tornado.gen.coroutine
     def salary_trend_list(self, job=str, token=str, cache_flag=int):
@@ -2332,6 +2387,7 @@ class Action(object):
     def salary_tantile_list(self, job=str, token=str, cache_flag=int):
 
         result = dict()
+
         ret = {
             'search': job,
 'salary_tantile_list': [{'legend': '3k以下', 'value': 1.03}, {'legend': '3k-5k', 'value': 2.06}, {'legend': '5k-8k', 'value': 5.5}, {'legend': '8k-12k', 'value': 46.05}, {'legend': '12k-15k', 'value': 5.5}, {'legend': '15k-20k', 'value': 27.15}, {'legend': '20k-25k', 'value': 10.31}, {'legend': '25k-30k', 'value': 1.72}, {'legend': '30k-40k', 'value': 0.34}, {'legend': '40k-50k', 'value': 0.34}, {'legend': '50k以上', 'value': 0}],
@@ -2694,66 +2750,73 @@ class Action(object):
 #   ##### 判断简历
     @tornado.gen.coroutine
     def Judgment_resume(self, token=str):
-            sql_status = "select candidate_cv from candidate_cv where user_id=%s" % token
-            resume_status = self.db.get(sql_status)
-            self.db.close()
-            user_cv = json.loads(resume_status['candidate_cv'])
+        sql_status = "select candidate_cv from candidate_cv where user_id=%s" % token
+        resume_status = self.db.get(sql_status)
+        self.db.close()
+        user_cv = json.loads(resume_status['candidate_cv'])
 
-            up_status = "update candidate_cv set allow_post=%s where user_id=%s"
-            if user_cv['basic']['name'] == '':
+        up_status = "update candidate_cv set allow_post=%s where user_id=%s"
+        if user_cv['basic']['name'] == '':
+            # 状态写为0
+            allow_0 = self.db.update(up_status, 0, token)
+            self.db.close()
+            self.log.info("candidate_cv allow_post=0; reson-->user_cv['basic']['name'] == ''")
+            return 0
+        else:
+            if user_cv['education'] == []:
                 # 状态写为0
                 allow_0 = self.db.update(up_status, 0, token)
                 self.db.close()
-                self.log.info("candidate_cv allow_post=0; reson-->user_cv['basic']['name'] == ''")
+                self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'] == []")
                 return 0
             else:
-                if user_cv['education'] == []:
+                if user_cv['education'][0]['end_time'] == '':
                     # 状态写为0
                     allow_0 = self.db.update(up_status, 0, token)
                     self.db.close()
-                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'] == []")
+                    self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
                     return 0
-                else:
-                    if user_cv['education'][0]['end_time'] == '':
-                        # 状态写为0
-                        allow_0 = self.db.update(up_status, 0, token)
-                        self.db.close()
-                        self.log.info("candidate_cv allow_post=0; reson-->user_cv['education'][0]['end_time'] == ''")
-                        return 0
-                    else:   # 职业意向
-                        # if user_cv['intension']['title'] == '':
-                        #     # 状态写为0
-                        #     allow_0 = self.db.update(up_status, 0, token)
-                        #     self.db.close()
-                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
-                        #     return 0
-                        # else:
-                        # if user_cv['career'] == []: # 实习经历
-                        #     # 状态写为0
-                        #     allow_0 = self.db.update(up_status, 0, token)
-                        #     self.db.close()
-                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
-                        #     return 0
-                        # else:
-                        #     if user_cv['career'][0]['end_time'] == '':
-                        #         # 状态写为0
-                        #         allow_0 = self.db.update(up_status, 0, token)
-                        #         self.db.close()
-                        #         self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
-                        #         return 0
-                        #     else:
-                        # if user_cv['extra']['description'] == '':
-                        #     # 状态写为0
-                        #     allow_0 = self.db.update(up_status, 0, token)
-                        #     self.db.close()
-                        #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
-                        #     return 0
-                        # else:
-                            # 状态写为1
-                        allow_1 = self.db.update(up_status, 1, token)
-                        self.db.close()
-                        self.log.info("candidate_cv allow_post=1")
-                        return 1
+                else:   # 职业意向
+                    # if user_cv['intension']['title'] == '':
+                    #     # 状态写为0
+                    #     allow_0 = self.db.update(up_status, 0, token)
+                    #     self.db.close()
+                    #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['intension']['school'] == ''")
+                    #     return 0
+                    # else:
+                    # if user_cv['career'] == []: # 实习经历
+                    #     # 状态写为0
+                    #     allow_0 = self.db.update(up_status, 0, token)
+                    #     self.db.close()
+                    #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'] == []")
+                    #     return 0
+                    # else:
+                    #     if user_cv['career'][0]['end_time'] == '':
+                    #         # 状态写为0
+                    #         allow_0 = self.db.update(up_status, 0, token)
+                    #         self.db.close()
+                    #         self.log.info("candidate_cv allow_post=0; reson-->user_cv['career'][0]['end_time'] == ''")
+                    #         return 0
+                    #     else:
+                    # if user_cv['extra']['description'] == '':
+                    #     # 状态写为0
+                    #     allow_0 = self.db.update(up_status, 0, token)
+                    #     self.db.close()
+                    #     self.log.info("candidate_cv allow_post=0; reson-->user_cv['extra']['description'] == ''")
+                    #     return 0
+                    # else:
+                        # 状态写为1
+                    allow_1 = self.db.update(up_status, 1, token)
+                    self.db.close()
+                    self.log.info("candidate_cv allow_post=1")
+                    return 1
+
+    # ####### 判断是否购买职业导航
+    @tornado.gen.coroutine
+    def Judgment_invote(self, token=str):
+        sql_invote_user = "select * from invite_user where user_id=%s" % (token,)
+        invote_user = self.db.get(sql_invote_user)
+        # if invote_user =
 # ########################################################################
 
     # 修改数据，慎用

@@ -87,6 +87,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 52.工资区间图-post：/salary_tantile_list  
 53.学历分布图-post：/edu_tantile_list  
 54.工作年限分布图-post：/exp_tantile_list  
+55.职业导航首页-post：/Pro-navigation  
+56.行业职位排行榜-post：/ranking-trade  
+57.高薪职位排行榜-post：/ranking-highsalary  
+58.热门职位排行榜-post：/ranking-hotjob  
 ***
 #####简历状态：  
 	
@@ -2046,4 +2050,139 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "avg_work_years": 2,
     "search": "python"
   }
+}```  
+
+####55.职业导航首页-post：/Pro-navigation  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "trade_list": [
+      {
+        "trade_name": "银行",
+        "id": 1
+      },
+      {
+        "trade_name": "食品/饮料",
+        "id": 2
+      },
+      {
+        "trade_name": "智能硬件",
+        "id": 3
+      }
+    ],
+    "major_list": [
+      {
+        "major_name": "highsalary"
+      },
+      {
+        "major_name": "hotjob"
+      }
+    ]
+  }
+}```  
+####56.行业职位排行榜-post：/ranking-trade  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "salary_avg": "13,981",
+      "job_name": "置业顾问"
+    },
+    {
+      "salary_avg": "3,680",
+      "job_name": "出纳"
+    }
+  ]
+}```  
+####57.高薪职位排行榜-post：/ranking-highsalary  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "salary_avg": "13,981",
+      "job_name": "置业顾问"
+    },
+    {
+      "salary_avg": "4,219",
+      "job_name": "编辑"
+    },
+    {
+      "salary_avg": "4,148",
+      "job_name": "产品设计师"
+    },
+    {
+      "salary_avg": "4,120",
+      "job_name": "会务专员"
+    },
+    {
+      "salary_avg": "3,680",
+      "job_name": "出纳"
+    }
+  ]
+}```  
+####58.热门职位排行榜-post：/ranking-hotjob  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职业名称
+返回结果：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": [
+    {
+      "salary_avg": 4827,
+      "job_name": "UI"
+    },
+    {
+      "salary_avg": 5278,
+      "job_name": "运营专员"
+    },
+    {
+      "salary_avg": 4171,
+      "job_name": "市场策划"
+    },
+    {
+      "salary_avg": 4145,
+      "job_name": "行政管理"
+    },
+    {
+      "salary_avg": 5124,
+      "job_name": "会计"
+    },
+    {
+      "salary_avg": 4042,
+      "job_name": "人力资源专员"
+    },
+    {
+      "salary_avg": 4235,
+      "job_name": "招聘专员"
+    }
+  ]
 }```  

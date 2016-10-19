@@ -21,6 +21,7 @@ class HomeHandler(BaseHandler):
         self.finish()
         return
 
+
 # 首页搜索职位
 class SearchHandler(BaseHandler):
     @gen.coroutine
@@ -44,6 +45,7 @@ class SearchHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 搜索公司
 class SearchCompanyHandler(BaseHandler):
@@ -72,6 +74,7 @@ class SearchCompanyHandler(BaseHandler):
         self.finish()
         return
 
+
 # 搜索公司或者职位
 class SearchCompanyOrJobHandler(BaseHandler):
     @gen.coroutine
@@ -99,6 +102,7 @@ class SearchCompanyOrJobHandler(BaseHandler):
         self.finish()
         return
 
+
 # 职位推荐
 class RecommendjobHandler(BaseHandler):
     @gen.coroutine
@@ -116,6 +120,7 @@ class RecommendjobHandler(BaseHandler):
         self.finish()
         return
 
+
 # 急速招聘
 class SpeedjobHandler(BaseHandler):
     @gen.coroutine
@@ -130,6 +135,7 @@ class SpeedjobHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 职为你来post
 class JobForMeHandler(BaseHandler):
@@ -148,6 +154,7 @@ class JobForMeHandler(BaseHandler):
         self.finish()
         return
 
+
 # 职位详情get
 class PositionHandler(BaseHandler):
     @gen.coroutine
@@ -160,6 +167,7 @@ class PositionHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 热门搜索
 class HostsearchlistHandler(BaseHandler):
@@ -178,13 +186,14 @@ class HostsearchlistHandler(BaseHandler):
         self.finish()
         return
 
+
 # 热门搜索城市列表(先写4个)get
 class HotcityHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
         self.log.info('+++++++++++Hot city+++++++++++')
-        cache_flag = self.get_cache_flag()
+        # cache_flag = self.get_cache_flag()
         data = dict()
         data['hotcity'] = ['不限', '北京', '上海', '广州','深圳']
         result = dict()
@@ -196,6 +205,7 @@ class HotcityHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 活动列表get
 class ActivityListGetHandler(BaseHandler):
@@ -209,6 +219,7 @@ class ActivityListGetHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 活动post(显示company/显示job)
 class ActivityHandler(BaseHandler):
@@ -232,7 +243,104 @@ class ActivityHandler(BaseHandler):
         self.finish()
         return
 
+
 # -----------------------------------职业导航---start------------------
+# 职业导航
+class ProNavigationHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Professional navigation !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.pro_navigation_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 行业职位排行榜
+class RankTradeHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Ranking Trade !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.rank_trade(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 高薪职位排行榜
+class RankHighSalaryHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Ranking HighSalary !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.Rank_high_salary(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 热门职位排行榜
+class RankHotJobHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ Ranking HotJob !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.rank_hot_job(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
 # 工资走势图
 class SalaryTrendHandler(BaseHandler):
     @gen.coroutine
@@ -255,6 +363,7 @@ class SalaryTrendHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 工资区间图
 class SalaryTantileHandler(BaseHandler):
@@ -279,6 +388,7 @@ class SalaryTantileHandler(BaseHandler):
         self.finish()
         return
 
+
 # 学历分布图
 class EduTantileHandler(BaseHandler):
     @gen.coroutine
@@ -301,6 +411,7 @@ class EduTantileHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
 
 # 工作年限分布图
 class ExpTantileHandler(BaseHandler):

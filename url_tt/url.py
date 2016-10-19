@@ -39,7 +39,11 @@ from api.position_handler import \
     SalaryTrendHandler, \
     SalaryTantileHandler, \
     EduTantileHandler, \
-    ExpTantileHandler
+    ExpTantileHandler, \
+    ProNavigationHandler, \
+    RankTradeHandler, \
+    RankHighSalaryHandler, \
+    RankHotJobHandler
 
 from api.sms_handler import \
     SendSmsHandler, \
@@ -112,6 +116,7 @@ urls = [
     url(r"/company-full/company/company-(\w+)/token-(\w+)", CompanyCompanyHandler),    # 公司详情-企业详情get（公司介绍，大事记）
     url(r"/company-full/job", CompanyJobHandler),    # 公司详情-所有职位post
     url(r"/me/token-(\w+)", UserHandler),    # 个人信息页get（基本信息）
+    #   #### 简历类目
     url(r"/resume-view/token-(\w+)", ResumeHandler),    # 简历查看get
     url(r"/resume-view/v1/cv-(\w+)/token-(\w+)", ResumeV1Handler),    # 简历查看V1 get
     url(r"/resume-edit-avatar", ResumeAvatarHandler),    # 简历编辑-修改头像post
@@ -127,18 +132,24 @@ urls = [
     url(r"/resume-edit-certificate", ResumeCertificateHandler),    # 简历编辑-获得证书post
     url(r"/resume-del-certificate/cert-(\w+)/token-(\w+)", ResumeDelCertificateHandler),    # 简历编辑-删除证书post
     url(r"/resume-edit-evaluation", ResumeEvaluationHandler),    # 简历编辑-自我评价post    # extra
+    #   ####
     url(r"/job-for-me", JobForMeHandler),    # 职为你来post
     url(r"/application-proxy-user/token-(\w+)", ApplicationProxyHandler),    # 申请成为校园代理post
     url(r"/feedback", FeedbackHandler),    # 意见反馈post
     url(r"/get-version", GetVersionHandler),    # 获取版本,自动更新（仅Android）
     url(r"/activity-list", ActivityListGetHandler),    # 活动列表get
     url(r"/activity", ActivityHandler),    # 活动post
+    #   #### 职业导航类目
+    url(r"/Pro-navigation", ProNavigationHandler),    # 职业导航
+    url(r"/ranking-trade", RankTradeHandler),    # 行业职位排行榜
+    url(r"/ranking-highsalary", RankHighSalaryHandler),    # 高薪职位排行榜
+    url(r"/ranking-hotjob", RankHotJobHandler),    # 热门职位排行榜
     url(r"/salary_trend_list", SalaryTrendHandler),    # 工资走势图
     url(r"/salary_tantile_list", SalaryTantileHandler),    # 工资区间图
     url(r"/edu_tantile_list", EduTantileHandler),    # 学历分布图
     url(r"/exp_tantile_list", ExpTantileHandler),    # 工作年限分布图
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
-    url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，慎用！！！！！
+    url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，从简历中获取用户个人信息！！！！！
     url(r"/.*", better404)
     ]
