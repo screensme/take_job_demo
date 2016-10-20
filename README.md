@@ -2094,7 +2094,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-
+	trade		Y	string		行业名称(将职业导航首页的行业写入)
 返回结果：
 ```{
   "status": "success",
@@ -2102,11 +2102,15 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": [
     {
-      "salary_avg": "13,981",
-      "job_name": "置业顾问"
+      "salary_avg": "16351元/月",
+      "job_name": "数据挖掘"
     },
     {
-      "salary_avg": "3,680",
+      "salary_avg": "13003元/月",
+      "job_name": "产品经理"
+    },
+    {
+      "salary_avg": "4572元/月",
       "job_name": "出纳"
     }
   ]
