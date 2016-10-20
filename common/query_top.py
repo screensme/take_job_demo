@@ -235,8 +235,8 @@ class QueryEsapi(object):
         if trade_salary_list is None:
             trade_salary_list = []
 
-        trade_salary_list = [item for item in trade_salary_list if item is not None]
-        trade_salary_list.sort(key=lambda x:x[1], reverse=False)
+        # trade_salary_list = [item for item in trade_salary_list if item is not None]
+        # trade_salary_list.sort(key=lambda x:x[1], reverse=False)
         return trade_salary_list
 
 #   ##########################################################################################

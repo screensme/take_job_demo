@@ -2605,8 +2605,8 @@ class Action(object):
         }
         if cache_flag:
             # 读取缓存
-            # query_cache_data = None
-            query_cache_data = self.cacheredis.get('trade_salary_list_{search}'.format(search=search.upper()))
+            query_cache_data = None
+            # query_cache_data = self.cacheredis.get('trade_salary_list_{search}'.format(search=search.upper()))
 
             # 读取缓存失败
             if query_cache_data is None:
@@ -2626,7 +2626,7 @@ class Action(object):
         trade_salary_list = [{'legend': trade, 'value': salary} for trade, salary in trade_salary_list]
         trade_salary_list = trade_salary_list[:10]
         trade_salary_list.reverse()
-
+        trade_salary_list.sort(key=lambda x:x['value'], reverse=True)
         ret = {'search': job,
                'trade_salary_list': trade_salary_list
                }
