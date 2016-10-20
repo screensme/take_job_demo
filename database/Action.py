@@ -2610,7 +2610,7 @@ class Action(object):
 
             # 读取缓存失败
             if query_cache_data is None:
-                th_salary_tantile_list = QueryEsapi.use_query_map(**payload)
+                th_salary_tantile_list = QueryEsapi.use_query_salary(**payload)
             else:
                 salary_tantile_list = json.loads(query_cache_data)
                 result['status'] = 'success'

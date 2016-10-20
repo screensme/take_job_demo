@@ -214,7 +214,7 @@ class QueryEsapi(object):
 #   ##############################################高薪行业排行榜图
     @classmethod
     # 调用高薪行业
-    def use_query_avg_work_years(cls, **payload):
+    def use_query_salary(cls, **payload):
 
         pool = ThreadPool(9)
         th_salary_tantile_list = pool.apply_async(QueryEsapi.query_salary, kwds=payload)
