@@ -277,10 +277,10 @@ class RankTradeHandler(BaseHandler):
         self.log.info('+++++++++++ Ranking Trade !!! +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        job = self.get_argument('job', '')
+        trade = self.get_argument('trade', '')
         token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.rank_trade(job, token, cache_flag)
+            result = yield self.db.rank_trade(trade, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'
@@ -301,10 +301,9 @@ class RankHighSalaryHandler(BaseHandler):
         self.log.info('+++++++++++ Ranking HighSalary !!! +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        job = self.get_argument('job', '')
         token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.Rank_high_salary(job, token, cache_flag)
+            result = yield self.db.Rank_high_salary(token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'
@@ -325,10 +324,9 @@ class RankHotJobHandler(BaseHandler):
         self.log.info('+++++++++++ Ranking HotJob !!! +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        job = self.get_argument('job', '')
         token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.rank_hot_job(job, token, cache_flag)
+            result = yield self.db.rank_hot_job(token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

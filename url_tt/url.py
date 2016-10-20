@@ -144,7 +144,7 @@ urls = [
     url(r"/ranking-trade", RankTradeHandler),    # 行业职位排行榜
     url(r"/ranking-highsalary", RankHighSalaryHandler),    # 高薪职位排行榜
     url(r"/ranking-hotjob", RankHotJobHandler),    # 热门职位排行榜
-    url(r"/salary_trend_list", SalaryTrendHandler),    # 工资走势图
+    # url(r"/salary_trend_list", SalaryTrendHandler),    # 工资走势图
     url(r"/salary_tantile_list", SalaryTantileHandler),    # 工资区间图
     url(r"/edu_tantile_list", EduTantileHandler),    # 学历分布图
     url(r"/exp_tantile_list", ExpTantileHandler),    # 工作年限分布图

@@ -17,6 +17,7 @@ import uuid
 from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 from common import IF_email
+from common.query_top import QueryEsapi
 import oss2
 
 reload(sys)
@@ -2333,31 +2334,62 @@ class Action(object):
 
     # 高薪职位排行榜
     @tornado.gen.coroutine
-    def Rank_high_salary(self, job=str, token=str, cache_flag=int):
+    def Rank_high_salary(self, token=str, cache_flag=int):
 
         result = dict()
-        ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
+        trade = '不限'
+        work_years = '应届'
+        try:
+            if cache_flag:
+                data_list = self.cacheredis.get('flask_cache_{trade}_{work_years}_headline'.format(trade=trade, work_years=work_years))
+                if data_list is None:
+                    data_list = QueryEsapi.query_trade_top(self.esapi)
+            else:
+                data_list = QueryEsapi.query_trade_top(self.esapi)
+        except Exception, e:
+            self.log.info('--------------query_trade_top error !-----')
+            data_list = []
+        # ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ret
+        result['data'] = data_list
         raise tornado.gen.Return(result)
 
     # 热门职位排行榜
     @tornado.gen.coroutine
-    def rank_hot_job(self, job=str, token=str, cache_flag=int):
+    def rank_hot_job(self, token=str, cache_flag=int):
 
+        hot_job_list = ['产品经理', 'HRBP', 'UI', '运营专员', '市场策划', '律师助理',
+                        '行政管理', '会计', '人力资源专员', '招聘专员']
+        try:
+            if cache_flag:
+                hot_job_list_top = self.cacheredis.get('hot_job_list_top')
+                if hot_job_list_top is None:
+                    hot_job_list_top = QueryEsapi.query_multi_job_top(self.esapi, *hot_job_list)
+                    hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
+                    self.cacheredis.set('hot_job_list_top', hot_job_list_top, ex=24 * 7 * 60 * 60)
+                else:
+                    hot_job_list_top = json.loads(hot_job_list_top)
+            else:
+                hot_job_list_top = QueryEsapi.query_multi_job_top(self.esapi, *hot_job_list)
+                hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
+                self.cacheredis.set('hot_job_list_top', hot_job_list_top, ex=24 * 7 * 60 * 60)
+        except Exception, e:
+            self.log.info('-------------- rank_hot_job error !-----')
+            hot_job_list_top = []
         result = dict()
-        ret = [{'job_name': 'UI', 'salary_avg': 4827}, {'job_name': '运营专员', 'salary_avg': 5278}, {'job_name': '市场策划', 'salary_avg': 4171}, {'job_name': '行政管理', 'salary_avg': 4145}, {'job_name': '会计', 'salary_avg': 5124}, {'job_name': '人力资源专员', 'salary_avg': 4042}, {'job_name': '招聘专员', 'salary_avg': 4235}]
+        # ret = [{'job_name': 'UI', 'salary_avg': 4827}, {'job_name': '运营专员', 'salary_avg': 5278}, {'job_name': '市场策划', 'salary_avg': 4171}, {'job_name': '行政管理', 'salary_avg': 4145}, {'job_name': '会计', 'salary_avg': 5124}, {'job_name': '人力资源专员', 'salary_avg': 4042}, {'job_name': '招聘专员', 'salary_avg': 4235}]
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ret
+        result['data'] = hot_job_list_top
         raise tornado.gen.Return(result)
 
     # 行业职位排行榜
     @tornado.gen.coroutine
-    def rank_trade(self, job=str, token=str, cache_flag=int):
+    def rank_trade(self, trade=str, token=str, cache_flag=int):
 
         result = dict()
         ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
@@ -2387,12 +2419,53 @@ class Action(object):
     def salary_tantile_list(self, job=str, token=str, cache_flag=int):
 
         result = dict()
+        search = job.strip()
+        payload = {
+            'job_name': search.upper(),
+            'search_type': 'salary',
+            'job_city': '北京',
+            'esapi': self.esapi
+        }
+
+        if cache_flag:
+            # 读取缓存
+            # query_cache_data = None
+            query_cache_data = self.cacheredis.get('salary_tantile_list_{search}'.format(search=search.upper()))
+
+            # 读取缓存失败
+            if query_cache_data is None:
+                th_salary_tantile_list = QueryEsapi.use_query_map(**payload)
+            else:
+                salary_tantile_list = json.loads(query_cache_data)
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = salary_tantile_list
+                raise tornado.gen.Return(result)
+        else:
+            th_salary_tantile_list = QueryEsapi.use_query_map(self.esapi, **payload)
+        # 处理薪酬区间分布
+        salary_tantile_list = th_salary_tantile_list.get()
+        salary_tantile_list = [{'legend': salary, 'value': tantile} for \
+                               salary, tantile in salary_tantile_list]
+
+        # 平均薪资
+        param = {'job_name': search,
+                 'esapi': self.esapi}
+        th_avg_salary = QueryEsapi.query_job_salary_avg_all(**param)
+        if th_avg_salary is None:
+            avg_salary = 0
+        else:
+            avg_salary = th_avg_salary['salary_avg']
 
         ret = {
             'search': job,
-'salary_tantile_list': [{'legend': '3k以下', 'value': 1.03}, {'legend': '3k-5k', 'value': 2.06}, {'legend': '5k-8k', 'value': 5.5}, {'legend': '8k-12k', 'value': 46.05}, {'legend': '12k-15k', 'value': 5.5}, {'legend': '15k-20k', 'value': 27.15}, {'legend': '20k-25k', 'value': 10.31}, {'legend': '25k-30k', 'value': 1.72}, {'legend': '30k-40k', 'value': 0.34}, {'legend': '40k-50k', 'value': 0.34}, {'legend': '50k以上', 'value': 0}],
-'avg_salary': 14960,
-}
+            'salary_tantile_list': salary_tantile_list,
+            'avg_salary': avg_salary
+            }
+        # 加入缓存
+        set_cache_data = self.cacheredis.set('salary_tantile_list_{search}'.format(search=search.upper()),
+                                             json.dumps(ret), ex=24 * 60 * 60)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2404,10 +2477,42 @@ class Action(object):
     def edu_tantile_list(self, job=str, token=str, cache_flag=int):
 
         result = dict()
-        ret = {
-'search': job,
-'edu_tantile_list': [{'legend': '中专', 'value': 7.4}, {'legend': '大专', 'value': 22.19}, {'legend': '本科', 'value': 69.45}, {'legend': '硕士', 'value': 0.96}, {'legend': '博士', 'value': 0}],
-}
+        search = job.strip()
+        payload = {
+            'job_name': search.upper(),
+            'search_type': 'education',
+            'job_city': '北京',
+            'esapi': self.esapi
+        }
+
+        if cache_flag:
+            # 读取缓存
+            # query_cache_data = None
+            query_cache_data = self.cacheredis.get('edu_tantile_list_{search}'.format(search=search.upper()))
+
+            # 读取缓存失败
+            if query_cache_data is None:
+                th_salary_tantile_list = QueryEsapi.use_query_map(**payload)
+            else:
+                salary_tantile_list = json.loads(query_cache_data)
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = salary_tantile_list
+                raise tornado.gen.Return(result)
+        else:
+            th_salary_tantile_list = QueryEsapi.use_query_map(self.esapi, **payload)
+        # 处理薪酬区间分布
+        salary_tantile_list = th_salary_tantile_list.get()
+        salary_tantile_list = [{'legend': salary, 'value': tantile} for \
+                               salary, tantile in salary_tantile_list]
+
+        ret = {'search': job,
+               'edu_tantile_list': salary_tantile_list
+               }
+        # 加入缓存
+        set_cache_data = self.cacheredis.set('edu_tantile_list_{search}'.format(search=search.upper()),
+                                             json.dumps(ret), ex=24 * 60 * 60)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2419,11 +2524,55 @@ class Action(object):
     def exp_tantile_list(self, job=str, token=str, cache_flag=int):
 
         result = dict()
-        ret = {
-'avg_work_years': 2.0,
-'search': job,
-'exp_tantile_list': [{'legend': '应届毕业生', 'value': 5.59}, {'legend': '1-3年', 'value': 52.8}, {'legend': '3-5年', 'value': 38.46}, {'legend': '5-10年', 'value': 3.15}, {'legend': '10年以上', 'value': 0}],
-}
+        search = job.strip()
+        payload = {
+            'job_name': search.upper(),
+            'search_type': 'work_years',
+            'job_city': '北京',
+            'esapi': self.esapi
+        }
+
+        if cache_flag:
+            # 读取缓存
+            # query_cache_data = None
+            query_cache_data = self.cacheredis.get('exp_tantile_list{search}'.format(search=search.upper()))
+
+            # 读取缓存失败
+            if query_cache_data is None:
+                th_salary_tantile_list = QueryEsapi.use_query_map(**payload)
+            else:
+                salary_tantile_list = json.loads(query_cache_data)
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = salary_tantile_list
+                raise tornado.gen.Return(result)
+        else:
+            th_salary_tantile_list = QueryEsapi.use_query_map(self.esapi, **payload)
+        # 处理薪酬区间分布
+        salary_tantile_list = th_salary_tantile_list.get()
+        salary_tantile_list = [{'legend': salary, 'value': tantile} for \
+                               salary, tantile in salary_tantile_list]
+        # 平均工作年限
+        param = {
+            'job_name': search.upper(),
+            'job_city': '北京',
+            'area': '',
+            'esapi': self.esapi
+        }
+        th_avg_work_years = QueryEsapi.use_query_avg_work_years(**param)
+        avg_work_years = th_avg_work_years.get()
+        if avg_work_years is None:
+            avg_work_years = 0
+        else:
+            avg_work_years = avg_work_years
+        ret = {'search': job,
+               'avg_work_years': avg_work_years,
+               'edu_tantile_list': salary_tantile_list
+               }
+        # 加入缓存
+        set_cache_data = self.cacheredis.set('exp_tantile_list{search}'.format(search=search.upper()),
+                                             json.dumps(ret), ex=24 * 60 * 60)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''

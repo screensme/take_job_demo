@@ -67,7 +67,7 @@ REDIS = {
         'db': 1
     },
     'redis-neiwang': {
-        'host': '192.168.12.146',
+        'host': '192.168.12.157',
         'port': 6379,
         'password': '',
         'db': 1
@@ -79,13 +79,13 @@ REDIS = {
         'db': 1
     },
     'redis-waiwang': {
-        'host': '182.92.99.38',
+        'host': '23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com',
         'port': 6379,
-        'password': '',
+        'password': 'Rcat123ABCD',
         'db': 1
     },
     'redis-online': {
-        'host': '23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs',
+        'host': '23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com',
         'port': 6379,
         'password': 'Rcat123ABCD',
         'db': 1
@@ -104,9 +104,6 @@ BASE_URL = {
     }
 }
 
-REDIS_URL = 'redis://23fef09bdd5a4810:Rcat123ABCD@23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com/1'
-# user / password @ ip:port / db
-# 23fef09bdd5a4810.m.cnbja.kvstore.aliyuncs.com ---> 100.114.45.27
 FCGI_SETTIGNS = {
     'fcgi_port': 1024,
 }

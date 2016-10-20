@@ -10,6 +10,7 @@ from url_tt.url import urls
 from common import web_log
 from common.web_config import MY_SQL, ES_API, REDIS, IMAGE_URL
 from database import Action
+from common import query_top
 define("port", default=8889, help="run on the given port", type=int)
 define("mysql", default='neiwang', help="run on the test or pro")
 define("esapi", default='neiwang', help="run on the test or pro")
@@ -66,6 +67,9 @@ class Application(tornado.web.Application):
                                 capassword=REDIS[redisstr]['password'],
                                 caseldb=REDIS[redisstr]['db']
                                 )
+        self.query = query_top.QueryEsapi(esapi=ES_API[esapistr]['url'],
+                                          log=self.log
+                                          )
 
 
 def creator_server():
