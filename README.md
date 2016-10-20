@@ -91,6 +91,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 56.行业职位排行榜-post：/ranking-trade  
 57.高薪职位排行榜-post：/ranking-highsalary  
 58.热门职位排行榜-post：/ranking-hotjob  
+59.高薪行业排行榜图-post：/trade_salary_list  
 ***
 #####简历状态：  
 	
@@ -2173,4 +2174,41 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "招聘专员"
     }
   ]
+}```  
+####59.高薪行业排行榜图-post：/trade_salary_list  
+参数：
+		
+	参数名称	必填	类型		描述
+	token		Y	string		用户id	
+	job			Y	string		职位名称
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "111",
+  "data": {
+    "search": "行政文员",
+    "trade_salary_list": [
+      {
+        "legend": "广告/会展/公关",
+        "value": 6254
+      },
+      {
+        "legend": "互联网/电子商务",
+        "value": 5474
+      },
+      {
+        "legend": "基金/证券/期货",
+        "value": 5290
+      },
+      {
+        "legend": "专业服务/咨询",
+        "value": 4981
+      },
+      {
+        "legend": "贸易/进出口/租赁",
+        "value": 4979
+      }
+    ]
+  }
 }```  
