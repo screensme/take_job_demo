@@ -99,7 +99,7 @@ class QueryEsapi(object):
             job_name = None
 
         # 判断job_name是否是在职位白名单里面
-        with open(file_path+'\helpers\major_job_list.json') as f:
+        with open(file_path+'/helpers/major_job_list.json') as f:
             major_job_list = json.load(f)
 
         major_job_list = [item.strip().upper() for item in major_job_list]
@@ -150,7 +150,7 @@ class QueryEsapi(object):
             job_name = None
 
         # 判断job_name是否是在职位白名单里面
-        with open(file_path+'\helpers\major_job_list.json') as f:
+        with open(file_path+'/helpers/major_job_list.json') as f:
             major_job_list = json.load(f)
 
         major_job_list = [item.strip().upper() for item in major_job_list]
