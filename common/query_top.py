@@ -211,6 +211,32 @@ class QueryEsapi(object):
 
         return ret_value
 
+#   ##############################################高薪行业排行榜图
+    @classmethod
+    # 调用高薪行业
+    def use_query_avg_work_years(cls, **payload):
+
+        pool = ThreadPool(9)
+        th_salary_tantile_list = pool.apply_async(QueryEsapi.query_salary, kwds=payload)
+        return th_salary_tantile_list
+
+    # 比薪,高薪行业
+    @classmethod
+    def query_salary(cls, esapi, **kwargs):
+        url = esapi + 'query_salary'
+
+        try:
+            r = requests.post(url, json=kwargs)
+            trade_salary_list = r.json()
+        except Exception as e:
+            # self.logger.exception(e)
+            trade_salary_list = []
+
+        if trade_salary_list is None:
+            trade_salary_list = []
+
+        return trade_salary_list
+
 #   ##########################################################################################
 
     @classmethod

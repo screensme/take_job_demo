@@ -432,4 +432,28 @@ class ExpTantileHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+# 高薪行业排行榜图
+class TradeSalaryHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ trade_salary_list !!! +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        job = self.get_argument('job', '')
+        token = self.get_argument('token')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.trade_salary_list(job, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
 # -----------------------------------职业导航---end------------------

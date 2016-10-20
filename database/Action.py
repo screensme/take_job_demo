@@ -2580,6 +2580,67 @@ class Action(object):
             avg_work_years = avg_work_years
         ret = {'search': job,
                'avg_work_years': avg_work_years,
+               'exp_tantile_list': salary_tantile_list
+               }
+        # 加入缓存
+        set_cache_data = self.cacheredis.set('exp_tantile_list{search}'.format(search=search.upper()),
+                                             json.dumps(ret), ex=24 * 60 * 60)
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ret
+        raise tornado.gen.Return(result)
+
+    # 高薪行业排行榜图
+    @tornado.gen.coroutine
+    def trade_salary_list(self, job=str, token=str, cache_flag=int):
+
+        result = dict()
+        search = job.strip()
+        payload = {
+            'job_name': search.upper(),
+            'job_city': '北京',
+            'area': '',
+            'esapi': self.esapi
+        }
+        if cache_flag:
+            # 读取缓存
+            # query_cache_data = None
+            query_cache_data = self.cacheredis.get('exp_tantile_list{search}'.format(search=search.upper()))
+
+            # 读取缓存失败
+            if query_cache_data is None:
+                th_salary_tantile_list = QueryEsapi.use_query_map(**payload)
+            else:
+                salary_tantile_list = json.loads(query_cache_data)
+                result['status'] = 'success'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = salary_tantile_list
+                raise tornado.gen.Return(result)
+        else:
+            th_salary_tantile_list = QueryEsapi.use_query_map(self.esapi, **payload)
+        # trade_salary_list = th_trade_salary_list.get()
+        # 处理高薪行业排行
+        trade_salary_list = [{'legend': trade, 'value': salary} for trade, salary in trade_salary_list]
+        trade_salary_list = trade_salary_list[:10]
+        trade_salary_list.reverse()
+
+        # 平均工作年限
+        param = {
+            'job_name': search.upper(),
+            'job_city': '北京',
+            'area': '',
+            'esapi': self.esapi
+        }
+        th_avg_work_years = QueryEsapi.use_query_avg_work_years(**param)
+        avg_work_years = th_avg_work_years.get()
+        if avg_work_years is None:
+            avg_work_years = 0
+        else:
+            avg_work_years = avg_work_years
+        ret = {'search': job,
+               'avg_work_years': avg_work_years,
                'edu_tantile_list': salary_tantile_list
                }
         # 加入缓存
