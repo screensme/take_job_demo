@@ -253,10 +253,9 @@ class ProNavigationHandler(BaseHandler):
         self.log.info('+++++++++++ Professional navigation !!! +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        job = self.get_argument('job', '')
         token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.pro_navigation_list(job, token, cache_flag)
+            result = yield self.db.pro_navigation_list(token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

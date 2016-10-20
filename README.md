@@ -83,7 +83,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 48.申请成为校园代理get：/application-proxy-user/token-{token}  
 49.活动列表get：/activity-list  
 50.活动详情post(显示公司/显示职位)：/activity  
-51.工资走势图-post：/salary_trend_list  
+51.工资走势图-post：/salary_trend_list(暂时不用)  
 52.工资区间图-post：/salary_tantile_list  
 53.学历分布图-post：/edu_tantile_list  
 54.工作年限分布图-post：/exp_tantile_list  
@@ -1846,7 +1846,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 
-####51.工资走势图-post：/salary_trend_list  
+####51.工资走势图-post：/salary_trend_list  (暂时不用)
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1929,43 +1929,43 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "salary_tantile_list": [
       {
         "legend": "3k以下",
-        "value": 1.03
+        "value": 0.85
       },
       {
         "legend": "3k-5k",
-        "value": 2.06
+        "value": 1.69
       },
       {
         "legend": "5k-8k",
-        "value": 5.5
+        "value": 4.51
       },
       {
         "legend": "8k-12k",
-        "value": 46.05
+        "value": 37.75
       },
       {
         "legend": "12k-15k",
-        "value": 5.5
+        "value": 4.51
       },
       {
         "legend": "15k-20k",
-        "value": 27.15
+        "value": 22.25
       },
       {
         "legend": "20k-25k",
-        "value": 10.31
+        "value": 8.45
       },
       {
         "legend": "25k-30k",
-        "value": 1.72
+        "value": 1.41
       },
       {
         "legend": "30k-40k",
-        "value": 0.34
+        "value": 0.28
       },
       {
         "legend": "40k-50k",
-        "value": 0.34
+        "value": 0.28
       },
       {
         "legend": "50k以上",
@@ -2025,7 +2025,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "111",
   "data": {
-    "exp_tantile_list": [
+    "avg_work_years": 2,
+    "search": "python",
+    "edu_tantile_list": [
       {
         "legend": "应届毕业生",
         "value": 5.59
@@ -2046,9 +2048,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "legend": "10年以上",
         "value": 0
       }
-    ],
-    "avg_work_years": 2,
-    "search": "python"
+    ]
   }
 }```  
 
@@ -2057,7 +2057,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	job			Y	string		职业名称
+
 返回结果：
 ```{
   "status": "success",
@@ -2093,7 +2093,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	job			Y	string		职业名称
+
 返回结果：
 ```{
   "status": "success",
@@ -2115,7 +2115,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	job			Y	string		职业名称
+
 返回结果：
 ```{
   "status": "success",
@@ -2123,24 +2123,20 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": [
     {
-      "salary_avg": "13,981",
-      "job_name": "置业顾问"
+      "salary_avg": "18900元/月",
+      "job_name": "算法工程师"
     },
     {
-      "salary_avg": "4,219",
-      "job_name": "编辑"
+      "salary_avg": "14007元/月",
+      "job_name": "IOS"
     },
     {
-      "salary_avg": "4,148",
-      "job_name": "产品设计师"
+      "salary_avg": "13935元/月",
+      "job_name": "交互设计师"
     },
     {
-      "salary_avg": "4,120",
-      "job_name": "会务专员"
-    },
-    {
-      "salary_avg": "3,680",
-      "job_name": "出纳"
+      "salary_avg": "4191元/月",
+      "job_name": "生产技工"
     }
   ]
 }```  
@@ -2149,7 +2145,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-	job			Y	string		职业名称
+
 返回结果：
 ```{
   "status": "success",
@@ -2157,31 +2153,23 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": [
     {
-      "salary_avg": 4827,
+      "salary_avg": "15269元/月",
+      "job_name": "产品经理"
+    },
+    {
+      "salary_avg": "8909元/月",
+      "job_name": "HRBP"
+    },
+    {
+      "salary_avg": "7376元/月",
       "job_name": "UI"
     },
     {
-      "salary_avg": 5278,
+      "salary_avg": "6025元/月",
       "job_name": "运营专员"
     },
     {
-      "salary_avg": 4171,
-      "job_name": "市场策划"
-    },
-    {
-      "salary_avg": 4145,
-      "job_name": "行政管理"
-    },
-    {
-      "salary_avg": 5124,
-      "job_name": "会计"
-    },
-    {
-      "salary_avg": 4042,
-      "job_name": "人力资源专员"
-    },
-    {
-      "salary_avg": 4235,
+      "salary_avg": "5304元/月",
       "job_name": "招聘专员"
     }
   ]

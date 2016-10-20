@@ -56,13 +56,13 @@ class QueryEsapi(object):
 
         ret_value = sorted(ret_value, key=lambda x:x['salary_avg'], reverse=True)
         ret_value = [{'job_name': item['job_name'],
-                      'salary_avg': format(int(item['salary_avg']), ',') + '元/月'} for item in ret_value]
+                      'salary_avg': format(int(item['salary_avg']))} for item in ret_value]
         return ret_value
 
     # 查询多个职位平均工资
     @classmethod
-    def query_multi_job_top(cls, esapi, *job_list):
-        job_list = list(set(job_list))
+    def query_multi_job_top(cls, esapi, *hot_job_list):
+        job_list = list(set(hot_job_list))
         job_top_list = []
 
         if len(job_list) == 0:
@@ -85,10 +85,7 @@ class QueryEsapi(object):
         pool.close()
         # 结果
         job_top_list = [item.get() for item in tmp_list if item.get() is not None]
-        # job_top_list.sort(key=lambda x:x['salary_avg'], reverse=True)
-        job_top_list = sorted(job_top_list, key=lambda x:x['salary_avg'], reverse=True)
-        for job in job_top_list:
-            job['salary_avg'] = str(job['salary_avg']) + '月/元'
+        job_top_list.sort(key=lambda x:x['salary_avg'], reverse=True)
 
         return job_top_list
 

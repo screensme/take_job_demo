@@ -2315,7 +2315,7 @@ class Action(object):
 
     # 职业导航首页
     @tornado.gen.coroutine
-    def pro_navigation_list(self, job=str, token=str, cache_flag=int):
+    def pro_navigation_list(self, token=str, cache_flag=int):
 
         result = dict()
         ret = {
@@ -2344,11 +2344,18 @@ class Action(object):
                 data_list = self.cacheredis.get('flask_cache_{trade}_{work_years}_headline'.format(trade=trade, work_years=work_years))
                 if data_list is None:
                     data_list = QueryEsapi.query_trade_top(self.esapi)
+                    self.cacheredis.set('flask_cache_{trade}_{work_years}_headline'.format(trade=trade, work_years=work_years), data_list, ex=24 * 7 * 60 * 60)
+                else:
+                    data_list = eval(data_list)
             else:
                 data_list = QueryEsapi.query_trade_top(self.esapi)
+                self.cacheredis.set('flask_cache_{trade}_{work_years}_headline'.format(trade=trade, work_years=work_years), data_list, ex=24 * 7 * 60 * 60)
         except Exception, e:
             self.log.info('--------------query_trade_top error !-----')
             data_list = []
+        if data_list != []:
+            for data in data_list:
+                data['salary_avg'] = data['salary_avg'] + '元/月'
         # ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
 
         result['status'] = 'success'
@@ -2361,6 +2368,7 @@ class Action(object):
     @tornado.gen.coroutine
     def rank_hot_job(self, token=str, cache_flag=int):
 
+        result = dict()
         hot_job_list = ['产品经理', 'HRBP', 'UI', '运营专员', '市场策划', '律师助理',
                         '行政管理', '会计', '人力资源专员', '招聘专员']
         try:
@@ -2371,7 +2379,8 @@ class Action(object):
                     hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
                     self.cacheredis.set('hot_job_list_top', hot_job_list_top, ex=24 * 7 * 60 * 60)
                 else:
-                    hot_job_list_top = json.loads(hot_job_list_top)
+                    hot_job_list_top = eval(hot_job_list_top)
+                    # hot_job_list_top = json.loads(hot_job_list_top)
             else:
                 hot_job_list_top = QueryEsapi.query_multi_job_top(self.esapi, *hot_job_list)
                 hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
@@ -2379,7 +2388,10 @@ class Action(object):
         except Exception, e:
             self.log.info('-------------- rank_hot_job error !-----')
             hot_job_list_top = []
-        result = dict()
+        if hot_job_list_top != []:
+            for data in hot_job_list_top:
+                data['salary_avg'] = str(data['salary_avg']) + '元/月'
+
         # ret = [{'job_name': 'UI', 'salary_avg': 4827}, {'job_name': '运营专员', 'salary_avg': 5278}, {'job_name': '市场策划', 'salary_avg': 4171}, {'job_name': '行政管理', 'salary_avg': 4145}, {'job_name': '会计', 'salary_avg': 5124}, {'job_name': '人力资源专员', 'salary_avg': 4042}, {'job_name': '招聘专员', 'salary_avg': 4235}]
         result['status'] = 'success'
         result['token'] = token
