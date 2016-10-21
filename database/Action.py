@@ -2341,8 +2341,8 @@ class Action(object):
                 raise tornado.gen.Return(result)
             else:
                 dt = datetime.datetime.now()
-                sql_update_invite_code = "update invite_code set status=%s where code=%s"
-                update_invite = self.db.update(sql_update_invite_code, 'use', invite_code)
+                sql_update_invite_code = "update invite_code set status=%s,dt_update=%s where code=%s"
+                update_invite = self.db.update(sql_update_invite_code, 'use', dt, invite_code)
                 self.db.close()
                 self.log.info('----------------------invite_code to invite_code!!! user=%s, code=%s' % (token, invite_code,))
 
