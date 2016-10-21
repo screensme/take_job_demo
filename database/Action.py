@@ -2405,8 +2405,8 @@ class Action(object):
 
         result = dict()
         if cache_flag:
-            cache_job_list = None
-            # cache_job_list = self.cacheredis.get('{trade}_job_list'.format(trade=trade))
+            # cache_job_list = None
+            cache_job_list = self.cacheredis.get('{trade}_job_list'.format(trade=trade))
             if cache_job_list is None:
                 job_list = QueryEsapi.query_trade_top(self.esapi, trade)
                 cache_job_list = self.cacheredis.set('{trade}_job_list'.format(trade=trade), job_list, ex=24 * 60 * 60)
