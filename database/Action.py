@@ -2341,9 +2341,15 @@ class Action(object):
                 raise tornado.gen.Return(result)
             else:
                 dt = datetime.datetime.now()
+                sql_update_invite_code = "update invite_code set status=%s where code=%s"
+                update_invite = self.db.update(sql_update_invite_code, 'use', invite_code)
+                self.db.close()
+                self.log.info('----------------------invite_code to invite_code!!! user=%s, code=%s' % (token, invite_code,))
+
                 sql_insert_invite = "insert into invite_user(user_id, code_id, dt_create, dt_update) values(%s,%s,%s,%s)"
                 insert_invite = self.db.insert(sql_insert_invite, token, search_invite['id'], dt, dt)
                 self.db.close()
+                self.log.info('----------------------invite_code to invite_user!!! user=%s, code=%s' % (token, invite_code,))
 
         ret = {'errorcode': 10,
                'major_list': [{'major_name': 'highsalary'},

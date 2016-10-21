@@ -2057,8 +2057,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 参数：
 		
 	参数名称	必填	类型		描述
-	token		Y	string		用户id	
-	code		Y	string		导航邀请码(默认传'',用户手动输入的邀请码)
+	token			Y	string		用户id	
+	invite_code		Y	string		导航邀请码(默认传'',用户手动输入的邀请码)
 返回成功：
 ```{
   "status": "success",
