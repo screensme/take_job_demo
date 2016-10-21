@@ -254,8 +254,9 @@ class ProNavigationHandler(BaseHandler):
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
+        invite_code = self.get_argument('invite_code', '')
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.pro_navigation_list(token, cache_flag)
+            result = yield self.db.pro_navigation_list(invite_code, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

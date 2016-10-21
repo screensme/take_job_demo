@@ -2315,16 +2315,46 @@ class Action(object):
 
     # 职业导航首页
     @tornado.gen.coroutine
-    def pro_navigation_list(self, token=str, cache_flag=int):
+    def pro_navigation_list(self, invite_code=str, token=str, cache_flag=int):
 
         result = dict()
-        ret = {
-            'major_list': [{'major_name': 'highsalary'},
-                           {'major_name': 'hotjob'}],
-            'trade_list': [{'id': 1, 'trade_name': '银行'},
-                           {'id': 2, 'trade_name': '食品/饮料'},
-                           {'id': 3, 'trade_name': '智能硬件'}
-                           ]
+        if invite_code == '':
+            sql_user = "select * from invite_user where user_id=%s" % (token,)
+            search_user = self.db.get(sql_user)
+            self.db.close()
+            if search_user is None:
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '请输入邀请码'
+                result['data'] = {'errorcode': 10}
+                raise tornado.gen.Return(result)
+
+        else:
+            sql_invite = "select * from invite_code where code='%s' and status='%s'" % (invite_code, 'unuse')
+            search_invite = self.db.get(sql_invite)
+            self.db.close()
+            if search_invite is None:
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '邀请码错误，请重新输入'
+                result['data'] = {'errorcode': 20}
+                raise tornado.gen.Return(result)
+            else:
+                dt = datetime.datetime.now()
+                sql_insert_invite = "insert into invite_user(user_id, code_id, dt_create, dt_update) values(%s,%s,%s,%s)"
+                insert_invite = self.db.insert(sql_insert_invite, token, search_invite['id'], dt, dt)
+                self.db.close()
+
+        ret = {'errorcode': 10,
+               'major_list': [{'major_name': 'highsalary'},
+                              {'major_name': 'hotjob'}],
+               'trade_list': [{'id': 1, 'trade_name': '金融/银行/证券'},
+                              {'id': 2, 'trade_name': '通信/电子'},
+                              {'id': 3, 'trade_name': '市场/销售/客服'},
+                              {'id': 4, 'trade_name': '房地产/建筑'},
+                              {'id': 5, 'trade_name': '人力/行政/后勤'},
+                              {'id': 6, 'trade_name': '设计/广告/媒体/艺术'}
+                              ]
             }
         result['status'] = 'success'
         result['token'] = token
@@ -2405,8 +2435,8 @@ class Action(object):
 
         result = dict()
         if cache_flag:
-            # cache_job_list = None
-            cache_job_list = self.cacheredis.get('{trade}_job_list'.format(trade=trade))
+            cache_job_list = None
+            # cache_job_list = self.cacheredis.get('{trade}_job_list'.format(trade=trade))
             if cache_job_list is None:
                 job_list = QueryEsapi.query_trade_top(self.esapi, trade)
                 cache_job_list = self.cacheredis.set('{trade}_job_list'.format(trade=trade), job_list, ex=24 * 60 * 60)

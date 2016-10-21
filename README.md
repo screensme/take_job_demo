@@ -2058,8 +2058,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
-
-返回结果：
+	code		Y	string		导航邀请码(默认传'',用户手动输入的邀请码)
+返回成功：
 ```{
   "status": "success",
   "msg": "",
@@ -2077,6 +2077,49 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       {
         "trade_name": "智能硬件",
         "id": 3
+      }
+    ],
+    "major_list": [
+      {
+        "major_name": "highsalary"
+      },
+      {
+        "major_name": "hotjob"
+      }
+    ]
+  }
+}```  
+返回失败：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "230",
+  "data": {
+    "errorcode": 10,
+    "trade_list": [
+      {
+        "trade_name": "金融/银行/证券",
+        "id": 1
+      },
+      {
+        "trade_name": "通信/电子",
+        "id": 2
+      },
+      {
+        "trade_name": "市场/销售/客服",
+        "id": 3
+      },
+      {
+        "trade_name": "房地产/建筑",
+        "id": 4
+      },
+      {
+        "trade_name": "人力/行政/后勤",
+        "id": 5
+      },
+      {
+        "trade_name": "设计/广告/媒体/艺术",
+        "id": 6
       }
     ],
     "major_list": [
