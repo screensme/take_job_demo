@@ -2354,12 +2354,12 @@ class Action(object):
         ret = {'errorcode': 10,
                'major_list': [{'major_name': 'highsalary'},
                               {'major_name': 'hotjob'}],
-               'trade_list': [{'id': 1, 'trade_name': '金融/银行/证券'},
-                              {'id': 2, 'trade_name': '通信/电子'},
-                              {'id': 3, 'trade_name': '市场/销售/客服'},
-                              {'id': 4, 'trade_name': '房地产/建筑'},
-                              {'id': 5, 'trade_name': '人力/行政/后勤'},
-                              {'id': 6, 'trade_name': '设计/广告/媒体/艺术'}
+               'trade_list': [{'id': 1, 'trade_name': '互联网/电子商务'},
+                              {'id': 2, 'trade_name': '基金/证券/期货'},
+                              {'id': 3, 'trade_name': '建筑/建材/工程'},
+                              {'id': 4, 'trade_name': '教育/培训/院校'},
+                              {'id': 5, 'trade_name': '文体/影视/艺术/表演'},
+                              {'id': 6, 'trade_name': '医药/制药/生物工程'}
                               ]
             }
         result['status'] = 'success'
