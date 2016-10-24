@@ -2524,7 +2524,7 @@ class Action(object):
         ret = {
             'search': job,
             'salary_tantile_list': salary_tantile_list,
-            'avg_salary': avg_salary
+            'avg_salary': str(avg_salary) + '元/月'
             }
         # 加入缓存
         set_cache_data = self.cacheredis.set('salary_tantile_list_{search}'.format(search=search.upper()),
@@ -2630,7 +2630,7 @@ class Action(object):
         else:
             avg_work_years = avg_work_years
         ret = {'search': job,
-               'avg_work_years': avg_work_years,
+               'avg_work_years': str(avg_work_years) + '年',
                'exp_tantile_list': salary_tantile_list
                }
         # 加入缓存
