@@ -2492,8 +2492,8 @@ class Action(object):
 
         if cache_flag:
             # 读取缓存
-            query_cache_data = None
-            # query_cache_data = self.cacheredis.get('salary_tantile_list_{search}'.format(search=search.upper()))
+            # query_cache_data = None
+            query_cache_data = self.cacheredis.get('salary_tantile_list_{search}'.format(search=search.upper()))
 
             # 读取缓存失败
             if query_cache_data is None:
