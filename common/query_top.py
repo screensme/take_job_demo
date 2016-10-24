@@ -316,6 +316,9 @@ class QueryEsapi(object):
                     value = float(value) / float(total)
                     value = round(value * 100, 2)
 
+                # 去掉字母k
+                if '-' in key:
+                    key = key.replace('k-', '-')
                 ret_list.append((key,value))
 
         return ret_list

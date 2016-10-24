@@ -2492,8 +2492,8 @@ class Action(object):
 
         if cache_flag:
             # 读取缓存
-            # query_cache_data = None
-            query_cache_data = self.cacheredis.get('salary_tantile_list_{search}'.format(search=search.upper()))
+            query_cache_data = None
+            # query_cache_data = self.cacheredis.get('salary_tantile_list_{search}'.format(search=search.upper()))
 
             # 读取缓存失败
             if query_cache_data is None:
@@ -2512,6 +2512,10 @@ class Action(object):
         salary_tantile_list = [{'legend': salary, 'value': tantile} for \
                                salary, tantile in salary_tantile_list]
 
+        a = salary_tantile_list.pop(10)['value']
+        b = salary_tantile_list.pop(9)['value']
+        c = salary_tantile_list.pop(8)['value']
+        salary_tantile_list.append({'legend': '30k以上', 'value': a+b+c})
         # 平均薪资
         param = {'job_name': search,
                  'esapi': self.esapi}
