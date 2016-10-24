@@ -1926,7 +1926,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": {
     "search": "python",
-    "avg_salary": 14960,
+    "avg_salary": '14960元/月',
     "salary_tantile_list": [
       {
         "legend": "3k以下",
@@ -2026,7 +2026,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "111",
   "data": {
-    "avg_work_years": 2,
+    "avg_work_years": '2年',
     "search": "python",
     "edu_tantile_list": [
       {
