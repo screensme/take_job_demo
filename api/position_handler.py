@@ -280,6 +280,18 @@ class RankTradeHandler(BaseHandler):
         trade = self.get_argument('trade', '')
         token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
+            if trade == 'IT/互联网':
+                trade = '互联网/电子商务'
+            elif trade == '金融':
+                trade = '基金/证券/期货'
+            elif trade == '建筑':
+                trade = '建筑/建材/工程'
+            elif trade == '教育/培训':
+                trade = '教育/培训/院校'
+            elif trade == '文体/艺术':
+                trade = '文体/影视/艺术/表演'
+            else:
+                trade = '医药/制药/生物工程'
             result = yield self.db.rank_trade(trade, token, cache_flag)
         else:
             result = dict()
