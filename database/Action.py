@@ -1684,7 +1684,7 @@ class Action(object):
             self.log.info('update candidate_cv set resume_name=%s,username=%s,userclass=%s,sex=%s,age=%s,edu=%s,candidate_cv=%s,dt_update=%s where user_id=%s' % (resume_name, username, userclass, sex, age, high_edu, json.dumps(basic_resume), dt, token))
             edit_resume = self.db.update(sqlll, resume_name, username, userclass, sex, age, high_edu, json.dumps(basic_resume), dt, token)
             self.db.close()
-            # 判断简历是否能投简历,1可以,0不可以
+            # 修改简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1749,7 +1749,7 @@ class Action(object):
                     sqlll = 'update candidate_cv set edu=%s,school=%s,major=%s,candidate_cv=%s,dt_update=%s where user_id=%s'
                     edit_resume = self.db.update(sqlll, edu, school, major, json.dumps(basic_resume), dt, token)
                     self.db.close()
-            # 判断简历是否能投简历,1可以,0不可以
+            # 修改简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1783,7 +1783,7 @@ class Action(object):
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
             self.db.close()
 
-            # 判断简历是否能投简历,1可以,0不可以
+            # 修改简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1817,7 +1817,7 @@ class Action(object):
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
             self.db.close()
 
-            # 判断简历是否能投简历,1可以,0不可以
+            # 修改简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1851,7 +1851,7 @@ class Action(object):
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
             self.db.close()
 
-            # # 判断简历是否能投简历,1可以,0不可以
+            # # 修改简历是否能投简历,1可以,0不可以
             # J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1885,7 +1885,7 @@ class Action(object):
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
             self.db.close()
 
-            # # 判断简历是否能投简历,1可以,0不可以
+            # # 修改简历是否能投简历,1可以,0不可以
             # J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1919,7 +1919,7 @@ class Action(object):
             edit_resume = self.db.update(sqlll, json.dumps(basic_resume), dt, token)
             self.db.close()
 
-            # # 判断简历是否能投简历,1可以,0不可以
+            # # 修改简历是否能投简历,1可以,0不可以
             # J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -1945,7 +1945,7 @@ class Action(object):
             result['data'] = {'errorcode': 1000}
             raise tornado.gen.Return(result)
 
-        # # 判断简历是否能投简历,1可以,0不可以
+        # # 修改简历是否能投简历,1可以,0不可以
         # J_post = self.Judgment_resume(token=token)
 
         result['status'] = 'success'
@@ -1978,7 +1978,7 @@ class Action(object):
             result['data'] = {'errorcode': 1000}
             raise tornado.gen.Return(result)
 
-        # # 判断简历是否能投简历,1可以,0不可以
+        # # 修改简历是否能投简历,1可以,0不可以
         # J_post = self.Judgment_resume(token=token)
         
         result['status'] = 'success'
@@ -2005,7 +2005,7 @@ class Action(object):
             result['data'] = {'errorcode': 1000}
             raise tornado.gen.Return(result)
 
-        # # 判断简历是否能投简历,1可以,0不可以
+        # # 修改简历是否能投简历,1可以,0不可以
         # J_post = self.Judgment_resume(token=token)
         
         result['status'] = 'success'
@@ -2047,7 +2047,7 @@ class Action(object):
             sqlll = 'update candidate_cv set candidate_cv=%s,dt_update=%s where user_id=%s'
             edit_resume = self.db.update(sqlll, json.dumps(expect_resume), dt, token)
             self.db.close()
-            # 判断简历是否能投简历,1可以,0不可以
+            # 修改简历是否能投简历,1可以,0不可以
             J_post = self.Judgment_resume(token=token)
         result = dict()
         result['status'] = 'success'
@@ -2153,8 +2153,16 @@ class Action(object):
                 result['data'] = {'errorcode': 20,
                                   }
             else:
-                J_post = self.Judgment_resume(token=token)
-                if J_post:
+                sql_resume = "select allow_post from candidate_cv where user_id=%s" % token
+                user_resume = self.db.get(sql_resume)
+                self.db.close()
+                if (user_resume is None) or (user_resume['allow_post'] == 0):
+                    result['status'] = 'fail'
+                    result['token'] = token
+                    result['msg'] = '请完善简历后申请成为合伙人'
+                    result['data'] = {'errorcode': 50,
+                                      }
+                else:
                     try:
                         tt = datetime.datetime.now()
                         sql_update = "update candidate_user set proxy_user=%s,dt_update=%s where id=%s"
@@ -2172,12 +2180,7 @@ class Action(object):
                         result['msg'] = e
                         result['data'] = {'errorcode': 1000,
                                           }
-                else:
-                    result['status'] = 'fail'
-                    result['token'] = token
-                    result['msg'] = '请将简历填写完整后申请成为合伙人'
-                    result['data'] = {'errorcode': 50,
-                                      }
+
         raise tornado.gen.Return(result)
 
     # # 职业导航
@@ -3011,7 +3014,7 @@ class Action(object):
         result['data'] = post_resume
         raise tornado.gen.Return(result)
 
-#   ##### 判断简历
+#   ##### 修改简历--是否允许投递
     @tornado.gen.coroutine
     def Judgment_resume(self, token=str):
         sql_status = "select candidate_cv from candidate_cv where user_id=%s" % token
