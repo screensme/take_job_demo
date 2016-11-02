@@ -77,6 +77,17 @@ from api.tools_handler import \
     GetVersionHandler, \
     ApplicationProxyHandler
 
+from api.workplaceQA_handler import \
+    WorkplaceHomeHandler, \
+    TopicListHandler, \
+    ExpertFullHandler, \
+    TopicFullHandler, \
+    EvaluateGetHandler, \
+    EvaluateEditHandler, \
+    ReservationHandler, \
+    WorkplacePayHandler, \
+    WorkplacePaySuccessHandler
+
 from api.Edit_database import \
     EditdatabaseHandler, \
     IdeldatabaseHandler
@@ -150,6 +161,16 @@ urls = [
     url(r"/edu_tantile_list", EduTantileHandler),    # 学历分布图
     url(r"/exp_tantile_list", ExpTantileHandler),    # 工作年限分布图
     url(r"/trade_salary_list", TradeSalaryHandler),    # 高薪行业排行榜图   (慢)
+    #   ####################################################################################
+    url(r"/workplaceQA/token-(\w+)", WorkplaceHomeHandler),    # 职场问答首页
+    url(r"/workplaceQA/topic_list/page-(\d+)/num-(\d+)/field-(\w+)/token-(\w+)", TopicListHandler),    # 话题列表
+    url(r"/workplaceQA/expert-(\w+)/token-(\w+)", ExpertFullHandler),    # 专家详情页
+    url(r"/workplaceQA/topic-(\w+)/token-(\w+)", TopicFullHandler),    # 话题详情页
+    url(r"/workplaceQA/evaluate/page-(\d+)/num-(\d+)/expert-(\w+)/token-(\w+)", EvaluateGetHandler),    # 对专家的评价列表
+    url(r"/workplaceQA/evaluate/topic-(\w+)", EvaluateEditHandler),    # 写评价页
+    url(r"/workplaceQA/reservation", ReservationHandler),    # 预约页
+    url(r"/workplaceQA/pay", WorkplacePayHandler),    # 付款页
+    url(r"/workplaceQA/pay-success/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，从简历中获取用户个人信息！！！！！

@@ -33,6 +33,9 @@ MY_SQL = {
                       }
 }
 ES_API = {
+    'esapi-worry': {
+        'url': 'http://192.168.12.178:8000/'
+    },
     'esapi-neiwang': {
         'url': 'http://192.168.12.146:8000/'
     },
@@ -40,7 +43,7 @@ ES_API = {
         'url': 'http://182.92.202.243:8000/'
     },
     'esapi-waiwang': {
-        'url': 'http://182.92.99.38:8000/'
+        'url': 'http://100.98.226.26:6000/'
     },
     'esapi-online': {
         'url': 'http://100.98.226.26:6000/'

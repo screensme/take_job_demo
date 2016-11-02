@@ -897,249 +897,6 @@ class Action(object):
         result['data'] = data
         raise tornado.gen.Return(result)
 
-    # 消息页，显示数量
-    @tornado.gen.coroutine
-    def Job_message(self, token=str, cache_flag=int):
-
-        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
-        search_user = self.db.get(sql)
-        self.db.close()
-        if search_user == None:
-            boss_profile = 0
-        else:
-            sqll = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
-            boss_profile = self.db.execute_rowcount(sqll)
-
-        result = dict()
-        result['status'] = 'success'
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = boss_profile
-        raise tornado.gen.Return(result)
-
-    # 简历状态查看get全部
-    @tornado.gen.coroutine
-    def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
-        if int(num) > 20:
-            num = 20
-        sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id=p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
-              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
-                 token, num, (int(page) * int(num)))
-        try:
-            boss_profile = self.db.query(sql)
-            self.db.close()
-            for index in boss_profile:
-                if index['company_logo'] != '':
-                    index['company_logo'] = "%s" % self.image + index['company_logo']
-                else:
-                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-                index['salary_start'] = index['salary_start'] / 1000
-                if (index['salary_end'] % 1000) >= 1:
-                    index['salary_end'] = index['salary_end'] / 1000 + 1
-                else:
-                    index['salary_end'] = index['salary_end'] / 1000
-                for ind in index.keys():
-                    if index[ind] == None:
-                        index[ind] = ''
-            status = 'success'
-        except Exception, e:
-            self.log.info('ERROR is %s' % e[1])
-            status = 'fail'
-            boss_profile = {}
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = boss_profile
-        self.log.info(boss_profile)
-        raise tornado.gen.Return(result)
-
-    # 简历状态查看get被查看
-    @tornado.gen.coroutine
-    def Message_viewed(self, page=int, num=int, token=str,  cache_flag=int):
-        if int(num) > 20:
-            num = 20
-        sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
-              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
-                 token, num, (int(page) * int(num)))
-        try:
-            search_status = self.db.query(sql)
-            self.db.close()
-            for index in search_status:
-                if index['company_logo'] != '':
-                    index['company_logo'] = "%s" % self.image + index['company_logo']
-                else:
-                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-                index['salary_start'] = index['salary_start'] / 1000
-                if (index['salary_end'] % 1000) >= 1:
-                    index['salary_end'] = index['salary_end'] / 1000 + 1
-                else:
-                    index['salary_end'] = index['salary_end'] / 1000
-                for ind in index.keys():
-                    if index[ind] == None:
-                        index[ind] = ''
-            status = 'success'
-        except Exception, e:
-            self.log.info('ERROR is %s' % e[1])
-            status = 'fail'
-            search_status = {}
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_status
-        self.log.info(search_status)
-        raise tornado.gen.Return(result)
-
-    # 简历状态查看get简历通过
-    @tornado.gen.coroutine
-    def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
-        if int(num) > 20:
-            num = 20
-        sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
-              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
-                 token, num, (int(page) * int(num)))
-        try:
-            search_status = self.db.query(sql)
-            self.db.close()
-            for index in search_status:
-                if index['company_logo'] != '':
-                    index['company_logo'] = "%s" % self.image + index['company_logo']
-                else:
-                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-                index['salary_start'] = index['salary_start'] / 1000
-                if (index['salary_end'] % 1000) >= 1:
-                    index['salary_end'] = index['salary_end'] / 1000 + 1
-                else:
-                    index['salary_end'] = index['salary_end'] / 1000
-                for ind in index.keys():
-                    if index[ind] == None:
-                        index[ind] = ''
-            status = 'success'
-        except Exception, e:
-            self.log.info('ERROR is %s' % e[1])
-            status = 'fail'
-            search_status = {}
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_status
-        self.log.info(search_status)
-        raise tornado.gen.Return(result)
-
-    # 简历状态查看get邀请面试
-    @tornado.gen.coroutine
-    def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
-        if int(num) > 20:
-            num = 20
-        sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
-              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
-                 token, num, (int(page) * int(num)))
-        try:
-            search_status = self.db.query(sql)
-            self.db.close()
-            for index in search_status:
-                if index['company_logo'] != '':
-                    index['company_logo'] = "%s" % self.image + index['company_logo']
-                else:
-                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-                index['salary_start'] = index['salary_start'] / 1000
-                if (index['salary_end'] % 1000) >= 1:
-                    index['salary_end'] = index['salary_end'] / 1000 + 1
-                else:
-                    index['salary_end'] = index['salary_end'] / 1000
-                for ind in index.keys():
-                    if index[ind] == None:
-                        index[ind] = ''
-            status = 'success'
-        except Exception, e:
-            self.log.info('ERROR is %s' % e[1])
-            status = 'fail'
-            search_status = {}
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_status
-        self.log.info(search_status)
-        raise tornado.gen.Return(result)
-
-    # 简历状态查看get不合适
-    @tornado.gen.coroutine
-    def Message_improper(self, page=int, num=int, token=str,  cache_flag=int):
-        if int(num) > 20:
-            num = 20
-        sql = "select %s from jobs_hot_es_test as k " \
-              "left join candidate_post as p on k.id = p.job_id " \
-              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
-              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
-                 token, num, (int(page) * int(num)))
-        try:
-            search_status = self.db.query(sql)
-            self.db.close()
-            for index in search_status:
-                if index['company_logo'] != '':
-                    index['company_logo'] = "%s" % self.image + index['company_logo']
-                else:
-                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
-                index['salary_start'] = index['salary_start'] / 1000
-                if (index['salary_end'] % 1000) >= 1:
-                    index['salary_end'] = index['salary_end'] / 1000 + 1
-                else:
-                    index['salary_end'] = index['salary_end'] / 1000
-                for ind in index.keys():
-                    if index[ind] == None:
-                        index[ind] = ''
-            status = 'success'
-        except Exception, e:
-            self.log.info('ERROR is %s' % e[1])
-            status = 'fail'
-            search_status = {}
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_status
-        self.log.info(search_status)
-        raise tornado.gen.Return(result)
-
-    # 消息详情页，时间轴
-    @tornado.gen.coroutine
-    def Message_full(self, job_id=str, token=str,  cache_flag=int):
-
-        sql = "select operate_massage from candidate_post where job_id=%s and user_id=%s" % (job_id, token)
-        try:
-            search_status = self.db.get(sql)
-            self.db.close()
-            if search_status is None:
-                search_st = []
-            else:
-                if search_status['operate_massage'] is None:
-                    search_st = []
-                else:
-                    search_st = json.loads(search_status['operate_massage'])
-            status = 'success'
-            self.log.info(search_st)
-        except Exception, e:
-            self.log.info('ERROR is %s' % e)
-            status = 'fail'
-            search_st = []
-        result = dict()
-        result['status'] = status
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = search_st
-        raise tornado.gen.Return(result)
-
     # 职位详情
     @tornado.gen.coroutine
     def Position_full(self, job_id=str, token=str, cache_flag=int):
@@ -1496,6 +1253,387 @@ class Action(object):
         result['msg'] = ''
         result['data'] = company_500
         raise tornado.gen.Return(result)
+
+
+    # 意见反馈
+    @tornado.gen.coroutine
+    def Feed_back(self, token=str, info=str, email=str, cache_flag=int):
+
+        dt = datetime.datetime.now()
+        job_type = "students"
+        channel = "school"
+        contents = info
+        email = email
+        status = "ready"
+        sql_feed_post = "insert into feedback(job_type,channel,contents,status,dt_create,dt_update,email) values(%s,%s,%s,%s,%s,%s,%s)"
+        try:
+            feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt, email)
+            self.db.close()
+        except Exception, e:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '数据添加不成功'
+            result['data'] = {'errorcode': 10}
+            raise tornado.gen.Return(result)
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '反馈成功'
+        result['data'] = {'errorcode': 0}
+        raise tornado.gen.Return(result)
+
+    # 获取版本,自动更新（仅Android）
+    @tornado.gen.coroutine
+    def Get_Version(self, Version=str, cache_flag=int):
+
+        result = dict()
+        version_get = Version.split('.')
+        if len(version_get) != 3:
+            result['status'] = 'fail'
+            result['token'] = ''
+            result['msg'] = '版本号格式有误'
+            result['data'] = {'errorcode': 10,
+                              'isupdate': 0,
+                              'version': '',
+                              'update_url': ''}
+            raise tornado.gen.Return(result)
+        else:
+            sql_version = "select version,app_file from app_version where status!='delete' order by id desc limit 1 "
+            try:
+                version_post = self.db.get(sql_version)
+                self.db.close()
+                self.log.info('-------------------Search version end--')
+                version_sql = version_post['version'].split('.')
+                isupdate = 0
+                for num in xrange(len(version_get)):
+                    if version_get[num] < version_sql[num]:
+                        isupdate = 1
+                        break
+
+            except Exception, e:
+                result['status'] = 'fail'
+                result['token'] = ''
+                result['msg'] = '数据添加不成功'
+                result['data'] = {'errorcode': 10,
+                                  'isupdate': 0,
+                                  'version': '',
+                                  'update_url': ''}
+                raise tornado.gen.Return(result)
+            result['status'] = 'success'
+            result['token'] = ''
+            result['msg'] = ''
+            result['data'] = {'errorcode': 0,
+                              'isupdate': isupdate,
+                              'version': version_post['version'],
+                              'update_url': self.image + version_post['app_file']
+                              }
+            raise tornado.gen.Return(result)
+
+    # 申请成为校园代理post
+    @tornado.gen.coroutine
+    def Application_proxy_user(self, token=str, cache_flag=int):
+
+        result = dict()
+        sql_user = "select id,proxy_user from candidate_user where id=%s" % token
+        search_user = self.db.get(sql_user)
+        self.db.close()
+        if search_user is None:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '没有此用户'
+            result['data'] = {'errorcode': 10,
+                              }
+        else:
+            if search_user['proxy_user'] != 0:
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '已经申请校园代理，请不要重复提交'
+                result['data'] = {'errorcode': 20,
+                                  }
+            else:
+                sql_resume = "select allow_post from candidate_cv where user_id=%s" % token
+                user_resume = self.db.get(sql_resume)
+                self.db.close()
+                if (user_resume is None) or (user_resume['allow_post'] == 0):
+                    result['status'] = 'fail'
+                    result['token'] = token
+                    result['msg'] = '请完善简历后申请成为合伙人'
+                    result['data'] = {'errorcode': 50,
+                                      }
+                else:
+                    try:
+                        tt = datetime.datetime.now()
+                        sql_update = "update candidate_user set proxy_user=%s,dt_update=%s where id=%s"
+                        update_user = self.db.update(sql_update, 2, tt, token)
+
+                        self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
+                        result['status'] = 'success'
+                        result['token'] = token
+                        result['msg'] = '申请成功，我们会尽快联系您'
+                        result['data'] = {'errorcode': 0,
+                                          }
+                    except Exception, e:
+                        result['status'] = 'fail'
+                        result['token'] = token
+                        result['msg'] = e
+                        result['data'] = {'errorcode': 1000,
+                                          }
+
+        raise tornado.gen.Return(result)
+
+#   ##################################################################################################
+    '''
+    消息页
+    '''
+
+    # 消息页，显示数量
+    @tornado.gen.coroutine
+    def Job_message(self, token=str, cache_flag=int):
+
+        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        if search_user == None:
+            boss_profile = 0
+        else:
+            sqll = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
+            boss_profile = self.db.execute_rowcount(sqll)
+
+        result = dict()
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = boss_profile
+        raise tornado.gen.Return(result)
+
+    # 简历状态查看get全部
+    @tornado.gen.coroutine
+    def Message_all(self, page=int, num=int, token=str,  cache_flag=int):
+        if int(num) > 20:
+            num = 20
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id=p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s order by dt_update DESC limit %s offset %s"\
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
+                 token, num, (int(page) * int(num)))
+        try:
+            boss_profile = self.db.query(sql)
+            self.db.close()
+            for index in boss_profile:
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
+            boss_profile = {}
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = boss_profile
+        self.log.info(boss_profile)
+        raise tornado.gen.Return(result)
+
+    # 简历状态查看get被查看
+    @tornado.gen.coroutine
+    def Message_viewed(self, page=int, num=int, token=str,  cache_flag=int):
+        if int(num) > 20:
+            num = 20
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='viewed' order by dt_update DESC limit %s offset %s"\
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
+                 token, num, (int(page) * int(num)))
+        try:
+            search_status = self.db.query(sql)
+            self.db.close()
+            for index in search_status:
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
+            search_status = {}
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        self.log.info(search_status)
+        raise tornado.gen.Return(result)
+
+    # 简历状态查看get简历通过
+    @tornado.gen.coroutine
+    def Message_communicated(self, page=int, num=int, token=str,  cache_flag=int):
+        if int(num) > 20:
+            num = 20
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status in ('pass', 'info') order by dt_update DESC limit %s offset %s"\
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
+                 token, num, (int(page) * int(num)))
+        try:
+            search_status = self.db.query(sql)
+            self.db.close()
+            for index in search_status:
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
+            search_status = {}
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        self.log.info(search_status)
+        raise tornado.gen.Return(result)
+
+    # 简历状态查看get邀请面试
+    @tornado.gen.coroutine
+    def Message_passed(self, page=int, num=int, token=str,  cache_flag=int):
+        if int(num) > 20:
+            num = 20
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='notify' order by dt_update DESC limit %s offset %s"\
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
+                 token, num, (int(page) * int(num)))
+        try:
+            search_status = self.db.query(sql)
+            self.db.close()
+            for index in search_status:
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
+            search_status = {}
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        self.log.info(search_status)
+        raise tornado.gen.Return(result)
+
+    # 简历状态查看get不合适
+    @tornado.gen.coroutine
+    def Message_improper(self, page=int, num=int, token=str,  cache_flag=int):
+        if int(num) > 20:
+            num = 20
+        sql = "select %s from jobs_hot_es_test as k " \
+              "left join candidate_post as p on k.id = p.job_id " \
+              "left join candidate_user as j on j.id=p.user_id where j.id =%s and p.status='deny' order by dt_update DESC limit %s offset %s"\
+              % ("p.job_id,k.company_type,k.salary_start,k.salary_end,k.scale_str,k.job_city,k.company_name,k.boon,k.education_str,k.job_name,k.work_years_str,p.status,p.dt_update,k.company_logo",
+                 token, num, (int(page) * int(num)))
+        try:
+            search_status = self.db.query(sql)
+            self.db.close()
+            for index in search_status:
+                if index['company_logo'] != '':
+                    index['company_logo'] = "%s" % self.image + index['company_logo']
+                else:
+                    index['company_logo'] = "%s" % self.image + "icompany_logo_%d.png" % (random.randint(1, 16),)
+                index['salary_start'] = index['salary_start'] / 1000
+                if (index['salary_end'] % 1000) >= 1:
+                    index['salary_end'] = index['salary_end'] / 1000 + 1
+                else:
+                    index['salary_end'] = index['salary_end'] / 1000
+                for ind in index.keys():
+                    if index[ind] == None:
+                        index[ind] = ''
+            status = 'success'
+        except Exception, e:
+            self.log.info('ERROR is %s' % e[1])
+            status = 'fail'
+            search_status = {}
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_status
+        self.log.info(search_status)
+        raise tornado.gen.Return(result)
+
+    # 消息详情页，时间轴
+    @tornado.gen.coroutine
+    def Message_full(self, job_id=str, token=str,  cache_flag=int):
+
+        sql = "select operate_massage from candidate_post where job_id=%s and user_id=%s" % (job_id, token)
+        try:
+            search_status = self.db.get(sql)
+            self.db.close()
+            if search_status is None:
+                search_st = []
+            else:
+                if search_status['operate_massage'] is None:
+                    search_st = []
+                else:
+                    search_st = json.loads(search_status['operate_massage'])
+            status = 'success'
+            self.log.info(search_st)
+        except Exception, e:
+            self.log.info('ERROR is %s' % e)
+            status = 'fail'
+            search_st = []
+        result = dict()
+        result['status'] = status
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = search_st
+        raise tornado.gen.Return(result)
+
+#   ###################################################################################################
+    '''
+    简历功能
+    '''
 
     # 简历查看
     @tornado.gen.coroutine
@@ -2056,265 +2194,10 @@ class Action(object):
         result['data'] = edit_resume
         raise tornado.gen.Return(result)
 
-    # 意见反馈
-    @tornado.gen.coroutine
-    def Feed_back(self, token=str, info=str, email=str, cache_flag=int):
-
-        dt = datetime.datetime.now()
-        job_type = "students"
-        channel = "school"
-        contents = info
-        email = email
-        status = "ready"
-        sql_feed_post = "insert into feedback(job_type,channel,contents,status,dt_create,dt_update,email) values(%s,%s,%s,%s,%s,%s,%s)"
-        try:
-            feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt, email)
-            self.db.close()
-        except Exception, e:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '数据添加不成功'
-            result['data'] = {'errorcode': 10}
-            raise tornado.gen.Return(result)
-        result = dict()
-        result['status'] = 'success'
-        result['token'] = token
-        result['msg'] = '反馈成功'
-        result['data'] = {'errorcode': 0}
-        raise tornado.gen.Return(result)
-
-    # 获取版本,自动更新（仅Android）
-    @tornado.gen.coroutine
-    def Get_Version(self, Version=str, cache_flag=int):
-
-        result = dict()
-        version_get = Version.split('.')
-        if len(version_get) != 3:
-            result['status'] = 'fail'
-            result['token'] = ''
-            result['msg'] = '版本号格式有误'
-            result['data'] = {'errorcode': 10,
-                              'isupdate': 0,
-                              'version': '',
-                              'update_url': ''}
-            raise tornado.gen.Return(result)
-        else:
-            sql_version = "select version,app_file from app_version where status!='delete' order by id desc limit 1 "
-            try:
-                version_post = self.db.get(sql_version)
-                self.db.close()
-                self.log.info('-------------------Search version end--')
-                version_sql = version_post['version'].split('.')
-                isupdate = 0
-                for num in xrange(len(version_get)):
-                    if version_get[num] < version_sql[num]:
-                        isupdate = 1
-                        break
-
-            except Exception, e:
-                result['status'] = 'fail'
-                result['token'] = ''
-                result['msg'] = '数据添加不成功'
-                result['data'] = {'errorcode': 10,
-                                  'isupdate': 0,
-                                  'version': '',
-                                  'update_url': ''}
-                raise tornado.gen.Return(result)
-            result['status'] = 'success'
-            result['token'] = ''
-            result['msg'] = ''
-            result['data'] = {'errorcode': 0,
-                              'isupdate': isupdate,
-                              'version': version_post['version'],
-                              'update_url': self.image + version_post['app_file']
-                              }
-            raise tornado.gen.Return(result)
-
-    # 申请成为校园代理post
-    @tornado.gen.coroutine
-    def Application_proxy_user(self, token=str, cache_flag=int):
-
-        result = dict()
-        sql_user = "select id,proxy_user from candidate_user where id=%s" % token
-        search_user = self.db.get(sql_user)
-        self.db.close()
-        if search_user is None:
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '没有此用户'
-            result['data'] = {'errorcode': 10,
-                              }
-        else:
-            if search_user['proxy_user'] != 0:
-                result['status'] = 'fail'
-                result['token'] = token
-                result['msg'] = '已经申请校园代理，请不要重复提交'
-                result['data'] = {'errorcode': 20,
-                                  }
-            else:
-                sql_resume = "select allow_post from candidate_cv where user_id=%s" % token
-                user_resume = self.db.get(sql_resume)
-                self.db.close()
-                if (user_resume is None) or (user_resume['allow_post'] == 0):
-                    result['status'] = 'fail'
-                    result['token'] = token
-                    result['msg'] = '请完善简历后申请成为合伙人'
-                    result['data'] = {'errorcode': 50,
-                                      }
-                else:
-                    try:
-                        tt = datetime.datetime.now()
-                        sql_update = "update candidate_user set proxy_user=%s,dt_update=%s where id=%s"
-                        update_user = self.db.update(sql_update, 2, tt, token)
-
-                        self.log.info("update candidate_user set proxy_user=%s where id=%s" % (2, token))
-                        result['status'] = 'success'
-                        result['token'] = token
-                        result['msg'] = '申请成功，我们会尽快联系您'
-                        result['data'] = {'errorcode': 0,
-                                          }
-                    except Exception, e:
-                        result['status'] = 'fail'
-                        result['token'] = token
-                        result['msg'] = e
-                        result['data'] = {'errorcode': 1000,
-                                          }
-
-        raise tornado.gen.Return(result)
-
-    # # 职业导航
-    # @tornado.gen.coroutine
-    # def MajorList(self, major=str, token=str, cache_flag=int):
-    #     result = dict()
-    #
-    #     user_code = None
-    #     seo = None
-    #     sql_seo = "select * from seo where seo_type=%s and seo_page=%s and isshow=%s"\
-    #               % ('candidate', 'major_list', 'yes')
-    #     try:
-    #         seo = self.db.get(sql_seo)
-    #         self.db.close()
-    #     except Exception as e:
-    #         self.log.info(e)
-    #
-    #     seo_cahe = self.cacheredis.get('candidate_major_list')
-    #     if seo_cahe is None:
-    #         seo_cahe = seo
-    #         self.cacheredis.set('candidate_major_list', seo, ex=24*60*60)
-    #
-    #     sql_user = "select * from candidate_user where id=%s" % (token,)
-    #     is_proxy_user = self.db.get(sql_user)
-    #     self.db.close()
-    #     if is_proxy_user is None:
-    #         result = dict()
-    #         result['status'] = 'fail'
-    #         result['token'] = token
-    #         result['msg'] = '用户不存在'
-    #         result['data'] = {}
-    #     else:
-    #         if is_proxy_user['proxy_user'] != 1:
-    #             sql_code = "select * from invite_user where user_id=%s" % (token,)
-    #             try:
-    #                 user_code = self.db.get(sql_code)
-    #                 self.db.close()
-    #             except Exception ,e:
-    #                 result = {'major': '',
-    #                           'major_list': [],
-    #                           'major_first': [],
-    #                           'major_second': [],
-    #                           'head_list': [],
-    #                           'hot_job_list_top': [],
-    #                           'code': 0,
-    #                           'order_code': '/invitecode',
-    #                           'seo': seo,
-    #                           }
-    #                 raise tornado.gen.Return(result)
-    #
-    #     major_list_file = 'RcatAPP/helpers/major_list.json'
-    #     major_list = self.cacheredis.get('major_list')
-    #     if major_list is None:
-    #         with open(major_list_file) as f:
-    #             major_list = json.load(f)
-    #             self.cacheredis.set('major_list', major_list, ex=24 * 60 * 60)
-    #
-    #     major_map_file = 'RcatAPP/helpers/major_map.json'
-    #
-    #     major_map = self.cacheredis.get('major_map')
-    #     if major_map is None:
-    #         with open(major_map_file) as f:
-    #             major_map = json.load(f)
-    #             self.cacheredis.set('major_map', major_map, ex=24 * 60 * 60)
-    #
-    #     # 判断缓存中是否有数据
-    #     major_top_dict = self.cacheredis.get('{major}_job_top_dict'.format(major=major))
-    #
-    #     if major_top_dict is None:
-    #         # 请求数据
-    #         job_list = major_map.get(major, None)
-    #         if job_list is not None:
-    #
-    #             try:
-    #                 total = len(job_list)
-    #                 sep_num = total - total // 3
-    #                 job_first_list = job_list[:sep_num]
-    #                 job_second_list = job_list[sep_num:]
-    #
-    #                 major_first_list = cs_api.query_multi_job_top(*job_first_list)
-    #                 major_second_list = cs_api.query_multi_job_top(*job_second_list)
-    #                 major_top_dict = {
-    #                     'first': major_first_list,
-    #                     'second': major_second_list
-    #                 }
-    #                 cache.set('{major}_job_top_dict'.format(major=major), major_top_dict, timeout=24 * 60 * 60)
-    #             except Exception as e:
-    #                 logger.exception(e)
-    #                 major_top_dict = {
-    #                     'first': [],
-    #                     'second': [],
-    #                 }
-    #         else:
-    #             major_top_dict = {
-    #                 'first': [],
-    #                 'second': [],
-    #             }
-    #
-    #     trade = request.args.get('trade', '不限').strip()
-    #     work_years = request.args.get('work_years', '应届').strip()
-    #     payload = {
-    #
-    #         'trade': trade,
-    #         'work_years': work_years,
-    #     }
-    #     data_list = cache.get(trade + work_years)
-    #     if data_list is None:
-    #         data_list = cs_api.query_trade_top(**payload)
-    #         cache.set(trade + work_years, data_list, timeout=12 * 60 * 60)
-    #
-    #     # hot job_list
-    #     hot_job_list = ['产品经理', 'HRBP', 'UI', '运营专员', '市场策划', '律师助理',
-    #                     '行政管理', '会计', '人力资源专员', '招聘专员']
-    #
-    #     hot_job_list_top = cache.get('hot_job_list_top')
-    #     if hot_job_list_top is None:
-    #         hot_job_list_top = cs_api.query_multi_job_top(*hot_job_list)
-    #         hot_job_list_top.sort(key=lambda x: hot_job_list.index(x['job_name']))
-    #         cache.set('hot_job_list_top', hot_job_list_top, timeout=24 * 7 * 60 * 60)
-    #
-    #     ret = {
-    #         'major': major,
-    #         'major_list': major_list,
-    #         'major_first': major_top_dict['first'],
-    #         'major_second': major_top_dict['second'],
-    #         'head_list': data_list,
-    #         'hot_job_list_top': hot_job_list_top,
-    #         'code': 1,
-    #         'order_code': '',
-    #         'seo': seo,
-    #     }
-    #     if user_agent.is_mobile or 'MicroMessenger' in ua_string:
-    #         return abort(404)
-    #     return render_template('candidate_tpl/major_list.html', **ret)
+#   ##################################################################################################
+    '''
+    职业导航功能
+    '''
 
     # 职业导航首页
     @tornado.gen.coroutine
@@ -2697,6 +2580,8 @@ class Action(object):
         result['data'] = ret
         raise tornado.gen.Return(result)
 
+#   #################################################################################
+
     # 活动列表get
     @tornado.gen.coroutine
     def Activity_List(self, cache_flag=int):
@@ -3014,6 +2899,295 @@ class Action(object):
         result['data'] = post_resume
         raise tornado.gen.Return(result)
 
+#   #######################################################################################
+    '''
+    职场问答功能
+    '''
+
+    # 问答首页
+    @tornado.gen.coroutine
+    def workplace_home(self, token=str, cache_flag=int):
+
+        result = dict()
+        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
+                 'field': ['面试', '职业规划', '简历'],
+                 'expert_list': [{'id': 1,
+                                  'name': '徐帅楠',
+                                  'topic': '手把手教你如何在北京租房',
+                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                                  'meet_num': 10},
+                                 {'id': 2,
+                                  'name': '张岩',
+                                  'topic': '脚把脚教你如何在上海租房',
+                                  'tag': '又帅又能吃的android工程师',
+                                  'meet_num': 11},
+                                 {'id': 3,
+                                  'name': '马锦航',
+                                  'topic': '脸对脸教你如何在广州租房',
+                                  'tag': '又帅又能吃的IOS工程师',
+                                  'meet_num': 12},
+                                 ]
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 话题列表
+    @tornado.gen.coroutine
+    def topic_list(self, page=str, num=str, field=str, token=str, cache_flag=int):
+
+        result = dict()
+        datas = {'field': field,
+                 'expert_list': [{'id': 1,
+                                  'name': '徐帅楠',
+                                  'topic': '手把手教你如何在北京租房',
+                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                                  'meet_num': 10},
+                                 {'id': 2,
+                                  'name': '张岩',
+                                  'topic': '脚把脚教你如何在上海租房',
+                                  'tag': '又帅又能吃的android工程师',
+                                  'meet_num': 11},
+                                 {'id': 3,
+                                  'name': '马锦航',
+                                  'topic': '脸对脸教你如何在广州租房',
+                                  'tag': '又帅又能吃的IOS工程师',
+                                  'meet_num': 12},
+                                 ]
+                 }
+        if field == '面试':
+            pass
+        elif field == '职业规划':
+            pass
+        else:
+            pass
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 专家详情页
+    @tornado.gen.coroutine
+    def expert_full(self, expert=str, token=str, cache_flag=int):
+
+        result = dict()
+        datas = {'id': expert,
+                 'name': '徐帅楠',
+                 'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                 'field': '面试',
+                 'address': '北京，丰台，朝阳，通州，西城，东城',
+                 'image': 'av168.png',
+                 'like_num': 11222,
+                 'meet_num': 1233,
+                 'introduction': '姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，'
+                               '因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，'
+                               '我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。'
+                               '对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。'
+                               '其实，我个人认为解决非标准化产品的重点不在于O2O，而在于C2C。用户的需求是分散的，'
+                               '那么就无需去要求老师对所提供的内容标准化，而是放手，让“内容”变得更加灵活性，'
+                               '从而提高匹配度。在行的模式是“一对一的线下面谈”，线下面谈固然重要，但更为重要的是一对一的'
+                               '形式。在行里的行家和用户见面之前，行家会收到一些问题，用来更好地准备见面。虽然内容是非标'
+                               '准化的，那么服务流程就必须标准化，从在行所提供的“行家帮助手册”中，行家的资质、审核，以及'
+                               '成为行家的行为规范，都有了一套完整的流程。甚至由谁买单咖啡的问题，都做了规定。而流程的标准'
+                               '则可以帮助控制对每一次的咨询服务做品控。',
+                 'topic': [{'id': 11,
+                            'title': '出行用车行业全面分析',
+                            'meet_num': 3,
+                            'score': '9.5分'},
+                           {'id': 12,
+                            'title': '解决你在创业路上的小疑惑',
+                            'meet_num': 5,
+                            'score': '9.3分'}],
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 话题详情页
+    @tornado.gen.coroutine
+    def topic_full(self, topic=str, token=str, cache_flag=int):
+
+        result = dict()
+        datas = {'title': '如何在北京租房',
+                 'topic_full': '姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，'
+                               '因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，'
+                               '我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。'
+                               '对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。'
+                               '其实，我个人认为解决非标准化产品的重点不在于O2O，而在于C2C。用户的需求是分散的，'
+                               '那么就无需去要求老师对所提供的内容标准化，而是放手，让“内容”变得更加灵活性，'
+                               '从而提高匹配度。在行的模式是“一对一的线下面谈”，线下面谈固然重要，但更为重要的是一对一的'
+                               '形式。在行里的行家和用户见面之前，行家会收到一些问题，用来更好地准备见面。虽然内容是非标'
+                               '准化的，那么服务流程就必须标准化，从在行所提供的“行家帮助手册”中，行家的资质、审核，以及'
+                               '成为行家的行为规范，都有了一套完整的流程。甚至由谁买单咖啡的问题，都做了规定。而流程的标准'
+                               '则可以帮助控制对每一次的咨询服务做品控。',
+                 'time_long': '约1.5小时',
+                 'money': '800/次'
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 评价列表和详情页
+    @tornado.gen.coroutine
+    def evaluate_get(self, page=str, num=str, expert=str, token=str, cache_flag=int):
+
+        result = dict()
+        datas = [{'id': 12,
+                  'name': 'QQQQQ',
+                  'image': 'image_1.png',
+                  'evaluate': '精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型'
+                              '职业帮我挑选了一款适合自己的眼睛，还给我一些服装颜色搭配的专业建议，跟老师约了下次挑选眼镜。',
+                  'topic': '你离成为人生赢家只差一副眼镜',
+                  'time': datetime.datetime.now()},
+                 {'id': 13,
+                  'name': 'KKKK',
+                  'image': 'image_2.png',
+                  'evaluate': '为了缓解小编们买不起棉裤的尴尬气氛，北京市城市管理委供热办相关负责人前两天表示：准备召开第二次气象会商，对7号前后的冷空气进行研制，如果在15号正常供暖前连续五天平均气温低于5℃，就有可能提前供暖。',
+                  'topic': '你离成为人生赢家只差一副眼镜',
+                  'time': datetime.datetime.now()},
+                 {'id': 14,
+                  'name': 'RRRR',
+                  'image': 'image_3.png',
+                  'evaluate': '近日，有网友爆料在某直播APP上发现多名女主播直播尺度过大，甚至进行色情表演。不仅如此，其中部分女主播还在自己的微信朋友圈以15元600部的价格兜售成人小黄片。',
+                  'topic': '你离成为人生赢家只差一副眼镜',
+                  'time': datetime.datetime.now()},]
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 写评价页get
+    @tornado.gen.coroutine
+    def evaluate_edit_get(self, topic=str, token=str):
+
+        result = dict()
+        datas = {'topic_id': topic,
+                 'topic': '手把手教你如何在北京租房',
+                 'name': '徐帅楠',
+                 'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                 'meet_num': 10,
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 写评价页post
+    @tornado.gen.coroutine
+    def evaluate_edit(self, token=str):
+
+        result = dict()
+        datas = ''
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '评价提交成功'
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 预约页
+    @tornado.gen.coroutine
+    def reservation(self, token=str, cache_flag=int):
+
+        result = dict()
+        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
+                 'field': ['面试', '职业规划', '简历'],
+                 'expert_list': [{'id': 1,
+                                  'name': '徐帅楠',
+                                  'topic': '手把手教你如何在北京租房',
+                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                                  'meet_num': 10},
+                                 {'id': 2,
+                                  'name': '张岩',
+                                  'topic': '脚把脚教你如何在上海租房',
+                                  'tag': '又帅又能吃的android工程师',
+                                  'meet_num': 11},
+                                 {'id': 3,
+                                  'name': '马锦航',
+                                  'topic': '脸对脸教你如何在广州租房',
+                                  'tag': '又帅又能吃的IOS工程师',
+                                  'meet_num': 12},
+                                 ]
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 付款页
+    @tornado.gen.coroutine
+    def workplace_pay(self, token=str):
+
+        result = dict()
+        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
+                 'field': ['面试', '职业规划', '简历'],
+                 'expert_list': [{'id': 1,
+                                  'name': '徐帅楠',
+                                  'topic': '手把手教你如何在北京租房',
+                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                                  'meet_num': 10},
+                                 {'id': 2,
+                                  'name': '张岩',
+                                  'topic': '脚把脚教你如何在上海租房',
+                                  'tag': '又帅又能吃的android工程师',
+                                  'meet_num': 11},
+                                 {'id': 3,
+                                  'name': '马锦航',
+                                  'topic': '脸对脸教你如何在广州租房',
+                                  'tag': '又帅又能吃的IOS工程师',
+                                  'meet_num': 12},
+                                 ]
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 付款成功页
+    @tornado.gen.coroutine
+    def workplace_pay_success(self, token=str):
+
+        result = dict()
+        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
+                 'field': ['面试', '职业规划', '简历'],
+                 'expert_list': [{'id': 1,
+                                  'name': '徐帅楠',
+                                  'topic': '手把手教你如何在北京租房',
+                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
+                                  'meet_num': 10},
+                                 {'id': 2,
+                                  'name': '张岩',
+                                  'topic': '脚把脚教你如何在上海租房',
+                                  'tag': '又帅又能吃的android工程师',
+                                  'meet_num': 11},
+                                 {'id': 3,
+                                  'name': '马锦航',
+                                  'topic': '脸对脸教你如何在广州租房',
+                                  'tag': '又帅又能吃的IOS工程师',
+                                  'meet_num': 12},
+                                 ]
+                 }
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
+#   #######################################################################################
+    '''
+    其他功能
+    '''
 #   ##### 修改简历--是否允许投递
     @tornado.gen.coroutine
     def Judgment_resume(self, token=str):
