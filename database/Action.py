@@ -2906,32 +2906,38 @@ class Action(object):
 
     # 问答首页
     @tornado.gen.coroutine
-    def workplace_home(self, token=str, cache_flag=int):
+    def workplace_home(self, page=str, num=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
-                 'field': ['面试', '职业规划', '简历'],
-                 'expert_list': [{'id': 1,
-                                  'name': '徐帅楠',
-                                  'topic': '手把手教你如何在北京租房',
-                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                                  'meet_num': 10},
-                                 {'id': 2,
-                                  'name': '张岩',
-                                  'topic': '脚把脚教你如何在上海租房',
-                                  'tag': '又帅又能吃的android工程师',
-                                  'meet_num': 11},
-                                 {'id': 3,
-                                  'name': '马锦航',
-                                  'topic': '脸对脸教你如何在广州租房',
-                                  'tag': '又帅又能吃的IOS工程师',
-                                  'meet_num': 12},
-                                 ]
-                 }
+        if int(num) > 20:
+            num = 20
+        # sql_search = "select a.id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num from qa_expert_list as a left join qa_field as b on a.id=b.expert_id where b.field='%s'" % ('职场问答')
+        sql_search = "select b.title,a.id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num " \
+                     "from qa_expert_list as a left join qa_expert_topic as b on a.id=b.expert_id " \
+                     "where a.is_show!=0 order by b.id desc limit %s offset %s" % (num, (int(page) * int(num)))
+        search_expert = self.db.query(sql_search)
+        self.db.close()
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = search_expert
+        raise tornado.gen.Return(result)
+
+    # 问答首页轮播图
+    @tornado.gen.coroutine
+    def workplace_home_slide(self, cache_flag=int):
+
+        result = dict()
+        sql_search = "select id,image from qa_expert_list where slide=1"
+
+        search_expert = self.db.query(sql_search)
+        self.db.close()
+
+        result['status'] = 'success'
+        result['token'] = ''
+        result['msg'] = ''
+        result['data'] = search_expert
         raise tornado.gen.Return(result)
 
     # 话题列表
@@ -2939,34 +2945,21 @@ class Action(object):
     def topic_list(self, page=str, num=str, field=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'field': field,
-                 'expert_list': [{'id': 1,
-                                  'name': '徐帅楠',
-                                  'topic': '手把手教你如何在北京租房',
-                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                                  'meet_num': 10},
-                                 {'id': 2,
-                                  'name': '张岩',
-                                  'topic': '脚把脚教你如何在上海租房',
-                                  'tag': '又帅又能吃的android工程师',
-                                  'meet_num': 11},
-                                 {'id': 3,
-                                  'name': '马锦航',
-                                  'topic': '脸对脸教你如何在广州租房',
-                                  'tag': '又帅又能吃的IOS工程师',
-                                  'meet_num': 12},
-                                 ]
-                 }
-        if field == '面试':
-            pass
-        elif field == '职业规划':
-            pass
-        else:
-            pass
+        if int(num) > 20:
+            num = 20
+        sql_topic = "select f.title,a.id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num " \
+                    "from qa_expert_list as a left join qa_tag_field as b on b.expert_id=a.id " \
+                    "left join qa_expert_topic as f on b.topic_id=f.id " \
+                    "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
+        search_topic = self.db.query(sql_topic)
+        self.db.close()
+        topic = {'field': field,
+                 'expert_list': search_topic}
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = topic
         raise tornado.gen.Return(result)
 
     # 专家详情页
@@ -2974,34 +2967,20 @@ class Action(object):
     def expert_full(self, expert=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'id': expert,
-                 'name': '徐帅楠',
-                 'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                 'field': '面试',
-                 'address': '北京，丰台，朝阳，通州，西城，东城',
-                 'image': 'av168.png',
-                 'like_num': 11222,
-                 'meet_num': 1233,
-                 'introduction': '姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，'
-                               '因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，'
-                               '我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。'
-                               '对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。'
-                               '其实，我个人认为解决非标准化产品的重点不在于O2O，而在于C2C。用户的需求是分散的，'
-                               '那么就无需去要求老师对所提供的内容标准化，而是放手，让“内容”变得更加灵活性，'
-                               '从而提高匹配度。在行的模式是“一对一的线下面谈”，线下面谈固然重要，但更为重要的是一对一的'
-                               '形式。在行里的行家和用户见面之前，行家会收到一些问题，用来更好地准备见面。虽然内容是非标'
-                               '准化的，那么服务流程就必须标准化，从在行所提供的“行家帮助手册”中，行家的资质、审核，以及'
-                               '成为行家的行为规范，都有了一套完整的流程。甚至由谁买单咖啡的问题，都做了规定。而流程的标准'
-                               '则可以帮助控制对每一次的咨询服务做品控。',
-                 'topic': [{'id': 11,
-                            'title': '出行用车行业全面分析',
-                            'meet_num': 3,
-                            'score': '9.5分'},
-                           {'id': 12,
-                            'title': '解决你在创业路上的小疑惑',
-                            'meet_num': 5,
-                            'score': '9.3分'}],
-                 }
+        sql_expert = "select * from qa_expert_list where id =%s" % (expert,)
+        sql_topic = "select id,title,money,score,little_image,meet_num from qa_expert_topic where expert_id=%s" % (expert,)
+        sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
+                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (expert,)
+        expert = self.db.get(sql_expert)
+        self.db.close()
+        topic = self.db.query(sql_topic)
+        self.db.close()
+        evaluate = self.db.query(sql_evaluate)
+        self.db.close()
+
+        datas = {'expert': expert,
+                 'topic': topic,
+                 'evaluate': evaluate}
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -3013,25 +2992,14 @@ class Action(object):
     def topic_full(self, topic=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'title': '如何在北京租房',
-                 'topic_full': '姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，'
-                               '因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，'
-                               '我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。'
-                               '对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。'
-                               '其实，我个人认为解决非标准化产品的重点不在于O2O，而在于C2C。用户的需求是分散的，'
-                               '那么就无需去要求老师对所提供的内容标准化，而是放手，让“内容”变得更加灵活性，'
-                               '从而提高匹配度。在行的模式是“一对一的线下面谈”，线下面谈固然重要，但更为重要的是一对一的'
-                               '形式。在行里的行家和用户见面之前，行家会收到一些问题，用来更好地准备见面。虽然内容是非标'
-                               '准化的，那么服务流程就必须标准化，从在行所提供的“行家帮助手册”中，行家的资质、审核，以及'
-                               '成为行家的行为规范，都有了一套完整的流程。甚至由谁买单咖啡的问题，都做了规定。而流程的标准'
-                               '则可以帮助控制对每一次的咨询服务做品控。',
-                 'time_long': '约1.5小时',
-                 'money': '800/次'
-                 }
+        sql_topic = "select * from qa_expert_topic where id=%s" % (topic,)
+        topic = self.db.get(sql_topic)
+        self.db.close()
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = topic
         raise tornado.gen.Return(result)
 
     # 评价列表和详情页
@@ -3039,29 +3007,13 @@ class Action(object):
     def evaluate_get(self, page=str, num=str, expert=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = [{'id': 12,
-                  'name': 'QQQQQ',
-                  'image': 'image_1.png',
-                  'evaluate': '精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型'
-                              '职业帮我挑选了一款适合自己的眼睛，还给我一些服装颜色搭配的专业建议，跟老师约了下次挑选眼镜。',
-                  'topic': '你离成为人生赢家只差一副眼镜',
-                  'time': datetime.datetime.now()},
-                 {'id': 13,
-                  'name': 'KKKK',
-                  'image': 'image_2.png',
-                  'evaluate': '为了缓解小编们买不起棉裤的尴尬气氛，北京市城市管理委供热办相关负责人前两天表示：准备召开第二次气象会商，对7号前后的冷空气进行研制，如果在15号正常供暖前连续五天平均气温低于5℃，就有可能提前供暖。',
-                  'topic': '你离成为人生赢家只差一副眼镜',
-                  'time': datetime.datetime.now()},
-                 {'id': 14,
-                  'name': 'RRRR',
-                  'image': 'image_3.png',
-                  'evaluate': '近日，有网友爆料在某直播APP上发现多名女主播直播尺度过大，甚至进行色情表演。不仅如此，其中部分女主播还在自己的微信朋友圈以15元600部的价格兜售成人小黄片。',
-                  'topic': '你离成为人生赢家只差一副眼镜',
-                  'time': datetime.datetime.now()},]
+        sql_evaluate = "select a.id,a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
+                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit %s offset %s" % (expert, num, (int(page) * int(num)))
+        evaluate = self.db.query(sql_evaluate)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = evaluate
         raise tornado.gen.Return(result)
 
     # 写评价页get
@@ -3096,32 +3048,13 @@ class Action(object):
 
     # 预约页
     @tornado.gen.coroutine
-    def reservation(self, token=str, cache_flag=int):
+    def reservation(self, time=str, address=str, question=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
-                 'field': ['面试', '职业规划', '简历'],
-                 'expert_list': [{'id': 1,
-                                  'name': '徐帅楠',
-                                  'topic': '手把手教你如何在北京租房',
-                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                                  'meet_num': 10},
-                                 {'id': 2,
-                                  'name': '张岩',
-                                  'topic': '脚把脚教你如何在上海租房',
-                                  'tag': '又帅又能吃的android工程师',
-                                  'meet_num': 11},
-                                 {'id': 3,
-                                  'name': '马锦航',
-                                  'topic': '脸对脸教你如何在广州租房',
-                                  'tag': '又帅又能吃的IOS工程师',
-                                  'meet_num': 12},
-                                 ]
-                 }
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 付款页

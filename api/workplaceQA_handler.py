@@ -11,17 +11,24 @@ import re
 class WorkplaceHomeHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         self.log.info('+++++++++++问答首页 Full+++++++++++')
         cache_flag = self.get_cache_flag()
-        if re.match(r'\d+', '%s' % token):
-            result = yield self.db.workplace_home(token, cache_flag)
-        else:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '未登录状态'
-            result['data'] = {}
+        result = yield self.db.workplace_home(page, num, token, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 问答首页轮播图
+class WorkplaceHomeSlideHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self):
+        self.log.info('+++++++++++问答首页轮播图 Full+++++++++++')
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.workplace_home_slide(cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -32,17 +39,16 @@ class WorkplaceHomeHandler(BaseHandler):
 class TopicListHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, page, num, field, token):
+    def post(self):
         self.log.info('+++++++++++问答首页 Full+++++++++++')
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        if re.match(r'\d+', '%s' % token):
-            result = yield self.db.topic_list(page, num, field, token, cache_flag)
-        else:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '未登录状态'
-            result['data'] = {}
+        page = self.get_argument('page')
+        num = self.get_argument('num')
+        field = self.get_argument('field')
+        token = self.get_argument('token')
+
+        result = yield self.db.topic_list(page, num, field, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -56,14 +62,7 @@ class ExpertFullHandler(BaseHandler):
     def get(self, expert, token):
         self.log.info('+++++++++++问答首页 Full+++++++++++')
         cache_flag = self.get_cache_flag()
-        if re.match(r'\d+', '%s' % token):
-            result = yield self.db.expert_full(expert, token, cache_flag)
-        else:
-            result = dict()
-            result['status'] = 'fail'
-            result['token'] = token
-            result['msg'] = '未登录状态'
-            result['data'] = {}
+        result = yield self.db.expert_full(expert, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -91,7 +90,7 @@ class EvaluateGetHandler(BaseHandler):
     def get(self, page, num, expert, token):
         self.log.info('+++++++++++ company 500 +++++++++++')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.evaluate_get(page, num, token, expert, cache_flag)
+        result = yield self.db.evaluate_get(page, num, expert, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -133,9 +132,13 @@ class ReservationHandler(BaseHandler):
     @tornado.web.asynchronous
     def post(self):
         self.log.info('+++++++++++ company 500 +++++++++++')
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        result = yield self.db.reservation(token, cache_flag)
+        time = self.get_argument('time')
+        address = self.get_argument('address')
+        question = self.get_argument('question')
+        result = yield self.db.reservation(time, address, question, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

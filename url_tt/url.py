@@ -79,6 +79,7 @@ from api.tools_handler import \
 
 from api.workplaceQA_handler import \
     WorkplaceHomeHandler, \
+    WorkplaceHomeSlideHandler, \
     TopicListHandler, \
     ExpertFullHandler, \
     TopicFullHandler, \
@@ -162,8 +163,9 @@ urls = [
     url(r"/exp_tantile_list", ExpTantileHandler),    # 工作年限分布图
     url(r"/trade_salary_list", TradeSalaryHandler),    # 高薪行业排行榜图   (慢)
     #   ####################################################################################
-    url(r"/workplaceQA/token-(\w+)", WorkplaceHomeHandler),    # 职场问答首页
-    url(r"/workplaceQA/topic_list/page-(\d+)/num-(\d+)/field-(\w+)/token-(\w+)", TopicListHandler),    # 话题列表
+    url(r"/workplaceQA/page-(\d+)/num-(\d+)/token-(\w+)", WorkplaceHomeHandler),    # 职场问答首页
+    url(r"/workplaceQA-slide", WorkplaceHomeSlideHandler),    # 职场问答首页轮播图
+    url(r"/workplaceQA/topic_list", TopicListHandler),    # 话题列表
     url(r"/workplaceQA/expert-(\w+)/token-(\w+)", ExpertFullHandler),    # 专家详情页
     url(r"/workplaceQA/topic-(\w+)/token-(\w+)", TopicFullHandler),    # 话题详情页
     url(r"/workplaceQA/evaluate/page-(\d+)/num-(\d+)/expert-(\w+)/token-(\w+)", EvaluateGetHandler),    # 对专家的评价列表
