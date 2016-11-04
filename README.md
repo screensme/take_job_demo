@@ -2339,33 +2339,30 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "status": "success",
   "msg": "",
   "token": "11",
-  "data": {
-    "expert_list": [
-      {
-        "meet_num": 123,
-        "name": "张岩",
-        "title": "你离成为人生赢家只差一副JJ",
-        "image": "image_img02",
-        "field": "职场秘籍",
-        "tag": "android",
-        "like_num": 12,
-        "address": "北京2",
-        "id": 2
-      },
-      {
-        "meet_num": 123,
-        "name": "张岩",
-        "title": "你离成为人生赢家只差一副小丁丁",
-        "image": "image_img02",
-        "field": "职场秘籍",
-        "tag": "android",
-        "like_num": 12,
-        "address": "北京2",
-        "id": 2
-      }
-    ],
-    "field": "职场问答"
-  }
+  "data": [
+    {
+      "meet_num": 123,
+      "name": "张岩",
+      "expert_id": 2,
+      "image": "image_img02",
+      "title": "你离成为人生赢家只差一副JJ",
+      "field": "职场秘籍",
+      "tag": "android",
+      "like_num": 12,
+      "address": "北京2"
+    },
+    {
+      "meet_num": 123,
+      "name": "张岩",
+      "expert_id": 2,
+      "image": "image_img02",
+      "title": "你离成为人生赢家只差一副小丁丁",
+      "field": "职场秘籍",
+      "tag": "android",
+      "like_num": 12,
+      "address": "北京2"
+    }
+  ]
 }```  
 
 ####63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
