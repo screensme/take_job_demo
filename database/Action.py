@@ -3045,11 +3045,21 @@ class Action(object):
 
     # 预约页
     @tornado.gen.coroutine
-    def reservation(self, topic=str, expert=str, time=str, address=str, question=str, token=str, cache_flag=int):
+    def reservation(self, topic_id=str, expert_id=str, meet_time=str, meet_address=str, meet_question=str, token=str, cache_flag=int):
 
         result = dict()
+        # status--> 1-预约，2-行家确认，3-付款，4-见面，5-评价，10-完成
+        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_time,meet_address,meet_question,status) values(%s,%s,%s,%s,%s,%s)"
+        try:
+            insert_reservation = self.db.insert(sql_insert, topic_id, expert_id, meet_time, meet_address, meet_question, '1')
+            self.db.close()
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '服务器错误' + e
+            result['data'] = {'errorcode': 1000}
+            raise tornado.gen.Return(result)
 
-        sql_insert = "insert into qa_reservation values(%s,%s,%s,%s,%s)"
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
