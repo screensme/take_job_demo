@@ -2408,6 +2408,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "name": "徐帅楠",
       "introduction": "这是介绍：balabala",
       "image": "image_img01",
+      "is_show": 1,
       "field": "简历,职场秘籍",
       "slide": 0,
       "tag": "python后台工程师",
@@ -2415,7 +2416,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-07-25T15:59:16",
       "dt_create": "2016-07-25T15:59:16",
       "address": "北京",
-      "is_show": 1,
+      "image_introduction": "",
       "id": 1
     }
   }

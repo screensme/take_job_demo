@@ -15,7 +15,7 @@ class EditNone(object):
     def edit_none(cls, *args):
         for index in args:
             if args[index] == None:
-               args[index] = ''
+                args[index] = ''
         return args
 
     # 修改full-全职
