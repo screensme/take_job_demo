@@ -93,15 +93,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 58.热门职位排行榜-post：/ranking-hotjob  
 59.高薪行业排行榜图-post：/trade_salary_list  
 ***
-60.职场问答首页-get：/workplaceQA/token-(\w+)  
-61.话题列表-get：/workplaceQA/topic_list/page-{page}/num-{num}/field-{field}/token-{token}  
-62.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
-63.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
-64.某一话题评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
-65.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
-66.预约页-post：/workplaceQA/reservation  
-67.付款页-post：/workplaceQA/pay  
-68.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+60.职场问答首页-get：/workplaceQA/page-(\d+)/num-(\d+)/token-(\w+)  
+61.职场问答首页轮播图-get：/workplaceQA-slide  
+62.话题列表-post：/workplaceQA/topic_list  
+63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
+64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
+65.某一话题评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
+66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
+67.预约页-post：/workplaceQA/reservation  
+68.付款页-post：/workplaceQA/pay  
+69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
 ***
 #####简历状态：  
 	
@@ -2269,54 +2270,63 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     ]
   }
 }```  
-####60.职场问答首页-get：/workplaceQA/token-(\w+)  
+####60.职场问答首页-get：/workplaceQA/page-(\d+)/num-(\d+)/token-(\w+)  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
+	page		Y	string		页数
+	num			Y	string		每页的数量
 返回成功：
 ```{
   "status": "success",
   "msg": "",
   "token": "111",
-  "data": {
-    "expert_list": [
-      {
-        "topic": "手把手教你如何在北京租房",
-        "meet_num": 10,
-        "tag": "首席UFO，又帅又能吃的Python后台工程师",
-        "id": 1,
-        "name": "徐帅楠"
-      },
-      {
-        "topic": "脚把脚教你如何在上海租房",
-        "meet_num": 11,
-        "tag": "又帅又能吃的android工程师",
-        "id": 2,
-        "name": "张岩"
-      },
-      {
-        "topic": "脸对脸教你如何在广州租房",
-        "meet_num": 12,
-        "tag": "又帅又能吃的IOS工程师",
-        "id": 3,
-        "name": "马锦航"
-      }
-    ],
-    "field": [
-      "面试",
-      "职业规划",
-      "简历"
-    ],
-    "home_image": [
-      "1.png",
-      "2.png",
-      "3.png",
-      "4.png"
-    ]
-  }
+  "data": [
+    {
+      "meet_num": 123,
+      "name": "张岩",
+      "title": "你离成为人生赢家只差一副小丁丁",
+      "image": "image_img02",
+      "field": "职场秘籍",
+      "tag": "android",
+      "like_num": 12,
+      "address": "北京2",
+      "id": 2
+    },
+    {
+      "meet_num": 123,
+      "name": "张岩",
+      "title": "你离成为人生赢家只差一副JJ",
+      "image": "image_img02",
+      "field": "职场秘籍",
+      "tag": "android",
+      "like_num": 12,
+      "address": "北京2",
+      "id": 2
+    }
+  ]
 }```  
-####61.话题列表-get：/workplaceQA/topic_list/page-{page}/num-{num}/field-{field}/token-{token}  
+
+####61.职场问答首页轮播图-get：/workplaceQA-slide  
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "",
+  "data": [
+    {
+      "image": "image_img03",
+      "id": 3
+    },
+    {
+      "image": "image_img04",
+      "id": 4
+    }
+  ]
+}```  
+
+####62.话题列表-post：/workplaceQA/topic_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2328,35 +2338,37 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "111",
+  "token": "11",
   "data": {
     "expert_list": [
       {
-        "topic": "手把手教你如何在北京租房",
-        "meet_num": 10,
-        "tag": "首席UFO，又帅又能吃的Python后台工程师",
-        "id": 1,
-        "name": "徐帅楠"
+        "meet_num": 123,
+        "name": "张岩",
+        "title": "你离成为人生赢家只差一副JJ",
+        "image": "image_img02",
+        "field": "职场秘籍",
+        "tag": "android",
+        "like_num": 12,
+        "address": "北京2",
+        "id": 2
       },
       {
-        "topic": "脚把脚教你如何在上海租房",
-        "meet_num": 11,
-        "tag": "又帅又能吃的android工程师",
-        "id": 2,
-        "name": "张岩"
-      },
-      {
-        "topic": "脸对脸教你如何在广州租房",
-        "meet_num": 12,
-        "tag": "又帅又能吃的IOS工程师",
-        "id": 3,
-        "name": "马锦航"
+        "meet_num": 123,
+        "name": "张岩",
+        "title": "你离成为人生赢家只差一副小丁丁",
+        "image": "image_img02",
+        "field": "职场秘籍",
+        "tag": "android",
+        "like_num": 12,
+        "address": "北京2",
+        "id": 2
       }
     ],
-    "field": "1"
+    "field": "职场问答"
   }
 }```  
-####62.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
+
+####63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2366,34 +2378,53 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "111",
+  "token": "2",
   "data": {
-    "meet_num": 1233,
-    "field": "面试",
     "topic": [
       {
-        "meet_num": 3,
-        "score": "9.5分",
-        "id": 11,
-        "title": "出行用车行业全面分析"
-      },
-      {
-        "meet_num": 5,
-        "score": "9.3分",
-        "id": 12,
-        "title": "解决你在创业路上的小疑惑"
+        "meet_num": 11,
+        "little_image": "image01.png",
+        "title": "你离成为人生赢家只差一副眼镜",
+        "money": "600/次",
+        "score": "0",
+        "id": 1
       }
     ],
-    "tag": "首席UFO，又帅又能吃的Python后台工程师",
-    "like_num": 11222,
-    "name": "徐帅楠",
-    "address": "北京，丰台，朝阳，通州，西城，东城",
-    "introduction": "姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。",
-    "image": "av168.png",
-    "id": "1111"
+    "evaluate": [
+      {
+        "evaluate": "精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型",
+        "create_time": "2016-07-25T15:59:16",
+        "user_name": null,
+        "avatar": null,
+        "title": "你离成为人生赢家只差一副眼镜"
+      },
+      {
+        "evaluate": "精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型",
+        "create_time": "2016-07-25T15:59:16",
+        "user_name": null,
+        "avatar": null,
+        "title": "你离成为人生赢家只差一副眼镜"
+      }
+    ],
+    "expert": {
+      "meet_num": 11,
+      "name": "徐帅楠",
+      "introduction": "这是介绍：balabala",
+      "image": "image_img01",
+      "field": "简历,职场秘籍",
+      "slide": 0,
+      "tag": "python后台工程师",
+      "like_num": 9,
+      "dt_update": "2016-07-25T15:59:16",
+      "dt_create": "2016-07-25T15:59:16",
+      "address": "北京",
+      "is_show": 1,
+      "id": 1
+    }
   }
 }```  
-####63.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
+
+####64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2403,15 +2434,25 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "111",
+  "token": "2",
   "data": {
-    "money": "800/次",
-    "time_long": "约1.5小时",
-    "topic_full": "姬十三在微博中也提到，“在行“的想法来源于他们做MOOC学院时所得到的反馈，因为除了学习之外，学习者还有很多问题需要解答，例如为什么要学，学了以后还会有哪些出路，我是不是适合出国留学等等。这些的问题是基于每个人，答案也是个性化，显然课程在这里也是行不通。对于非标准化产品的思考，姬十三说是O2O模式让他获得新的出路。",
-    "title": "如何在北京租房"
+    "meet_num": 11,
+    "big_image": "image01.png",
+    "score": "0",
+    "little_image": "image01.png",
+    "title": "你离成为人生赢家只差一副眼镜",
+    "money": "600/次",
+    "id": 1,
+    "evaluate_num": 0,
+    "expert_id": 1,
+    "create_time": "2016-07-25T15:59:16",
+    "topic_time": "2016-07-25T15:59:16",
+    "time_long": "1.5小时",
+    "desc": "为了缓解小编们买不起棉裤的尴尬气氛，北京市城市管理委供热办相关负责人前两天表示：准备召开第二次气象会商，对7号前后的冷空气进行研制，如果在15号正常供暖前连续五天平均气温低于5℃，就有可能提前供暖。"
   }
 }```  
-####64.对专家的评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
+
+####65.对专家的评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2426,32 +2467,24 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "111",
   "data": [
     {
-      "name": "QQQQQ",
-      "evaluate": "精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型职业帮我挑选了一款适合自己的眼睛，还给我一些服装颜色搭配的专业建议，跟老师约了下次挑选眼镜。",
-      "image": "image_1.png",
-      "topic": "你离成为人生赢家只差一副眼镜",
-      "time": "2016-11-02T17:52:27.647000",
-      "id": 12
+      "title": "你离成为人生赢家只差一副眼镜",
+      "evaluate": "精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型",
+      "create_time": "2016-07-25T15:59:16",
+      "avatar": null,
+      "user_name": null,
+      "id": 1
     },
     {
-      "name": "KKKK",
-      "evaluate": "为了缓解小编们买不起棉裤的尴尬气氛，北京市城市管理委供热办相关负责人前两天表示：准备召开第二次气象会商，对7号前后的冷空气进行研制，如果在15号正常供暖前连续五天平均气温低于5℃，就有可能提前供暖。",
-      "image": "image_2.png",
-      "topic": "你离成为人生赢家只差一副眼镜",
-      "time": "2016-11-02T17:52:27.647000",
-      "id": 13
-    },
-    {
-      "name": "RRRR",
-      "evaluate": "近日，有网友爆料在某直播APP上发现多名女主播直播尺度过大，甚至进行色情表演。不仅如此，其中部分女主播还在自己的微信朋友圈以15元600部的价格兜售成人小黄片。",
-      "image": "image_3.png",
-      "topic": "你离成为人生赢家只差一副眼镜",
-      "time": "2016-11-02T17:52:27.647000",
-      "id": 14
+      "title": "你离成为人生赢家只差一副眼镜",
+      "evaluate": "精彩的内容，得体的服饰，精心打理过的发型，丽丽老师就是我向往的充满魅力的女人，丽丽老师不仅根据我的脸型",
+      "create_time": "2016-07-25T15:59:16",
+      "avatar": null,
+      "user_name": null,
+      "id": 2
     }
   ]
 }```  
-####65.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
-####66.预约页-post：/workplaceQA/reservation  
-####67.付款页-post：/workplaceQA/pay  
-####68.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+####66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
+####67.预约页-post：/workplaceQA/reservation  
+####68.付款页-post：/workplaceQA/pay  
+####69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
