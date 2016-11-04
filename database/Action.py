@@ -18,7 +18,7 @@ from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 from common import IF_email
 from common.query_top import QueryEsapi
-import oss2
+# import oss2
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -2278,7 +2278,6 @@ class Action(object):
         if data_list != []:
             for data in data_list:
                 data['salary_avg'] = data['salary_avg'] + '元/月'
-        # ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
 
         result['status'] = 'success'
         result['token'] = token
@@ -2314,7 +2313,6 @@ class Action(object):
             for data in hot_job_list_top:
                 data['salary_avg'] = str(data['salary_avg']) + '元/月'
 
-        # ret = [{'job_name': 'UI', 'salary_avg': 4827}, {'job_name': '运营专员', 'salary_avg': 5278}, {'job_name': '市场策划', 'salary_avg': 4171}, {'job_name': '行政管理', 'salary_avg': 4145}, {'job_name': '会计', 'salary_avg': 5124}, {'job_name': '人力资源专员', 'salary_avg': 4042}, {'job_name': '招聘专员', 'salary_avg': 4235}]
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2341,7 +2339,7 @@ class Action(object):
         if job_list != []:
             for data in job_list:
                 data['salary_avg'] = data['salary_avg'] + '元/月'
-        # ret = [{'job_name': '置业顾问', 'salary_avg': '13,981'}, {'job_name': '数据分析', 'salary_avg': '7,931'}, {'job_name': '交易员', 'salary_avg': '7,828'}, {'job_name': '理财经理', 'salary_avg': '7,293'}, {'job_name': '投资顾问', 'salary_avg': '7,293'}, {'job_name': '培训师', 'salary_avg': '7,261'}, {'job_name': '招生顾问', 'salary_avg': '7,107'}, {'job_name': 'PHP', 'salary_avg': '7,080'}, {'job_name': 'java', 'salary_avg': '6,926'}, {'job_name': '教师', 'salary_avg': '6,882'}, {'job_name': '销售代表', 'salary_avg': '6,823'}, {'job_name': '软件工程师', 'salary_avg': '6,797'}, {'job_name': '电话销售', 'salary_avg': '6,630'}, {'job_name': '学术推广', 'salary_avg': '6,542'}, {'job_name': '市场专员', 'salary_avg': '6,542'}, {'job_name': '演员', 'salary_avg': '6,429'}, {'job_name': '艺人经纪人', 'salary_avg': '6,429'}, {'job_name': '美容顾问', 'salary_avg': '6,231'}, {'job_name': '化妆师', 'salary_avg': '6,231'}, {'job_name': '美容师', 'salary_avg': '6,231'}, {'job_name': '测试工程师', 'salary_avg': '5,863'}, {'job_name': '运营专员', 'salary_avg': '5,805'}, {'job_name': '会计', 'salary_avg': '5,636'}, {'job_name': '商务专员', 'salary_avg': '5,352'}, {'job_name': '招商专员', 'salary_avg': '5,352'}, {'job_name': 'UI', 'salary_avg': '5,309'}, {'job_name': '办公室文员', 'salary_avg': '5,111'}, {'job_name': '秘书', 'salary_avg': '4,857'}, {'job_name': '客服专员', 'salary_avg': '4,715'}, {'job_name': '招聘专员', 'salary_avg': '4,658'}, {'job_name': '市场策划', 'salary_avg': '4,588'}, {'job_name': '用户运营', 'salary_avg': '4,559'}, {'job_name': '行政管理', 'salary_avg': '4,559'}, {'job_name': '人力资源专员', 'salary_avg': '4,446'}, {'job_name': '内容编辑', 'salary_avg': '4,446'}, {'job_name': '编辑', 'salary_avg': '4,219'}, {'job_name': '产品设计师', 'salary_avg': '4,148'}, {'job_name': '会务专员', 'salary_avg': '4,120'}, {'job_name': '出纳', 'salary_avg': '3,680'}]
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2911,8 +2909,7 @@ class Action(object):
         result = dict()
         if int(num) > 20:
             num = 20
-        # sql_search = "select a.id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num from qa_expert_list as a left join qa_field as b on a.id=b.expert_id where b.field='%s'" % ('职场问答')
-        sql_search = "select b.title,a.id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num " \
+        sql_search = "select b.title,a.id as expert_id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num " \
                      "from qa_expert_list as a left join qa_expert_topic as b on a.id=b.expert_id " \
                      "where a.is_show!=0 order by b.id desc limit %s offset %s" % (num, (int(page) * int(num)))
         search_expert = self.db.query(sql_search)
@@ -3048,9 +3045,11 @@ class Action(object):
 
     # 预约页
     @tornado.gen.coroutine
-    def reservation(self, time=str, address=str, question=str, token=str, cache_flag=int):
+    def reservation(self, topic=str, expert=str, time=str, address=str, question=str, token=str, cache_flag=int):
 
         result = dict()
+
+        sql_insert = "insert into qa_reservation values(%s,%s,%s,%s,%s)"
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -3185,12 +3184,6 @@ class Action(object):
                     self.log.info("candidate_cv allow_post=1")
                     return 1
 
-    # ####### 判断是否购买职业导航
-    @tornado.gen.coroutine
-    def Judgment_invote(self, token=str):
-        sql_invote_user = "select * from invite_user where user_id=%s" % (token,)
-        invote_user = self.db.get(sql_invote_user)
-        # if invote_user =
 # ########################################################################
 
     # 修改数据，慎用

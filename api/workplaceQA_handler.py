@@ -138,7 +138,9 @@ class ReservationHandler(BaseHandler):
         time = self.get_argument('time')
         address = self.get_argument('address')
         question = self.get_argument('question')
-        result = yield self.db.reservation(time, address, question, token, cache_flag)
+        topic = self.get_argument('topic')
+        expert = self.get_argument('expert')
+        result = yield self.db.reservation(topic, expert, time, address, question, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
