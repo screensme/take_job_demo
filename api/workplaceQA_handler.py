@@ -125,9 +125,10 @@ class EvaluateEditHandler(BaseHandler):
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        expert = self.get_argument('expert')
+        topic = self.get_argument('topic')
+        score = self.get_argument('score')
         evaluate = self.get_argument('evaluate')
-        result = yield self.db.evaluate_edit(expert, topic, evaluate, token, cache_flag)
+        result = yield self.db.evaluate_edit(score, topic, evaluate, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

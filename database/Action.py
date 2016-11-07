@@ -3031,15 +3031,17 @@ class Action(object):
 
     # 写评价页post
     @tornado.gen.coroutine
-    def evaluate_edit(self, token=str):
+    def evaluate_edit(self, score=str, topic=str, evaluate=str, token=str, cache_flag=str):
 
         result = dict()
-        datas = ''
+        sql_evaluate = "insert into qa_evaluate(user_id,topic_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s)"
+        insert_evaluate = self.db.insert(sql_evaluate, token, topic, evaluate, score, datetime.datetime.now())
+        self.db.close()
 
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '评价提交成功'
-        result['data'] = datas
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 预约页

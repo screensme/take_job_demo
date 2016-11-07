@@ -2289,7 +2289,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "expert_id": 2,
       "image": "image_img02",
       "title": "你离成为人生赢家只差一副小丁丁",
-      "field": "职场秘籍",
       "tag": "android",
       "like_num": 12,
       "address": "北京2"
@@ -2300,7 +2299,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "expert_id": 2,
       "image": "image_img02",
       "title": "你离成为人生赢家只差一副JJ",
-      "field": "职场秘籍",
       "tag": "android",
       "like_num": 12,
       "address": "北京2"
@@ -2346,7 +2344,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "expert_id": 2,
       "image": "image_img02",
       "title": "你离成为人生赢家只差一副JJ",
-      "field": "职场秘籍",
       "tag": "android",
       "like_num": 12,
       "address": "北京2"
@@ -2357,7 +2354,6 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "expert_id": 2,
       "image": "image_img02",
       "title": "你离成为人生赢家只差一副小丁丁",
-      "field": "职场秘籍",
       "tag": "android",
       "like_num": 12,
       "address": "北京2"
@@ -2485,6 +2481,25 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 
 ####66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
 
+
+评价post:
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	score		Y	string		评分
+	topic		Y	string		话题id
+	evaluate	Y	string		评价
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "11",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+
 ####67.预约页-post：/workplaceQA/reservation  
 参数：
 		
@@ -2507,5 +2522,20 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 }```  
 
 ####68.付款页-post：/workplaceQA/pay  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	pay_type		Y	string		支付类型('wx'=微信，'alipay'=支付宝)
+	topic_id		Y	string		话题id
+返回成功：
+```{
+  "status": "success",
+  "msg": "支付成功",
+  "token": "122",
+  "data": {
+    "errorcode": 0
+  }
+}```  
 
 ####69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
