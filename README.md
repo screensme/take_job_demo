@@ -2484,6 +2484,28 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 }```  
 
 ####66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
+
 ####67.预约页-post：/workplaceQA/reservation  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	expert_id		Y	string		专家id
+	topic_id		Y	string		话题id
+	meet_time		Y	string		见面时间
+	meet_address	Y	string		见面地点
+	meet_question	Y	string		约见问题
+
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "11",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+
 ####68.付款页-post：/workplaceQA/pay  
+
 ####69.付款成功页-get：/workplaceQA/pay-success/token-{token}  

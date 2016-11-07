@@ -6,6 +6,14 @@ import tornado
 from common.tools import args404, ObjectToString
 import re
 
+# ping++ id
+Test_Secret_Key = "sk_test_jPK4GKWLOCW94av5i5nTmrjL"
+Live_Secret_Key = "sk_live_X9ajj1TCa1u15Si94ObzLWDS"
+
+pingpp_app_key = "app_eTiLm1mvTGe5O4mv"
+pingpp_api_key = {'test_test': Test_Secret_Key,
+                  'true_true': Live_Secret_Key}
+
 
 # 问答首页
 class WorkplaceHomeHandler(BaseHandler):
@@ -151,11 +159,26 @@ class ReservationHandler(BaseHandler):
 class WorkplacePayHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, page, num, token):
+    def post(self):
         self.log.info('+++++++++++ 付款页 500 +++++++++++')
+        self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
-        result = yield self.db.workplace_pay(page, num, token, cache_flag)
 
+        pingxx_secret_key = pingpp_api_key['test_test']
+        ip = self.request.remote_ip
+        token = self.get_argument('token')
+        pay_type = self.get_argument('pay_type')
+        # money = self.get_argument('money')
+        topic_id = self.get_argument('topic_id')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.workplace_pay(pingpp_app_key, pingxx_secret_key, topic_id,
+                                                 pay_type, ip, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
         self.write(ObjectToString().encode(result))
         self.finish()
         return

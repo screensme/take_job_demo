@@ -18,6 +18,7 @@ from common.resume_default import cv_dict_default
 from common.sms_api import SmsApi
 from common import IF_email
 from common.query_top import QueryEsapi
+import pingpp
 # import oss2
 
 reload(sys)
@@ -2909,7 +2910,7 @@ class Action(object):
         result = dict()
         if int(num) > 20:
             num = 20
-        sql_search = "select b.title,a.id as expert_id,a.name,a.tag,a.field,a.address,a.image,a.like_num,a.meet_num " \
+        sql_search = "select b.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
                      "from qa_expert_list as a left join qa_expert_topic as b on a.id=b.expert_id " \
                      "where a.is_show!=0 order by b.id desc limit %s offset %s" % (num, (int(page) * int(num)))
         search_expert = self.db.query(sql_search)
@@ -2950,8 +2951,6 @@ class Action(object):
                     "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
         search_topic = self.db.query(sql_topic)
         self.db.close()
-        # topic = {'field': field,
-        #          'expert_list': search_topic}
 
         result['status'] = 'success'
         result['token'] = token
@@ -3056,7 +3055,7 @@ class Action(object):
         except Exception, e:
             result['status'] = 'fail'
             result['token'] = token
-            result['msg'] = '服务器错误' + e
+            result['msg'] = '服务器错误' + e.message
             result['data'] = {'errorcode': 1000}
             raise tornado.gen.Return(result)
 
@@ -3068,32 +3067,94 @@ class Action(object):
 
     # 付款页
     @tornado.gen.coroutine
-    def workplace_pay(self, token=str):
+    def workplace_pay(self, pingpp_app_key=str, pingxx_secret_key=str, topic_id=str,
+                      pay_type=str, ip=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
-                 'field': ['面试', '职业规划', '简历'],
-                 'expert_list': [{'id': 1,
-                                  'name': '徐帅楠',
-                                  'topic': '手把手教你如何在北京租房',
-                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                                  'meet_num': 10},
-                                 {'id': 2,
-                                  'name': '张岩',
-                                  'topic': '脚把脚教你如何在上海租房',
-                                  'tag': '又帅又能吃的android工程师',
-                                  'meet_num': 11},
-                                 {'id': 3,
-                                  'name': '马锦航',
-                                  'topic': '脸对脸教你如何在广州租房',
-                                  'tag': '又帅又能吃的IOS工程师',
-                                  'meet_num': 12},
-                                 ]
-                 }
+        sql_topic = "select a.id,a.expert_id,a.money,a.title,a.topic_time,b.name from qa_expert_topic as a " \
+                    "left join qa_expert_list as b on a.expert_id=b.id where a.id=%s" % (topic_id,)
+        topic = self.db.get(sql_topic)
+        self.db.close()
+        if topic is None:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '话题id错误'
+            result['data'] = {'errorcode': 10}
+            raise tornado.gen.Return(result)
+        else:
+            if topic['topic_time'] < datetime.datetime.now():
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = '该话题已经结束'
+                result['data'] = {'errorcode': 50}
+                raise tornado.gen.Return(result)
+        if 'test' in topic['title']:
+            price = int(topic['money'])
+        else:
+            price = int(topic['money']) * 100
+
+        # len(order_no) = 32
+        order_no = str(uuid.uuid1()).replace('-', '')
+        app = pingpp_app_key
+        metadata = json.dumps({'topic': topic['id'],
+                    'expert': topic['expert_id'],
+                    'user': token})
+        # metadata = {'topic': topic['id'],
+        #             'expert': topic['expert_id'],
+        #             'user': token}
+        sql_order = "insert into qa_order(amount,amount_refunded,amount_settle,app,body," \
+                     "channel,client_ip,created,credential,currency,description,extra,failure_code," \
+                     "failure_msg,_id,livemode,metadata,object,order_no,paid,refunded,refunds,subject," \
+                     "time_expire,time_paid,time_settle,transaction_no,dt_create) " \
+                     "values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        order_list = [price, 0, price, app, topic['title'], pay_type, ip, 0, "{}", 'cny', None, "{}",
+                      None, None, 0, 0, metadata, 'charge', order_no, 0, 0, "{}", topic['name'], 0,
+                      None, None, None, datetime.datetime.now()]
+        insert_order = self.db.insert(sql_order, *order_list)
+        self.log.info("-------------------User pay step 1, insert order success")
+
+        # 提交订单到，ping++
+        form = dict()
+        form['order_no'] = order_no
+        form['amount'] = price
+        form['body'] = topic['title']
+        form['subject'] = topic['name']
+        form['client_ip'] = ip
+        form['app'] = dict(id=pingpp_app_key)
+        form['currency'] = 'cny'
+        form['channel'] = pay_type
+        form['metadata'] = {'topic': topic['id'],
+                            'expert': topic['expert_id'],
+                            'user': token}
+        try:
+            pay_QA = pingpp.Charge.create(api_key=pingxx_secret_key, **form)
+            self.log.info("-----------------------User pay step 2, post ping++ success")
+        except Exception, e:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '支付错误' + e.message
+            result['data'] = {'errorcode': 40}
+            raise tornado.gen.Return(result)
+
+        # 支付成功，更新订单
+        sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
+                           "time_expire=%s where id=%s" \
+                           % (pay_QA['created'], pay_QA['credential'], pay_QA['id'],
+                              pay_QA['refunded'], pay_QA['time_expire'], insert_order)
+        
+        update_order = self.db.update(sql_update_order)
+        self.db.close()
+
+        sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s" % (3, topic_id, token)
+        update_reservation = self.db.update(sql_update_res)
+        self.db.close()
+
+        self.log.info("------------------------User pay step 3 -->success, --update_order=%s,--update_reservation=%s"
+                      % (update_order, update_reservation))
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
-        result['data'] = datas
+        result['msg'] = '支付成功'
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
     # 付款成功页
