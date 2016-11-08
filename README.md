@@ -2642,5 +2642,49 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 }```  
 
 ####72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "12",
+  "data": [
+    {
+      "status": "待评价",
+      "name": "徐帅楠",
+      "little_image": "image01.png",
+      "title": "你离成为人生赢家只差一副小丁丁",
+      "money": "880",
+      "is_read": "0",
+      "tag": "python后台工程师",
+      "is_pay": "0"
+    }
+  ]
+}```  
 
 ####73.消息-话题已完成-get：/message/topic-finish/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "12",
+  "data": [
+    {
+      "status": "未同意",
+      "name": "张岩",
+      "little_image": "image01.png",
+      "title": "你离成为人生赢家只差一副眼镜",
+      "money": "600",
+      "is_read": "0",
+      "tag": "android",
+      "is_pay": "0"
+    }
+  ]
+}```  

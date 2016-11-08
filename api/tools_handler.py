@@ -114,7 +114,7 @@ class MessageTopicProcessHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        self.log.info('+++++++++++ V1 Message, message_topic_process +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
@@ -136,7 +136,7 @@ class MessageTopicEvaluateHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        self.log.info('+++++++++++ V1 Message, message_topic_evaluate +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
@@ -158,7 +158,7 @@ class MessageTopicFinishHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, token):
-        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        self.log.info('+++++++++++ V1 Message, message_topic_finish +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):

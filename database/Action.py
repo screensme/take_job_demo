@@ -3280,20 +3280,12 @@ class Action(object):
 
         result = dict()
 
-        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
-        search_user = self.db.get(sql)
+        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+                            "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s" % (token,)
+        topic_message = self.db.query(sql_topic_message)
         self.db.close()
-        if search_user == None:
-            job_message = 0
-            topic_message = 0
-        else:
-            sql_job_message = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
-            sql_topic_message = "select * from qa_reservation where user_id=%s and is_read=%s" % (token, '0')
-            job_message = self.db.execute_rowcount(sql_job_message)
-            topic_message = self.db.execute_rowcount(sql_topic_message)
-
-        message = {'job_message': job_message,
-                   'topic_message': topic_message}
+        message = EditTopic.edit_status_process(*topic_message)
 
         result['status'] = 'success'
         result['token'] = token
@@ -3307,20 +3299,12 @@ class Action(object):
 
         result = dict()
 
-        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
-        search_user = self.db.get(sql)
+        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+                            "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s" % (token,)
+        topic_message = self.db.query(sql_topic_message)
         self.db.close()
-        if search_user == None:
-            job_message = 0
-            topic_message = 0
-        else:
-            sql_job_message = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
-            sql_topic_message = "select * from qa_reservation where user_id=%s and is_read=%s" % (token, '0')
-            job_message = self.db.execute_rowcount(sql_job_message)
-            topic_message = self.db.execute_rowcount(sql_topic_message)
-
-        message = {'job_message': job_message,
-                   'topic_message': topic_message}
+        message = EditTopic.edit_status_process(*topic_message)
 
         result['status'] = 'success'
         result['token'] = token
