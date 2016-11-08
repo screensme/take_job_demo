@@ -100,7 +100,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
 65.某一话题评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
 66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
-67.预约页-post：/workplaceQA/reservation  
+67-1.预约页-get：/workplaceQA/reservation?topic_id={topic_id}&token={token}  
+67-2.预约页-post：/workplaceQA/reservation  
 68.付款页-post：/workplaceQA/pay  
 69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
 ***
@@ -2500,7 +2501,34 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
-####67.预约页-post：/workplaceQA/reservation  
+####67-1.预约页-get：/workplaceQA/reservation?topic_id={topic_id}&token={token}  
+查看是否提交过申请，只要不是完成状态，都返回失败。  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	topic_id		Y	string		话题id
+
+返回成功：
+```{
+  "status": "success",
+  "msg": "可以提交申请",
+  "token": "11",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "您已经提交过申请，请不要重复提交",
+  "token": "12",
+  "data": {
+    "errorcode": 100
+  }
+}```  
+
+####67-2.预约页-post：/workplaceQA/reservation  
 参数：
 		
 	参数名称		必填	类型		描述

@@ -3044,15 +3044,41 @@ class Action(object):
         result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
+    # 预约查看
+    @tornado.gen.coroutine
+    def reservation_get(self, topic_id=str, token=str, cache_flag=int):
+
+        result = dict()
+        # status--> 1-预约，2-行家确认，3-付款，4-见面，5-评价，10-完成
+        sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4,5)" \
+                          % (topic_id, token)
+        search_reservation = self.db.query(sql_reservation)
+        self.db.close()
+        if search_reservation != []:
+
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '您已经提交过申请，请不要重复提交'
+            result['data'] = {'errorcode': 100}
+            raise tornado.gen.Return(result)
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '可以提交申请'
+        result['data'] = {'errorcode': 0}
+        raise tornado.gen.Return(result)
+
     # 预约页
     @tornado.gen.coroutine
     def reservation(self, topic_id=str, expert_id=str, meet_time=str, meet_address=str, meet_question=str, token=str, cache_flag=int):
 
         result = dict()
         # status--> 1-预约，2-行家确认，3-付款，4-见面，5-评价，10-完成
-        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_time,meet_address,meet_question,status) values(%s,%s,%s,%s,%s,%s)"
+        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_time,meet_address,meet_question,status,user_id) " \
+                     "values(%s,%s,%s,%s,%s,%s,%s)"
         try:
-            insert_reservation = self.db.insert(sql_insert, topic_id, expert_id, meet_time, meet_address, meet_question, '1')
+            insert_reservation = self.db.insert(sql_insert, topic_id, expert_id, meet_time,
+                                                meet_address, meet_question, '1', token)
             self.db.close()
         except Exception, e:
             result['status'] = 'fail'

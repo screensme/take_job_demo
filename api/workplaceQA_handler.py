@@ -139,8 +139,23 @@ class EvaluateEditHandler(BaseHandler):
 class ReservationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
+    def get(self):
+        self.log.info('+++++++++++ Reservation 预约 GET +++++++++++')
+        self.log.info(self.get_arguments())
+        cache_flag = self.get_cache_flag()
+        token = self.get_argument('token')
+        topic_id = self.get_argument('topic_id')
+        # expert_id = self.get_argument('expert_id')
+        result = yield self.db.reservation_get(topic_id, token, cache_flag)
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+    @gen.coroutine
+    @tornado.web.asynchronous
     def post(self):
-        self.log.info('+++++++++++ Reservation 预约 start +++++++++++')
+        self.log.info('+++++++++++ Reservation 预约 POST start +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
