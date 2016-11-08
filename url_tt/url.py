@@ -172,6 +172,7 @@ urls = [
     url(r"/workplaceQA/evaluate/topic-(\w+)", EvaluateEditHandler),    # 写评价页
     url(r"/workplaceQA/reservation", ReservationHandler),    # 预约页
     url(r"/workplaceQA/pay", WorkplacePayHandler),    # 付款页
+    url(r"/workplaceQA/pay", WorkplacePayHandler),    # 新消息列表，包含
     url(r"/workplaceQA/pay-success/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
