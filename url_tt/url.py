@@ -75,7 +75,11 @@ from api.resume_handler import \
 from api.tools_handler import \
     FeedbackHandler, \
     GetVersionHandler, \
-    ApplicationProxyHandler
+    ApplicationProxyHandler, \
+    MessageGetHandler, \
+    MessageTopicProcessHandler, \
+    MessageTopicEvaluateHandler, \
+    MessageTopicFinishHandler
 
 from api.workplaceQA_handler import \
     WorkplaceHomeHandler, \
@@ -117,7 +121,7 @@ urls = [
     url(r"/add_or_del_collect", AddcollectHandler),     # 增加和取消收藏post
     url(r"/cut_collect", CutcollectHandler),     # 取消收藏post(查看收藏中，取消收藏用)
     url(r"/post-resume", PostresumeHandler),     # 简历投递post
-    url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get
+    url(r"/message/resume/token-(\w+)", MessageHandler),     # 消息页数量get     xxxxxx(居然没用到)
     url(r"/message/resume-allstatus/page-(\d+)/num-(\d+)/token-(\w+)", MessageAllHandler),    # 消息(简历状态查看)get全部
     url(r"/message/resume-viewed/page-(\d+)/num-(\d+)/token-(\w+)", MessageViewedHandler),    # 消息(简历状态查看)get被查看
     url(r"/message/resume-communicated/page-(\d+)/num-(\d+)/token-(\w+)", MessageCommunicatedHandler),    # 消息(简历状态查看)get简历通过
@@ -172,8 +176,11 @@ urls = [
     url(r"/workplaceQA/evaluate/topic-(\w+)", EvaluateEditHandler),    # 写评价页
     url(r"/workplaceQA/reservation", ReservationHandler),    # 预约页
     url(r"/workplaceQA/pay", WorkplacePayHandler),    # 付款页
-    url(r"/workplaceQA/pay", WorkplacePayHandler),    # 新消息列表，包含
     url(r"/workplaceQA/pay-success/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页
+    url(r"/message/token-(\w+)", MessageGetHandler),    # 新消息列表，包含所有消息数量
+    url(r"/message/topic-processing/token-(\w+)", MessageTopicProcessHandler),    # 消息-话题进行中
+    url(r"/message/topic-evaluated/token-(\w+)", MessageTopicEvaluateHandler),    # 消息-话题待评价
+    url(r"/message/topic-finish/token-(\w+)", MessageTopicFinishHandler),    # 消息-话题已完成
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，从简历中获取用户个人信息！！！！！

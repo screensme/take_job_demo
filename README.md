@@ -104,6 +104,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 67-2.预约页-post：/workplaceQA/reservation  
 68.付款页-post：/workplaceQA/pay  
 69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+70.新消息列表-get：/message/token-{token}  
+71.消息-话题进行中-get：/message/topic-processing/token-{token}  
+72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
+73.消息-话题已完成-get：/message/topic-finish/token-{token}  
 ***
 #####简历状态：  
 	
@@ -2566,3 +2570,77 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 }```  
 
 ####69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+
+####70.新消息列表-get：/message/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "12",
+  "data": {
+    "topic_message": 5,		(话题消息未读数量)
+    "resume_message": 0		(简历相关消息未读数量)
+  }
+}```  
+
+####71.消息-话题进行中-get：/message/topic-processing/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "12",
+  "data": [
+    {
+      "status": "待约见",
+      "name": "徐帅楠",
+      "little_image": "image01.png",
+      "title": "你离成为人生赢家只差一副眼镜",
+      "money": "600",
+      "is_read": "0",
+      "tag": "python后台工程师",
+      "is_pay": "0"
+    },
+    {
+      "status": "待同意",
+      "name": "徐帅楠",
+      "little_image": null,
+      "title": null,
+      "money": null,
+      "is_read": "0",
+      "tag": "python后台工程师",
+      "is_pay": "0"
+    },
+    {
+      "status": "待付款",
+      "name": "徐帅楠",
+      "little_image": "image01.png",
+      "title": "你离成为人生赢家只差一副JJ",
+      "money": "700",
+      "is_read": "0",
+      "tag": "python后台工程师",
+      "is_pay": "0"
+    },
+    {
+      "status": "待同意",
+      "name": "徐帅楠",
+      "little_image": "image01.png",
+      "title": "你离成为人生赢家只差一副眼镜",
+      "money": "600",
+      "is_read": "0",
+      "tag": "python后台工程师",
+      "is_pay": "0"
+    }
+  ]
+}```  
+
+####72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
+
+####73.消息-话题已完成-get：/message/topic-finish/token-{token}  

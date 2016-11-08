@@ -19,6 +19,7 @@ from common.sms_api import SmsApi
 from common import IF_email
 from common.query_top import QueryEsapi
 import pingpp
+from tools.tools_topic_message import EditTopic
 # import oss2
 
 reload(sys)
@@ -3224,6 +3225,107 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = datas
+        raise tornado.gen.Return(result)
+
+    # 新消息列表，包含所有消息数量
+    @tornado.gen.coroutine
+    def message_get(self, token=str, cache_flag=int):
+
+        result = dict()
+
+        sql = "select id from candidate_user where id='%s'" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        if search_user == None:
+            resume_message = 0
+            topic_message = 0
+        else:
+            sql_job_message = "select * from message where receiver_user_id='%s' and status='unread'" % search_user['id']
+            sql_topic_message = "select * from qa_reservation where user_id=%s and is_read=%s" % (token, '0')
+            resume_message = self.db.execute_rowcount(sql_job_message)
+            topic_message = self.db.execute_rowcount(sql_topic_message)
+            self.db.close()
+
+        message = {'resume_message': resume_message,
+                   'topic_message': topic_message}
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = message
+        raise tornado.gen.Return(result)
+
+    # 消息-话题进行中(1-->已预约,待同意，2-->已确认,待付款，3-已付款,待约见，)
+    @tornado.gen.coroutine
+    def message_topic_process(self, token=str, cache_flag=int):
+
+        result = dict()
+
+        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+                            "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s" % (token,)
+        topic_message = self.db.query(sql_topic_message)
+        self.db.close()
+        message = EditTopic.edit_status_process(*topic_message)
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = message
+        raise tornado.gen.Return(result)
+
+    # 消息-话题待评价
+    @tornado.gen.coroutine
+    def message_topic_evaluate(self, token=str, cache_flag=int):
+
+        result = dict()
+
+        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        if search_user == None:
+            job_message = 0
+            topic_message = 0
+        else:
+            sql_job_message = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
+            sql_topic_message = "select * from qa_reservation where user_id=%s and is_read=%s" % (token, '0')
+            job_message = self.db.execute_rowcount(sql_job_message)
+            topic_message = self.db.execute_rowcount(sql_topic_message)
+
+        message = {'job_message': job_message,
+                   'topic_message': topic_message}
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = message
+        raise tornado.gen.Return(result)
+
+    # 消息-话题已完成
+    @tornado.gen.coroutine
+    def message_topic_finish(self, token=str, cache_flag=int):
+
+        result = dict()
+
+        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        search_user = self.db.get(sql)
+        self.db.close()
+        if search_user == None:
+            job_message = 0
+            topic_message = 0
+        else:
+            sql_job_message = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
+            sql_topic_message = "select * from qa_reservation where user_id=%s and is_read=%s" % (token, '0')
+            job_message = self.db.execute_rowcount(sql_job_message)
+            topic_message = self.db.execute_rowcount(sql_topic_message)
+
+        message = {'job_message': job_message,
+                   'topic_message': topic_message}
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = message
         raise tornado.gen.Return(result)
 
 #   #######################################################################################

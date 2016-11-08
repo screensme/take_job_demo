@@ -35,6 +35,7 @@ class FeedbackHandler(BaseHandler):
         self.finish()
         return
 
+
 # 获取版本,自动更新（仅Android）
 class GetVersionHandler(BaseHandler):
     @gen.coroutine
@@ -62,6 +63,7 @@ class GetVersionHandler(BaseHandler):
         self.finish()
         return
 
+
 # 申请成为校园代理post
 class ApplicationProxyHandler(BaseHandler):
     @gen.coroutine
@@ -73,6 +75,94 @@ class ApplicationProxyHandler(BaseHandler):
         # token = self.get_argument('token')
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.Application_proxy_user(token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 新消息列表，包含所有消息数量
+class MessageGetHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.message_get(token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 消息-话题进行中(1-->已预约,待同意，2-->已确认,待付款，3-已付款,待约见，)
+class MessageTopicProcessHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.message_topic_process(token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 消息-话题待评价
+class MessageTopicEvaluateHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.message_topic_evaluate(token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
+
+
+# 消息-话题已完成
+class MessageTopicFinishHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        self.log.info('+++++++++++ V1 Message, all message number +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.message_topic_finish(token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

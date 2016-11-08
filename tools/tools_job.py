@@ -30,6 +30,7 @@ class EditNone(object):
                 index['job_type'] = '实习'
             elif index['job_type'] == 'unclear':
                 index['job_type'] = '不限'
+        return args
 
     # 修改金额为K，logo，full-全职
     @classmethod
@@ -53,3 +54,4 @@ class EditNone(object):
                 index['job_type'] = '实习'
             elif index['job_type'] == 'unclear':
                 index['job_type'] = '不限'
+        return args
