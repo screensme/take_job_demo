@@ -140,7 +140,7 @@ class EvaluateEditHandler(BaseHandler):
 class ReservationHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self):
+    def get(self):  # 已经不用了
         self.log.info('+++++++++++ Reservation 预约 GET +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()

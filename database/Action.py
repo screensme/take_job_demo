@@ -2993,6 +2993,17 @@ class Action(object):
         sql_topic = "select * from qa_expert_topic where id=%s" % (topic,)
         topic = self.db.get(sql_topic)
         self.db.close()
+        # status--> 1-已预约，2-行家已确认，3-已付款，4-已见面，10-完成
+        sql_reservation = "select status,is_pay from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
+                          % (topic, token)
+        search_reservation = self.db.get(sql_reservation)
+        self.db.close()
+        if search_reservation is not None:
+            topic['is_process'] = search_reservation['status']
+            topic['is_pay'] = search_reservation['is_pay']
+        else:
+            topic['is_process'] = 0
+            topic['is_pay'] = 0
 
         result['status'] = 'success'
         result['token'] = token
@@ -3019,16 +3030,16 @@ class Action(object):
     def evaluate_edit_get(self, topic=str, token=str):
 
         result = dict()
-        datas = {'topic_id': topic,
-                 'topic': '手把手教你如何在北京租房',
-                 'name': '徐帅楠',
-                 'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                 'meet_num': 10,
-                 }
+        # sql_topic = "select *"
+        # sql_topic = "select f.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
+        #             "from qa_expert_list as a left join qa_tag_field as b on b.expert_id=a.id " \
+        #             "left join qa_expert_topic as f on b.topic_id=f.id " \
+        #             "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
+
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = datas
+        result['data'] = ''
         raise tornado.gen.Return(result)
 
     # 写评价页post
@@ -3039,6 +3050,24 @@ class Action(object):
         sql_evaluate = "insert into qa_evaluate(user_id,topic_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s)"
         insert_evaluate = self.db.insert(sql_evaluate, token, topic, evaluate, score, datetime.datetime.now())
         self.db.close()
+        # 更新状态 4-->10
+        meet_line = [{'time': Time_Change.string_time(),
+                      'info': '评价成功，完成',
+                      'extra': []
+                      }]
+        sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
+                         % (token, topic, 4)
+        get_status = self.db.get(sql_get_status)
+        self.db.close()
+        json_time_line = json.loads(get_status['time_line'])
+        append_status = json_time_line.append(meet_line)
+        time_line = json.dumps(append_status)
+
+        sql_status = "update qa_reservation set status=%s,time_line=%s where id=%s"
+        status_list = [10, time_line, get_status['id']]
+        update_status = self.db.update(sql_status, *status_list)
+        self.db.close()
+        self.log.info("---------------------- evaluate success , finish !!!!!!")
 
         result['status'] = 'success'
         result['token'] = token
@@ -3238,14 +3267,40 @@ class Action(object):
     @tornado.gen.coroutine
     def recv_charge(self, charge=dict, cache_flag=int):
 
+        charge_topic = charge['data']['object']['metadata']['topic']
+        charge_user = charge['data']['object']['metadata']['user']
+        charge_expert = charge['data']['object']['metadata']['expert']
         try:
+            # 更新订单
             if charge['type'] == 'charge.succeeded':
                 self.log.info('----------------------------- 1 ping++ return charge , succeeded')
                 update_sql = "update qa_order set result_object=%s and result_pending_webhooks=%s and result_created=%s " \
-                             "and result_type=%s and result_livemode=%s and result_request=%s and result_id=%s"
+                             "and result_type=%s and result_livemode=%s and result_request=%s and result_id=%s " \
+                             "where order_no=%s"
                 sql_list = [charge['object'], charge['pending_webhooks'], charge['created'], charge['type'],
-                            charge['livemode'], charge['request'], charge['id']]
+                            charge['livemode'], charge['request'], charge['id'], charge['data']['object']['order_no']]
                 update_charge = self.db.update(update_sql, sql_list)
+                self.db.close()
+                # 更新状态2-->3，info更改
+                sql_expert = "select mobile,email from qa_expert_list where id=%s" % charge_expert
+                expert = self.db.get(sql_expert)
+                self.db.close()
+                meet_line = [{'time': Time_Change.string_time(),
+                              'info': '付款成功，等待见面',
+                              'extra': ['%s' % expert['mobile'],
+                                        '%s' % expert['email']]
+                              }]
+                sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
+                                 % (charge_user, charge_topic, 2)
+                get_status = self.db.get(sql_get_status)
+                self.db.close()
+                json_time_line = json.loads(get_status['time_line'])
+                append_status = json_time_line.append(meet_line)
+                time_line = json.dumps(append_status)
+                sql_status = "update qa_reservation set status=%s,time_line=%s where id=%s"
+                status_list = [3, time_line, get_status['id']]
+                update_status = self.db.update(sql_status, *status_list)
+                self.db.close()
         except Exception, e:
             self.log.info("----------------------------- 2 ping++ return charge , update order false !!!!!!!")
         finally:

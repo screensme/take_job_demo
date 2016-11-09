@@ -2436,6 +2436,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "2",
   "data": {
+	"is_process": 0,	(是否预约过，0=未预约，1=已预约，2=已确认，3=已付款，4=已见面)
+	"is_pay": 0,		(是否支付，1=支付，0=未支付)
     "meet_num": 11,
     "big_image": "image01.png",
     "score": "0",
