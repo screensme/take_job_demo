@@ -2565,7 +2565,56 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "支付成功",
   "token": "122",
   "data": {
-    "errorcode": 0
+    "errorcode": 0,
+    "charge": {
+      "order_no": "be1e331ea65511e6bcce606c6604429a",
+      "extra": {},
+      "app": "app_eTiLm1mvTGe5O4mv",
+      "livemode": false,
+      "currency": "cny",
+      "time_settle": null,
+      "time_expire": 1478686987,
+      "id": "ch_9CGeX5OC0440un1qH89Si1qP",
+      "subject": "徐帅楠",
+      "failure_msg": null,
+      "channel": "wx",
+      "metadata": {
+        "topic": 1,
+        "user": "122",
+        "expert": 1
+      },
+      "body": "你离成为人生赢家只差一副眼镜",
+      "credential": {
+        "object": "credential",
+        "wx": {
+          "packageValue": "Sign=WXPay",
+          "timeStamp": 1478679787,
+          "sign": "0a2db199c4d4a2f552ad114870c354cb786090e0",
+          "partnerId": "1276847601",
+          "appId": "wxtqflkcs0mlgot0ql",
+          "prepayId": "1101000000161109x5unvtpcej5ke5sy",
+          "nonceStr": "9eb6820021ed25d9c1071dda1897c8df"
+        }
+      },
+      "client_ip": "127.0.0.1",
+      "description": null,
+      "amount_refunded": 0,
+      "refunded": false,
+      "object": "charge",
+      "paid": false,
+      "amount_settle": 60000,
+      "time_paid": null,
+      "failure_code": null,
+      "refunds": {
+        "url": "/v1/charges/ch_9CGeX5OC0440un1qH89Si1qP/refunds",
+        "has_more": false,
+        "object": "list",
+        "data": []
+      },
+      "created": 1478679787,
+      "transaction_no": null,
+      "amount": 60000
+    }
   }
 }```  
 
