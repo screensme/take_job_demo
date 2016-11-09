@@ -173,3 +173,25 @@ class MessageTopicFinishHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+
+# 消息-详情-话题轴
+class MessageFullTopicHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def get(self, token):
+        self.log.info('+++++++++++ V1 Message, message full +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.message_full_topic(token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

@@ -79,7 +79,8 @@ from api.tools_handler import \
     MessageGetHandler, \
     MessageTopicProcessHandler, \
     MessageTopicEvaluateHandler, \
-    MessageTopicFinishHandler
+    MessageTopicFinishHandler, \
+    MessageFullTopicHandler
 
 from api.workplaceQA_handler import \
     WorkplaceHomeHandler, \
@@ -181,6 +182,7 @@ urls = [
     url(r"/message/topic-processing/token-(\w+)", MessageTopicProcessHandler),    # 消息-话题进行中
     url(r"/message/topic-evaluated/token-(\w+)", MessageTopicEvaluateHandler),    # 消息-话题待评价
     url(r"/message/topic-finish/token-(\w+)", MessageTopicFinishHandler),    # 消息-话题已完成
+    url(r"/message-full/topic-(\w+)/token-(\w+)", MessageFullTopicHandler),    # 消息-详情-话题轴
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
     url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，从简历中获取用户个人信息！！！！！

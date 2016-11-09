@@ -20,6 +20,7 @@ from common import IF_email
 from common.query_top import QueryEsapi
 import pingpp
 from tools.tools_topic_message import EditTopic
+from tools.time_change import Time_Change
 # import oss2
 
 reload(sys)
@@ -3086,11 +3087,16 @@ class Action(object):
             result['msg'] = '您已经提交过申请，请不要重复提交'
             result['data'] = {'errorcode': 100}
             raise tornado.gen.Return(result)
-        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_message,meet_question,status,user_id) " \
-                     "values(%s,%s,%s,%s,%s,%s)"
+
+        dt = datetime.datetime.now()
+        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_message,meet_question,status,user_id,meet_line,dt_create,dt_update) " \
+                     "values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        meet_line = [{'time': Time_Change.string_time(),
+                      'info': '预约成功，等待专家确认',
+                      'extra': []}]
+        insert_list = [topic_id, expert_id, meet_message, meet_question, '1', token, json.dumps(meet_line), dt, dt]
         try:
-            insert_reservation = self.db.insert(sql_insert, topic_id, expert_id,
-                                                meet_message, meet_question, '1', token)
+            insert_reservation = self.db.insert(sql_insert, *insert_list)
             self.db.close()
         except Exception, e:
             result['status'] = 'fail'
@@ -3194,7 +3200,8 @@ class Action(object):
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '支付成功'
-        result['data'] = {'errorcode': 0}
+        result['data'] = {'errorcode': 0,
+                          'charge': pay_QA}
         raise tornado.gen.Return(result)
 
     # 付款成功页
@@ -3310,6 +3317,19 @@ class Action(object):
         result['token'] = token
         result['msg'] = ''
         result['data'] = message
+        raise tornado.gen.Return(result)
+
+    # 消息-详情-话题轴
+    @tornado.gen.coroutine
+    def message_full_topic(self, token=str, cache_flag=int):
+
+        result = dict()
+
+        #
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = ''
         raise tornado.gen.Return(result)
 
 #   #######################################################################################

@@ -98,7 +98,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 62.话题列表-post：/workplaceQA/topic_list  
 63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
 64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
-65.某一话题评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
+65.对专家的评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
 66.写评价页-get-post：/workplaceQA/evaluate/topic-{topic}  
 67-1.预约页-get：/workplaceQA/reservation?topic_id={topic_id}&token={token}  
 67-2.预约页-post：/workplaceQA/reservation  
