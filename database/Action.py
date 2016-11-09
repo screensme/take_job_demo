@@ -3234,6 +3234,24 @@ class Action(object):
         result['data'] = datas
         raise tornado.gen.Return(result)
 
+    # 支付返回结果，ping++返回结果
+    @tornado.gen.coroutine
+    def recv_charge(self, charge=dict, cache_flag=int):
+
+        try:
+            if charge['type'] == 'charge.succeeded':
+                self.log.info('----------------------------- 1 ping++ return charge , succeeded')
+                update_sql = "update qa_order set result_object=%s and result_pending_webhooks=%s and result_created=%s " \
+                             "and result_type=%s and result_livemode=%s and result_request=%s and result_id=%s"
+                sql_list = [charge['object'], charge['pending_webhooks'], charge['created'], charge['type'],
+                            charge['livemode'], charge['request'], charge['id']]
+                update_charge = self.db.update(update_sql, sql_list)
+        except Exception, e:
+            self.log.info("----------------------------- 2 ping++ return charge , update order false !!!!!!!")
+        finally:
+            self.log.info('----------------------------- 3 ping++ return finish !!!!!!!')
+        raise tornado.gen.Return('success')
+
     # 新消息列表，包含所有消息数量
     @tornado.gen.coroutine
     def message_get(self, token=str, cache_flag=int):
@@ -3268,7 +3286,7 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s" % (token,)
         topic_message = self.db.query(sql_topic_message)
@@ -3287,7 +3305,7 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s" % (token,)
         topic_message = self.db.query(sql_topic_message)
@@ -3306,7 +3324,7 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s" % (token,)
         topic_message = self.db.query(sql_topic_message)
@@ -3321,16 +3339,29 @@ class Action(object):
 
     # 消息-详情-话题轴
     @tornado.gen.coroutine
-    def message_full_topic(self, token=str, cache_flag=int):
+    def message_full_topic(self, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-
-        #
-        result['status'] = 'success'
-        result['token'] = token
-        result['msg'] = ''
-        result['data'] = ''
-        raise tornado.gen.Return(result)
+        sql_message = "select time_line from qa_reservation where id=%s and user_id=%s" % (message_id, token)
+        message = self.db.get(sql_message)
+        self.db.close()
+        if message is None:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = {'errorcode': 100}
+            raise tornado.gen.Return(result)
+        else:
+            try:
+                time_line = json.loads(message['time_line'])
+            except Exception, e:
+                pass
+            #
+            result['status'] = 'success'
+            result['token'] = token
+            result['msg'] = ''
+            result['data'] = time_line
+            raise tornado.gen.Return(result)
 
 #   #######################################################################################
     '''

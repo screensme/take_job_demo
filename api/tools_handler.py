@@ -179,12 +179,12 @@ class MessageTopicFinishHandler(BaseHandler):
 class MessageFullTopicHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, message_id, token):
         self.log.info('+++++++++++ V1 Message, message full +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.message_full_topic(token, cache_flag)
+            result = yield self.db.message_full_topic(message_id, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

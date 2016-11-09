@@ -5,6 +5,7 @@ from api.base_handler import BaseHandler
 import tornado
 from common.tools import args404, ObjectToString
 import re
+import json
 
 # ping++ id
 Test_Secret_Key = "sk_test_jPK4GKWLOCW94av5i5nTmrjL"
@@ -175,7 +176,7 @@ class WorkplacePayHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
-        self.log.info('+++++++++++ 付款页 500 +++++++++++')
+        self.log.info('+++++++++++ 付款页 200 +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
 
@@ -204,7 +205,7 @@ class WorkplacePaySuccessHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def get(self, page, num, token):
-        self.log.info('+++++++++++ 付款成功页 500 +++++++++++')
+        self.log.info('+++++++++++ 付款成功页 200 +++++++++++')
         cache_flag = self.get_cache_flag()
         result = yield self.db.workplace_pay_success(page, num, token, cache_flag)
 
@@ -212,3 +213,19 @@ class WorkplacePaySuccessHandler(BaseHandler):
         self.finish()
         return
 
+
+# 支付返回结果，ping++返回结果
+class WorkplacePayResultHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info(self.request.body)
+        form = json.loads(self.request.body)
+        self.log.info(json.dumps(form, indent=4))
+        # self.log.info(form)
+        cache_flag = self.get_cache_flag()
+        result = yield self.db.recv_charge(charge=form, cache_flag=cache_flag)
+        self.log.info('charge is save OK')
+        self.write('success')
+        self.finish()
+        return

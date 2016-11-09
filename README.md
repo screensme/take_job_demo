@@ -108,6 +108,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 71.消息-话题进行中-get：/message/topic-processing/token-{token}  
 72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
 73.消息-话题已完成-get：/message/topic-finish/token-{token}  
+74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 ***
 #####简历状态：  
 	
@@ -2655,7 +2656,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "money": "600",
       "is_read": "0",
       "tag": "python后台工程师",
-      "is_pay": "0"
+      "is_pay": "0",
+	  "id": 1
     },
     {
       "status": "待同意",
@@ -2666,6 +2668,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "is_read": "0",
       "tag": "python后台工程师",
       "is_pay": "0"
+	  "id": 2
     },
     {
       "status": "待付款",
@@ -2676,6 +2679,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "is_read": "0",
       "tag": "python后台工程师",
       "is_pay": "0"
+	  "id": 3
     },
     {
       "status": "待同意",
@@ -2686,6 +2690,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "is_read": "0",
       "tag": "python后台工程师",
       "is_pay": "0"
+	  "id": 4
     }
   ]
 }```  
@@ -2710,6 +2715,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "is_read": "0",
       "tag": "python后台工程师",
       "is_pay": "0"
+	  "id": 5
     }
   ]
 }```  
@@ -2734,6 +2740,36 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "is_read": "0",
       "tag": "android",
       "is_pay": "0"
+	  "id": 6
     }
   ]
 }```  
+####74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "11",
+  "data": [
+    {
+      "info": "已预约，等待见面",
+      "time": "2016-11-09 18:19:44",
+      "extra": []
+    },
+    {
+      "info": "专家已确认，请您付款",
+      "time": "2016-11-09 19:10:14",
+      "extra": []
+    },
+    {
+      "info": "已预约，等待见面",
+      "time": "2016-11-09 19:15:28",
+      "extra": []
+    }
+  ]
+}```  
+
