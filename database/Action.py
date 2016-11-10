@@ -3052,8 +3052,9 @@ class Action(object):
         sql_get_status = "select * from qa_reservation where id=%s" % (reservation_id,)
         get_status = self.db.get(sql_get_status)
         self.db.close()
-        sql_evaluate = "insert into qa_evaluate(user_id,topic_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s)"
-        insert_evaluate = self.db.insert(sql_evaluate, token, topic, evaluate, score, datetime.datetime.now())
+        sql_evaluate = "insert into qa_evaluate(user_id,topic_id,expert_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s,%s)"
+        evaluate_list = [token, get_status['topic_id'], get_status['expert_id'], evaluate, score, dt]
+        insert_evaluate = self.db.insert(sql_evaluate, *evaluate_list)
         self.db.close()
         # 更新状态 4-->10
         meet_line = [{'time': Time_Change.string_time(),
