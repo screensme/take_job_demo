@@ -3214,20 +3214,20 @@ class Action(object):
             raise tornado.gen.Return(result)
 
         # 支付成功，更新订单
-        sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
-                           "time_expire=%s where id=%s"
-        update_list = [pay_QA['created'], json.dumps(pay_QA['credential']), pay_QA['id'], pay_QA['refunded'],
-                       pay_QA['time_expire'], insert_order]
-
-        update_order = self.db.update(sql_update_order, *update_list)
-        self.db.close()
+        # sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
+        #                    "time_expire=%s where id=%s"
+        # update_list = [pay_QA['created'], json.dumps(pay_QA['credential']), pay_QA['id'], pay_QA['refunded'],
+        #                pay_QA['time_expire'], insert_order]
+        #
+        # update_order = self.db.update(sql_update_order, *update_list)
+        # self.db.close()
 
         sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s"
         update_reservation = self.db.update(sql_update_res, 3, topic_id, token)
         self.db.close()
 
-        self.log.info("------------------------User pay step 3 -->success, --update_order=%s,--update_reservation=%s"
-                      % (update_order, update_reservation))
+        self.log.info("------------------------User pay step 3 -->success, --update_reservation=%s"
+                      % (update_reservation,))
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '支付成功'
