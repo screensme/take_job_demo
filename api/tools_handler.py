@@ -113,12 +113,12 @@ class MessageGetHandler(BaseHandler):
 class MessageTopicProcessHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         self.log.info('+++++++++++ V1 Message, message_topic_process +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.message_topic_process(token, cache_flag)
+            result = yield self.db.message_topic_process(page, num, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'
@@ -135,12 +135,12 @@ class MessageTopicProcessHandler(BaseHandler):
 class MessageTopicEvaluateHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         self.log.info('+++++++++++ V1 Message, message_topic_evaluate +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.message_topic_evaluate(token, cache_flag)
+            result = yield self.db.message_topic_evaluate(page, num, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'
@@ -157,12 +157,12 @@ class MessageTopicEvaluateHandler(BaseHandler):
 class MessageTopicFinishHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, token):
+    def get(self, page, num, token):
         self.log.info('+++++++++++ V1 Message, message_topic_finish +++++++++++')
         cache_flag = self.get_cache_flag()
 
         if re.match(r'\d+', '%s' % token):
-            result = yield self.db.message_topic_finish(token, cache_flag)
+            result = yield self.db.message_topic_finish(page, num, token, cache_flag)
         else:
             result = dict()
             result['status'] = 'fail'

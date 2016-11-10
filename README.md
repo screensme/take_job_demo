@@ -105,9 +105,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 68.付款页-post：/workplaceQA/pay  
 69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
 70.新消息列表-get：/message/token-{token}  
-71.消息-话题进行中-get：/message/topic-processing/token-{token}  
-72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
-73.消息-话题已完成-get：/message/topic-finish/token-{token}  
+71.消息-话题进行中-get：/message/topic-processing/page-/page-{page}/num-{num}/token-{token}  
+72.消息-话题待评价-get：/message/topic-evaluated/page-/page-{page}/num-{num}/token-{token}  
+73.消息-话题已完成-get：/message/topic-finish/page-/page-{page}/num-{num}/token-{token}  
 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 ***
 #####简历状态：  
@@ -2639,11 +2639,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
-####71.消息-话题进行中-get：/message/topic-processing/token-{token}  
+####71.消息-话题进行中-get：/message/topic-processing/page-/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
 	token			Y	string		用户id	
+	page		Y	string		页数
+	num			Y	string		每页的数量
 返回成功：
 ```{
   "status": "success",
@@ -2697,11 +2699,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 
-####72.消息-话题待评价-get：/message/topic-evaluated/token-{token}  
+####72.消息-话题待评价-get：/message/topic-evaluated/page-/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
 	token			Y	string		用户id	
+	page		Y	string		页数
+	num			Y	string		每页的数量
 返回成功：
 ```{
   "status": "success",
@@ -2722,11 +2726,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 
-####73.消息-话题已完成-get：/message/topic-finish/token-{token}  
+####73.消息-话题已完成-get：/message/topic-finish/page-/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
 	token			Y	string		用户id	
+	page		Y	string		页数
+	num			Y	string		每页的数量
 返回成功：
 ```{
   "status": "success",

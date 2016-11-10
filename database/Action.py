@@ -3047,6 +3047,7 @@ class Action(object):
     def evaluate_edit(self, score=str, topic=str, evaluate=str, token=str, cache_flag=str):
 
         result = dict()
+        dt = datetime.datetime.now()
         sql_evaluate = "insert into qa_evaluate(user_id,topic_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s)"
         insert_evaluate = self.db.insert(sql_evaluate, token, topic, evaluate, score, datetime.datetime.now())
         self.db.close()
@@ -3063,8 +3064,8 @@ class Action(object):
         append_status = json_time_line.append(meet_line)
         time_line = json.dumps(append_status)
 
-        sql_status = "update qa_reservation set status=%s,time_line=%s where id=%s"
-        status_list = [10, time_line, get_status['id']]
+        sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
+        status_list = [10, time_line, dt, get_status['id']]
         update_status = self.db.update(sql_status, *status_list)
         self.db.close()
         self.log.info("---------------------- evaluate success , finish !!!!!!")
@@ -3080,8 +3081,8 @@ class Action(object):
     def reservation_get(self, topic_id=str, token=str, cache_flag=int):
 
         result = dict()
-        # status--> 1-预约，2-行家确认，3-付款，4-见面，5-评价，10-完成
-        sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4,5)" \
+        # status--> 1-已预约，2-行家已确认，3-已付款，4-已见面，10-完成
+        sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
                           % (topic_id, token)
         search_reservation = self.db.query(sql_reservation)
         self.db.close()
@@ -3104,8 +3105,8 @@ class Action(object):
     def reservation(self, topic_id=str, expert_id=str, meet_message=str, meet_question=str, token=str, cache_flag=int):
 
         result = dict()
-        # status--> 1-预约，2-行家确认，3-付款，4-见面，5-评价，10-完成
-        sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4,5)" \
+        # status--> 1-已预约，2-行家已确认，3-已付款，4-已见面，10-完成
+        sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
                           % (topic_id, token)
         search_reservation = self.db.query(sql_reservation)
         self.db.close()
@@ -3267,6 +3268,7 @@ class Action(object):
     @tornado.gen.coroutine
     def recv_charge(self, charge=dict, cache_flag=int):
 
+        dt = datetime.datetime.now()
         charge_topic = charge['data']['object']['metadata']['topic']
         charge_user = charge['data']['object']['metadata']['user']
         charge_expert = charge['data']['object']['metadata']['expert']
@@ -3297,8 +3299,8 @@ class Action(object):
                 json_time_line = json.loads(get_status['time_line'])
                 append_status = json_time_line.append(meet_line)
                 time_line = json.dumps(append_status)
-                sql_status = "update qa_reservation set status=%s,time_line=%s where id=%s"
-                status_list = [3, time_line, get_status['id']]
+                sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
+                status_list = [3, time_line, dt, get_status['id']]
                 update_status = self.db.update(sql_status, *status_list)
                 self.db.close()
         except Exception, e:
@@ -3337,13 +3339,14 @@ class Action(object):
 
     # 消息-话题进行中(1-->已预约,待同意，2-->已确认,待付款，3-已付款,待约见，)
     @tornado.gen.coroutine
-    def message_topic_process(self, token=str, cache_flag=int):
+    def message_topic_process(self, page=str, num=str, token=str, cache_flag=int):
 
         result = dict()
 
-        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s" % (token,)
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s" \
+                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3356,13 +3359,14 @@ class Action(object):
 
     # 消息-话题待评价
     @tornado.gen.coroutine
-    def message_topic_evaluate(self, token=str, cache_flag=int):
+    def message_topic_evaluate(self, page=str, num=str, token=str, cache_flag=int):
 
         result = dict()
 
-        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s" % (token,)
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s" \
+                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3375,13 +3379,14 @@ class Action(object):
 
     # 消息-话题已完成
     @tornado.gen.coroutine
-    def message_topic_finish(self, token=str, cache_flag=int):
+    def message_topic_finish(self, page=str, num=str, token=str, cache_flag=int):
 
         result = dict()
 
-        sql_topic_message = "select a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s" % (token,)
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s" \
+                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
