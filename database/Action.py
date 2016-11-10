@@ -1260,7 +1260,7 @@ class Action(object):
 
     # 意见反馈
     @tornado.gen.coroutine
-    def Feed_back(self, token=str, info=str, email=str, cache_flag=int):
+    def Feed_back(self, token=str, info=str, email=str, feed_type=str, cache_flag=int):
 
         dt = datetime.datetime.now()
         job_type = "students"
@@ -1268,9 +1268,10 @@ class Action(object):
         contents = info
         email = email
         status = "ready"
-        sql_feed_post = "insert into feedback(job_type,channel,contents,status,dt_create,dt_update,email) values(%s,%s,%s,%s,%s,%s,%s)"
+        sql_feed_post = "insert into feedback(job_type,channel,contents,status,dt_create,dt_update,email,feed_type) " \
+                        "values(%s,%s,%s,%s,%s,%s,%s,%s)"
         try:
-            feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt, email)
+            feed_post = self.db.insert(sql_feed_post, job_type, channel, contents, status, dt, dt, email, feed_type)
             self.db.close()
         except Exception, e:
             result = dict()

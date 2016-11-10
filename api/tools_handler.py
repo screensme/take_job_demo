@@ -17,11 +17,13 @@ class FeedbackHandler(BaseHandler):
         self.log.info('+++++++++++Feedback+++++++++++')
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        info = self.get_argument('info')
-        try:
-            email = self.get_argument('email')
-        except Exception,e:
-            email = ''
+        info = self.get_argument('info', '')
+        email = self.get_argument('email', '')
+        feed_type = self.get_argument('feed_type', 1)
+        # try:
+        #     email = self.get_argument('email')
+        # except Exception,e:
+        #     email = ''
         if info == '':
             result = dict()
             result['status'] = 'fail'
@@ -29,7 +31,7 @@ class FeedbackHandler(BaseHandler):
             result['msg'] = '请输入反馈的内容'
             result['data'] = {'errorcode': 1000}
         else:
-            result = yield self.db.Feed_back(token, info, email, cache_flag)
+            result = yield self.db.Feed_back(token, info, email, feed_type, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

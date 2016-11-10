@@ -821,6 +821,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	token		Y	string		用户id	
 	info		Y	string		反馈的消息内容
 	email		N	string		反馈用户的邮箱（选填）
+	feed_type	N	string		1--> APP反馈，2-->问道反馈
 返回成功：
 ```{
   "status": "success",
