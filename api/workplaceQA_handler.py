@@ -219,6 +219,7 @@ class WorkplacePayResultHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
     def post(self):
+        self.log.info("--------------------------------- ping ++ receive charge result....")
         self.log.info(self.request.body)
         form = json.loads(self.request.body)
         self.log.info(json.dumps(form, indent=4))
