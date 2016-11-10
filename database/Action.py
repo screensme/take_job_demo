@@ -3216,7 +3216,7 @@ class Action(object):
         # 支付成功，更新订单
         sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
                            "time_expire=%s where id=%s"
-        update_list = [pay_QA['created'], pay_QA['credential'], pay_QA['id'], pay_QA['refunded'],
+        update_list = [pay_QA['created'], json.dumps(pay_QA['credential']), pay_QA['id'], pay_QA['refunded'],
                        pay_QA['time_expire'], insert_order]
 
         update_order = self.db.update(sql_update_order, *update_list)
