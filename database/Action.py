@@ -2948,7 +2948,7 @@ class Action(object):
         result = dict()
         if int(num) > 20:
             num = 20
-        sql_topic = "select f.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
+        sql_topic = "select f.create_time,f.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
                     "from qa_expert_list as a left join qa_tag_field as b on b.expert_id=a.id " \
                     "left join qa_expert_topic as f on b.topic_id=f.id " \
                     "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
