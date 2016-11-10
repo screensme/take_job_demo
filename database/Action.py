@@ -3427,11 +3427,11 @@ class Action(object):
 
             status = message['status']
             dt_update = message['dt_update']
-            touch_info = ['电话：%s' % message['mobile'], '邮箱：%s' % message['email']]
+            touch_info = {'mobile': message['mobile'], 'email': message['email']}
             topic_info = {'topic': message['title'],
                           'expert': message['name'],
                           'money': message['money']}
-            metadata = EditTopic.edit_message_status_info(status, dt_update, *touch_info)
+            metadata = EditTopic.edit_message_status_info(status, dt_update, **touch_info)
             return_info = {'status': status,
                            'topic_info': topic_info,
                            'time_line': time_line,
