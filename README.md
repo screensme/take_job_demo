@@ -105,9 +105,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 68.付款页-post：/workplaceQA/pay  
 69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
 70.新消息列表-get：/message/token-{token}  
-71.消息-话题进行中-get：/message/topic-processing/page-/page-{page}/num-{num}/token-{token}  
-72.消息-话题待评价-get：/message/topic-evaluated/page-/page-{page}/num-{num}/token-{token}  
-73.消息-话题已完成-get：/message/topic-finish/page-/page-{page}/num-{num}/token-{token}  
+71.消息-话题进行中-get：/message/topic-processing/page-{page}/num-{num}/token-{token}  
+72.消息-话题待评价-get：/message/topic-evaluated/page-{page}/num-{num}/token-{token}  
+73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 ***
 #####简历状态：  
@@ -2639,7 +2639,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
-####71.消息-话题进行中-get：/message/topic-processing/page-/page-{page}/num-{num}/token-{token}  
+####71.消息-话题进行中-get：/message/topic-processing/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2699,7 +2699,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 
-####72.消息-话题待评价-get：/message/topic-evaluated/page-/page-{page}/num-{num}/token-{token}  
+####72.消息-话题待评价-get：/message/topic-evaluated/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2726,7 +2726,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 
-####73.消息-话题已完成-get：/message/topic-finish/page-/page-{page}/num-{num}/token-{token}  
+####73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2753,6 +2753,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }```  
 ####74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
+状态码：
+		
+		1-->已预约,待同意，
+		2-->已确认,待付款，
+		3-->已付款,待约见，
+		4-->已见面,待评价，
+		10-->已评价,完成，
+		11-->已取消，
+		12-->未同意，
+		13-->已过期，
+		14-->未见面  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2761,23 +2772,34 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ```{
   "status": "success",
   "msg": "",
-  "token": "11",
-  "data": [
-    {
-      "info": "已预约，等待见面",
-      "time": "2016-11-09 18:19:44",
-      "extra": []
+  "token": "12",
+  "data": {
+    "status": 3,					(状态码)
+    "time_line": [					（时间线，约见流程）
+      {
+        "info": "已预约，等待见面",
+        "extra": [],
+        "time": "2016-11-09 18:19:44"
+      },
+      {
+        "info": "专家已确认，请您付款",
+        "extra": [],
+        "time": "2016-11-10 11:38:45"
+      }
+    ],
+    "topic_info": {						（话题-专家-金额）
+      "topic": "你离成为人生赢家只差两副小丁丁",
+      "money": "300",
+      "expert": "徐帅楠"
     },
-    {
-      "info": "专家已确认，请您付款",
-      "time": "2016-11-09 19:10:14",
-      "extra": []
-    },
-    {
-      "info": "已预约，等待见面",
-      "time": "2016-11-09 19:15:28",
-      "extra": []
+    "metadata": {
+      "status_info": "约会费用已支付",						（顶部文字）
+      "status_little_info": "已给出联系方式，请与行家确认好约见时间和地点",		(顶部小字)
+      "touch_info": [			（行家联系方式,除支付外，均为[]）
+        "电话：18301656040",
+        "邮箱：178277658@qq.com"
+      ]
     }
-  ]
+  }
 }```  
 

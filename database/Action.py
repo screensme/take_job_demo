@@ -3402,7 +3402,9 @@ class Action(object):
     def message_full_topic(self, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_message = "select time_line from qa_reservation where id=%s and user_id=%s" % (message_id, token)
+        sql_message = "select q.dt_update,q.status,q.time_line,a.mobile,a.email,a.name,m.title,m.money " \
+                      "from qa_reservation as q left join qa_expert_list as a on q.expert_id=a.id " \
+                      "left join qa_expert_topic as m on q.topic_id=m.id where q.id=%s and q.user_id=%s" % (message_id, token)
         message = self.db.get(sql_message)
         self.db.close()
         if message is None:
@@ -3415,12 +3417,29 @@ class Action(object):
             try:
                 time_line = json.loads(message['time_line'])
             except Exception, e:
-                pass
-            #
+                self.log.info("---------------------- message Error, %s " % e.message)
+                result['status'] = 'fail'
+                result['token'] = token
+                result['msg'] = ''
+                result['data'] = {'errorcode': 1000}
+                raise tornado.gen.Return(result)
+
+            status = message['status']
+            dt_update = message['dt_update']
+            touch_info = ['电话：%s' % message['mobile'], '邮箱：%s' % message['email']]
+            topic_info = {'topic': message['title'],
+                          'expert': message['name'],
+                          'money': message['money']}
+            metadata = EditTopic.edit_message_status_info(status, dt_update, *touch_info)
+            return_info = {'status': status,
+                           'topic_info': topic_info,
+                           'time_line': time_line,
+                           'metadata': metadata,
+                           }
             result['status'] = 'success'
             result['token'] = token
             result['msg'] = ''
-            result['data'] = time_line
+            result['data'] = return_info
             raise tornado.gen.Return(result)
 
 #   #######################################################################################
