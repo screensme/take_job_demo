@@ -175,7 +175,7 @@ urls = [
     url(r"/workplaceQA/expert-(\w+)/token-(\w+)", ExpertFullHandler),    # 专家详情页
     url(r"/workplaceQA/topic-(\w+)/token-(\w+)", TopicFullHandler),    # 话题详情页
     url(r"/workplaceQA/evaluate/page-(\d+)/num-(\d+)/expert-(\w+)/token-(\w+)", EvaluateGetHandler),    # 对专家的评价列表
-    url(r"/workplaceQA/evaluate/topic-(\w+)", EvaluateEditHandler),    # 写评价页
+    url(r"/workplaceQA/evaluate", EvaluateEditHandler),    # 评价页get,写评价页post
     url(r"/workplaceQA/reservation", ReservationHandler),    # 预约页
     url(r"/workplaceQA/pay", WorkplacePayHandler),    # 付款页
     url(r"/workplaceQA/pay-success/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页

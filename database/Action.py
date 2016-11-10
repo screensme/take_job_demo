@@ -3028,27 +3028,30 @@ class Action(object):
 
     # 写评价页get
     @tornado.gen.coroutine
-    def evaluate_edit_get(self, topic=str, token=str):
+    def evaluate_edit_get(self, reservation_id=str, token=str, cache_flag=int):
 
         result = dict()
-        # sql_topic = "select *"
-        # sql_topic = "select f.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
-        #             "from qa_expert_list as a left join qa_tag_field as b on b.expert_id=a.id " \
-        #             "left join qa_expert_topic as f on b.topic_id=f.id " \
-        #             "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
+        sql_topic = "select a.meet_time,a.meet_address,b.little_image,b.title,m.name from qa_reservation as a " \
+                    "left join qa_expert_topic as b on a.topic_id=b.id " \
+                    "left join qa_expert_list as m on a.expert_id=m.id where a.id=%s" % (reservation_id,)
+        topic_expert_reservation = self.db.get(sql_topic)
+        self.db.close()
 
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = ''
+        result['data'] = topic_expert_reservation
         raise tornado.gen.Return(result)
 
     # 写评价页post
     @tornado.gen.coroutine
-    def evaluate_edit(self, score=str, topic=str, evaluate=str, token=str, cache_flag=str):
+    def evaluate_edit(self, reservation_id=str, score=str, evaluate=str, token=str, cache_flag=str):
 
         result = dict()
         dt = datetime.datetime.now()
+        sql_get_status = "select * from qa_reservation where id=%s" % (reservation_id,)
+        get_status = self.db.get(sql_get_status)
+        self.db.close()
         sql_evaluate = "insert into qa_evaluate(user_id,topic_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s)"
         insert_evaluate = self.db.insert(sql_evaluate, token, topic, evaluate, score, datetime.datetime.now())
         self.db.close()
@@ -3057,16 +3060,13 @@ class Action(object):
                       'info': '评价成功，完成',
                       'extra': []
                       }]
-        sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
-                         % (token, topic, 4)
-        get_status = self.db.get(sql_get_status)
-        self.db.close()
+
         json_time_line = json.loads(get_status['time_line'])
         append_status = json_time_line.append(meet_line)
         time_line = json.dumps(append_status)
 
         sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
-        status_list = [10, time_line, dt, get_status['id']]
+        status_list = [10, time_line, dt, reservation_id]
         update_status = self.db.update(sql_status, *status_list)
         self.db.close()
         self.log.info("---------------------- evaluate success , finish !!!!!!")
@@ -3215,15 +3215,15 @@ class Action(object):
 
         # 支付成功，更新订单
         sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
-                           "time_expire=%s where id=%s" \
-                           % (pay_QA['created'], pay_QA['credential'], pay_QA['id'],
-                              pay_QA['refunded'], pay_QA['time_expire'], insert_order)
-        
-        update_order = self.db.update(sql_update_order)
+                           "time_expire=%s where id=%s"
+        update_list = [pay_QA['created'], pay_QA['credential'], pay_QA['id'],pay_QA['refunded'],
+                       pay_QA['time_expire'], insert_order]
+
+        update_order = self.db.update(sql_update_order, *update_list)
         self.db.close()
 
-        sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s" % (3, topic_id, token)
-        update_reservation = self.db.update(sql_update_res)
+        sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s"
+        update_reservation = self.db.update(sql_update_res, 3, topic_id, token)
         self.db.close()
 
         self.log.info("------------------------User pay step 3 -->success, --update_order=%s,--update_reservation=%s"

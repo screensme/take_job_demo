@@ -110,10 +110,12 @@ class EvaluateGetHandler(BaseHandler):
 class EvaluateEditHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, topic):
+    def get(self):
         self.log.info('+++++++++++ 写评价页 Evaluate Edit get +++++++++++')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.evaluate_edit_get(topic, cache_flag)
+        token = self.get_argument('token')
+        reservation_id = self.get_argument('reservation_id')
+        result = yield self.db.evaluate_edit_get(reservation_id, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
@@ -121,15 +123,15 @@ class EvaluateEditHandler(BaseHandler):
 
     @gen.coroutine
     @tornado.web.asynchronous
-    def post(self, topic):
+    def post(self):
         self.log.info('+++++++++++ 写评价页 Evaluate Edit post +++++++++++')
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        topic = self.get_argument('topic')
+        reservation_id = self.get_argument('reservation_id')
         score = self.get_argument('score')
         evaluate = self.get_argument('evaluate')
-        result = yield self.db.evaluate_edit(score, topic, evaluate, token, cache_flag)
+        result = yield self.db.evaluate_edit(reservation_id, score, evaluate, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()
