@@ -206,10 +206,10 @@ class WorkplacePayHandler(BaseHandler):
 class WorkplacePaySuccessHandler(BaseHandler):
     @gen.coroutine
     @tornado.web.asynchronous
-    def get(self, page, num, token):
+    def get(self, message_id, token):
         self.log.info('+++++++++++ 付款成功页 200 +++++++++++')
         cache_flag = self.get_cache_flag()
-        result = yield self.db.workplace_pay_success(page, num, token, cache_flag)
+        result = yield self.db.workplace_pay_success(message_id, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

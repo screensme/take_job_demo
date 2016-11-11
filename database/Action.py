@@ -3238,28 +3238,17 @@ class Action(object):
 
     # 付款成功页
     @tornado.gen.coroutine
-    def workplace_pay_success(self, token=str):
+    def workplace_pay_success(self, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-        datas = {'home_image': ['1.png', '2.png', '3.png', '4.png'],
-                 'field': ['面试', '职业规划', '简历'],
-                 'expert_list': [{'id': 1,
-                                  'name': '徐帅楠',
-                                  'topic': '手把手教你如何在北京租房',
-                                  'tag': '首席UFO，又帅又能吃的Python后台工程师',
-                                  'meet_num': 10},
-                                 {'id': 2,
-                                  'name': '张岩',
-                                  'topic': '脚把脚教你如何在上海租房',
-                                  'tag': '又帅又能吃的android工程师',
-                                  'meet_num': 11},
-                                 {'id': 3,
-                                  'name': '马锦航',
-                                  'topic': '脸对脸教你如何在广州租房',
-                                  'tag': '又帅又能吃的IOS工程师',
-                                  'meet_num': 12},
-                                 ]
-                 }
+
+        sql_result_info = "select a.meet_address,a.meet_time,b.name,b.mobile,b.email " \
+                          "from qa_reservation as a left join qa_expert_list as b on a.expert_id=b.id " \
+                          "where a.id=%s" % (message_id,)
+        result_info = self.db.get(sql_result_info)
+        self.db.close()
+        datas = "请你于%s\n在%s\n与%s老师见面\n联系电话：%s\n" \
+                % (result_info['meet_time'], result_info['meet_address'], result_info['name'], result_info['mobile'])
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -3443,6 +3432,22 @@ class Action(object):
             result['msg'] = ''
             result['data'] = return_info
             raise tornado.gen.Return(result)
+
+    # 用户自主提问接口
+    @tornado.gen.coroutine
+    def user_post_question(self, field=str, question=str, token=str, cache_flag=int):
+
+        result = dict()
+
+        sql_insert = "insert into qa_user_question(user_id,field,question) values(%s,%s,%s)"
+        insert_question = self.db.insert(sql_insert, token, field, question)
+        self.db.close()
+
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = '问题已提交，我们会根据你的问题尽快帮您找到合适专家。'
+        result['data'] = {'errorcode': 0}
+        raise tornado.gen.Return(result)
 
 #   #######################################################################################
     '''

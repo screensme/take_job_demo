@@ -197,3 +197,28 @@ class MessageFullTopicHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+
+# 用户自主提问接口
+class QuestionUserHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ User post question  +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        token = self.get_argument('token')
+        question = self.get_argument('question')
+        field = self.get_argument('field')
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.user_post_question(field, question, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

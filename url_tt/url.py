@@ -80,7 +80,8 @@ from api.tools_handler import \
     MessageTopicProcessHandler, \
     MessageTopicEvaluateHandler, \
     MessageTopicFinishHandler, \
-    MessageFullTopicHandler
+    MessageFullTopicHandler, \
+    QuestionUserHandler
 
 from api.workplaceQA_handler import \
     WorkplaceHomeHandler, \
@@ -178,12 +179,13 @@ urls = [
     url(r"/workplaceQA/evaluate", EvaluateEditHandler),    # 评价页get,写评价页post
     url(r"/workplaceQA/reservation", ReservationHandler),    # 预约页
     url(r"/workplaceQA/pay", WorkplacePayHandler),    # 付款页
-    url(r"/workplaceQA/pay-success/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页
+    url(r"/workplaceQA/pay-success/message-(\w+)/token-(\w+)", WorkplacePaySuccessHandler),    # 付款成功页
     url(r"/message/token-(\w+)", MessageGetHandler),    # 新消息列表，包含所有消息数量
     url(r"/message/topic-processing/page-(\d+)/num-(\d+)/token-(\w+)", MessageTopicProcessHandler),    # 消息-话题进行中
     url(r"/message/topic-evaluated/page-(\d+)/num-(\d+)/token-(\w+)", MessageTopicEvaluateHandler),    # 消息-话题待评价
     url(r"/message/topic-finish/page-(\d+)/num-(\d+)/token-(\w+)", MessageTopicFinishHandler),    # 消息-话题已完成
     url(r"/message-full/message-(\w+)/token-(\w+)", MessageFullTopicHandler),    # 消息-详情-话题轴
+    url(r"/workplaceQA/question", QuestionUserHandler),    # 用户自主提问接口
     #   @#@#
     url(r"/workplaceQA/pay/result", WorkplacePayResultHandler),    # 支付返回结果，ping++返回结果
     #   ####################################################################################

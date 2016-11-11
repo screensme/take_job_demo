@@ -103,12 +103,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 66-2.写评价页-post：/workplaceQA/evaluate  
 67.预约页-post：/workplaceQA/reservation  
 68.付款页-post：/workplaceQA/pay  
-69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+69.付款成功页-get：/workplaceQA/pay-success/message-{message_id}/token-{token}  
 70.新消息列表-get：/message/token-{token}  
 71.消息-话题进行中-get：/message/topic-processing/page-{page}/num-{num}/token-{token}  
 72.消息-话题待评价-get：/message/topic-evaluated/page-{page}/num-{num}/token-{token}  
 73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
+75.用户自主提问-post：/workplaceQA/question  
 ***
 #####简历状态：  
 	
@@ -2614,7 +2615,19 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
-####69.付款成功页-get：/workplaceQA/pay-success/token-{token}  
+####69.付款成功页-get：/workplaceQA/pay-success/message-{message_id}/token-{token}  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	message_id		Y	string		进入付款页的消息id
+返回成功：
+```{
+  "status": "success",
+  "msg": "",
+  "token": "12",
+  "data": "请你于46589765\n在None\n与张岩老师见面\n联系电话：18301656040\n"
+}```
 
 ####70.新消息列表-get：/message/token-{token}  
 参数：
@@ -2796,3 +2809,19 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
+75.用户自主提问-post：/workplaceQA/question  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	field			Y	string		问题所在领域
+	question		Y	string		问题内容
+返回成功：
+```{
+  "status": "success",
+  "msg": "问题已提交，我们会根据你的问题尽快帮您找到合适专家。",
+  "token": "12",
+  "data": {
+    "errorcode": 0
+  }
+}```
