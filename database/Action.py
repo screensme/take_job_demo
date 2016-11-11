@@ -2992,7 +2992,7 @@ class Action(object):
 
         result = dict()
         sql_topic = "select * from qa_expert_topic where id=%s" % (topic,)
-        topic = self.db.get(sql_topic)
+        expert_topic = self.db.get(sql_topic)
         self.db.close()
         # status--> 1-已预约，2-行家已确认，3-已付款，4-已见面，10-完成
         sql_reservation = "select status,is_pay from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
@@ -3000,16 +3000,16 @@ class Action(object):
         search_reservation = self.db.get(sql_reservation)
         self.db.close()
         if search_reservation is not None:
-            topic['is_process'] = search_reservation['status']
-            topic['is_pay'] = search_reservation['is_pay']
+            expert_topic['is_process'] = search_reservation['status']
+            expert_topic['is_pay'] = search_reservation['is_pay']
         else:
-            topic['is_process'] = 0
-            topic['is_pay'] = 0
+            expert_topic['is_process'] = 0
+            expert_topic['is_pay'] = 0
 
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
-        result['data'] = topic
+        result['data'] = expert_topic
         raise tornado.gen.Return(result)
 
     # 评价列表和详情页
