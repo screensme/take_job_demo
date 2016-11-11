@@ -2967,7 +2967,9 @@ class Action(object):
 
         result = dict()
         sql_expert = "select * from qa_expert_list where id =%s" % (expert,)
-        sql_topic = "select id,title,money,score,little_image,meet_num from qa_expert_topic where expert_id=%s" % (expert,)
+        # sql_topic = "select id,title,money,score,little_image,meet_num from qa_expert_topic where expert_id=%s" % (expert,)
+        sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num,b.status from qa_expert_topic as a " \
+                    "left join qa_reservation as b on a.id=b.topic_id where a.expert_id=%s" % (expert,)
         sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
                        "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (expert,)
         expert = self.db.get(sql_expert)
