@@ -182,7 +182,7 @@ class WorkplacePayHandler(BaseHandler):
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
 
-        pingxx_secret_key = pingpp_api_key['test_test']
+        pingxx_secret_key = pingpp_api_key['true_true']
         ip = self.request.remote_ip
         token = self.get_argument('token')
         pay_type = self.get_argument('pay_type')
