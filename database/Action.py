@@ -3386,7 +3386,7 @@ class Action(object):
     def message_full_topic(self, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_message = "select q.dt_update,q.status,q.time_line,a.mobile,a.email,a.name,m.title,m.money " \
+        sql_message = "select q.id,q.dt_update,q.status,q.time_line,a.mobile,a.email,a.name,m.title,m.money " \
                       "from qa_reservation as q left join qa_expert_list as a on q.expert_id=a.id " \
                       "left join qa_expert_topic as m on q.topic_id=m.id where q.id=%s and q.user_id=%s" % (message_id, token)
         message = self.db.get(sql_message)
@@ -3408,6 +3408,7 @@ class Action(object):
                 result['data'] = {'errorcode': 1000}
                 raise tornado.gen.Return(result)
 
+            topic_id = message['topic_id']
             status = message['status']
             dt_update = message['dt_update']
             touch_info = {'mobile': message['mobile'], 'email': message['email']}
@@ -3416,6 +3417,7 @@ class Action(object):
                           'money': message['money']}
             metadata = EditTopic.edit_message_status_info(status, dt_update, **touch_info)
             return_info = {'status': status,
+                           'topic_id': topic_id,
                            'topic_info': topic_info,
                            'time_line': time_line,
                            'metadata': metadata,
