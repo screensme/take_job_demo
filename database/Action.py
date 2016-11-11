@@ -3386,7 +3386,7 @@ class Action(object):
     def message_full_topic(self, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_message = "select q.id,q.dt_update,q.status,q.time_line,a.mobile,a.email,a.name,m.title,m.money " \
+        sql_message = "select m.id,q.dt_update,q.status,q.time_line,a.mobile,a.email,a.name,m.title,m.money " \
                       "from qa_reservation as q left join qa_expert_list as a on q.expert_id=a.id " \
                       "left join qa_expert_topic as m on q.topic_id=m.id where q.id=%s and q.user_id=%s" % (message_id, token)
         message = self.db.get(sql_message)
