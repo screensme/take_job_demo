@@ -3057,14 +3057,14 @@ class Action(object):
         insert_evaluate = self.db.insert(sql_evaluate, *evaluate_list)
         self.db.close()
         # 更新状态 4-->10
-        meet_line = [{'time': Time_Change.string_time(),
+        meet_line = {'time': Time_Change.string_time(),
                       'info': '评价成功，完成',
                       'extra': []
-                      }]
+                      }
 
         json_time_line = json.loads(get_status['time_line'])
-        append_status = json_time_line.append(meet_line)
-        time_line = json.dumps(append_status)
+        json_time_line.append(meet_line)
+        time_line = json.dumps(json_time_line)
 
         sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
         status_list = [10, time_line, dt, reservation_id]
@@ -3121,12 +3121,12 @@ class Action(object):
             raise tornado.gen.Return(result)
 
         dt = datetime.datetime.now()
-        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_message,meet_question,status,user_id,meet_line,dt_create,dt_update) " \
+        sql_insert = "insert into qa_reservation(topic_id,expert_id,meet_message,meet_question,status,user_id,time_line,dt_create,dt_update) " \
                      "values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        meet_line = [{'time': Time_Change.string_time(),
+        time_line = [{'time': Time_Change.string_time(),
                       'info': '预约成功，等待专家确认',
                       'extra': []}]
-        insert_list = [topic_id, expert_id, meet_message, meet_question, '1', token, json.dumps(meet_line), dt, dt]
+        insert_list = [topic_id, expert_id, meet_message, meet_question, '1', token, json.dumps(time_line), dt, dt]
         try:
             insert_reservation = self.db.insert(sql_insert, *insert_list)
             self.db.close()
@@ -3159,13 +3159,13 @@ class Action(object):
             result['msg'] = '话题id错误'
             result['data'] = {'errorcode': 10}
             raise tornado.gen.Return(result)
-        else:
-            if topic['topic_time'] < datetime.datetime.now():
-                result['status'] = 'fail'
-                result['token'] = token
-                result['msg'] = '该话题已经结束'
-                result['data'] = {'errorcode': 50}
-                raise tornado.gen.Return(result)
+        # else:
+        #     if topic['topic_time'] < datetime.datetime.now():
+        #         result['status'] = 'fail'
+        #         result['token'] = token
+        #         result['msg'] = '该话题已经结束'
+        #         result['data'] = {'errorcode': 50}
+        #         raise tornado.gen.Return(result)
         if 'test' in topic['title']:
             price = int(topic['money'])
         else:
@@ -3214,21 +3214,12 @@ class Action(object):
             result['data'] = {'errorcode': 40}
             raise tornado.gen.Return(result)
 
-        # 支付成功，更新订单
-        # sql_update_order = "update qa_order set created=%s,credential='%s',_id='%s',refunds='%s'," \
-        #                    "time_expire=%s where id=%s"
-        # update_list = [pay_QA['created'], json.dumps(pay_QA['credential']), pay_QA['id'], pay_QA['refunded'],
-        #                pay_QA['time_expire'], insert_order]
-        #
-        # update_order = self.db.update(sql_update_order, *update_list)
+        # sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s"
+        # update_reservation = self.db.update(sql_update_res, 3, topic_id, token)
         # self.db.close()
 
-        sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s"
-        update_reservation = self.db.update(sql_update_res, 3, topic_id, token)
-        self.db.close()
-
-        self.log.info("------------------------User pay step 3 -->success, --update_reservation=%s"
-                      % (update_reservation,))
+        # self.log.info("------------------------User pay step 3 -->success, --update_reservation=%s"
+        #               % (update_reservation,))
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '支付成功'
