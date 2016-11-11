@@ -3394,7 +3394,7 @@ class Action(object):
         if message is None:
             result['status'] = 'fail'
             result['token'] = token
-            result['msg'] = ''
+            result['msg'] = 'message_id 错误'
             result['data'] = {'errorcode': 100}
             raise tornado.gen.Return(result)
         else:
@@ -3404,11 +3404,11 @@ class Action(object):
                 self.log.info("---------------------- message Error, %s " % e.message)
                 result['status'] = 'fail'
                 result['token'] = token
-                result['msg'] = ''
+                result['msg'] = '服务器错误'
                 result['data'] = {'errorcode': 1000}
                 raise tornado.gen.Return(result)
 
-            topic_id = message['topic_id']
+            topic_id = message['id']
             status = message['status']
             dt_update = message['dt_update']
             touch_info = {'mobile': message['mobile'], 'email': message['email']}
@@ -3424,7 +3424,7 @@ class Action(object):
                            }
             result['status'] = 'success'
             result['token'] = token
-            result['msg'] = ''
+            result['msg'] = '成功'
             result['data'] = return_info
             raise tornado.gen.Return(result)
 
