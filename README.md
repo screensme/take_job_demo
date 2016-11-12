@@ -2386,7 +2386,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "topic": [
       {
         "meet_num": 2,
-        "status": null,				(话题的状态-null=未预约过)
+        "status": null,			(该用户在本话题的状态-和预约状态相同-null=未预约过)
         "little_image": "http://tse2.mm.bing.net/th?id=OIP.Meff9c97f3dc014a82830c609b051ba6bo0&w=175&h=135&c=7&rs=1&qlt=90&o=",
         "title": "如何运营好一次线上微课堂",
         "money": "499",
