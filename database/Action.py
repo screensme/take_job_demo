@@ -3285,8 +3285,8 @@ class Action(object):
                 json_time_line = json.loads(get_status['time_line'])
                 json_time_line.append(meet_line)
                 time_line = json.dumps(json_time_line)
-                sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
-                status_list = [3, time_line, dt, get_status['id']]
+                sql_status = "update qa_reservation set status=%s,is_pay=%s,time_line=%s,dt_update=%s where id=%s"
+                status_list = [3, 1, time_line, dt, get_status['id']]
                 update_status = self.db.update(sql_status, *status_list)
                 self.db.close()
                 self.log.info("--------------------update reservation success")
