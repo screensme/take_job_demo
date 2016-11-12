@@ -3272,11 +3272,11 @@ class Action(object):
                 sql_expert = "select mobile,email from qa_expert_list where id=%s" % charge_expert
                 expert = self.db.get(sql_expert)
                 self.db.close()
-                meet_line = [{'time': Time_Change.string_time(),
+                meet_line = {'time': Time_Change.string_time(),
                               'info': '付款成功，等待见面',
                               'extra': ['电话：%s' % expert['mobile'],
                                         '邮箱：%s' % expert['email']]
-                              }]
+                              }
                 sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
                                  % (charge_user, charge_topic, 2)
                 get_status = self.db.get(sql_get_status)
