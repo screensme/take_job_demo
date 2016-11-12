@@ -225,10 +225,19 @@ class WorkplacePayResultHandler(BaseHandler):
         self.log.info(self.request.body)
         form = json.loads(self.request.body)
         self.log.info(json.dumps(form, indent=4))
-        # self.log.info(form)
         cache_flag = self.get_cache_flag()
         result = yield self.db.recv_charge(charge=form, cache_flag=cache_flag)
         self.log.info('charge is save OK')
         self.write('success')
         self.finish()
         return
+
+        # # test charge
+        # from test.test_action import test_charge
+        # form = test_charge.form   # 测试用的订单
+        # cache_flag = self.get_cache_flag()
+        # result = yield self.db.recv_charge(charge=form, cache_flag=cache_flag)
+        # self.log.info('test charge is save OK')
+        # self.write('test success')
+        # self.finish()
+        # return

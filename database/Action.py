@@ -3260,13 +3260,14 @@ class Action(object):
             # 更新订单
             if charge['type'] == 'charge.succeeded':
                 self.log.info('----------------------------- 1 ping++ return charge , succeeded')
-                update_sql = "update qa_order set result_object=%s and result_pending_webhooks=%s and result_created=%s " \
-                             "and result_type=%s and result_livemode=%s and result_request=%s and result_id=%s " \
+                update_sql = "update qa_order set result_object=%s,result_pending_webhooks=%s,result_created=%s," \
+                             "result_type=%s,result_livemode=%s,result_request=%s,result_id=%s " \
                              "where order_no=%s"
                 sql_list = [charge['object'], charge['pending_webhooks'], charge['created'], charge['type'],
                             charge['livemode'], charge['request'], charge['id'], charge['data']['object']['order_no']]
-                update_charge = self.db.update(update_sql, sql_list)
+                update_charge = self.db.update(update_sql, *sql_list)
                 self.db.close()
+                self.log.info("--------------------update order success")
                 # 更新状态2-->3，info更改
                 sql_expert = "select mobile,email from qa_expert_list where id=%s" % charge_expert
                 expert = self.db.get(sql_expert)
@@ -3280,6 +3281,7 @@ class Action(object):
                                  % (charge_user, charge_topic, 2)
                 get_status = self.db.get(sql_get_status)
                 self.db.close()
+                self.log.info("--------------------select expert(mobile,email) success")
                 json_time_line = json.loads(get_status['time_line'])
                 append_status = json_time_line.append(meet_line)
                 time_line = json.dumps(append_status)
@@ -3287,10 +3289,11 @@ class Action(object):
                 status_list = [3, time_line, dt, get_status['id']]
                 update_status = self.db.update(sql_status, *status_list)
                 self.db.close()
+                self.log.info("--------------------update reservation success")
         except Exception, e:
-            self.log.info("----------------------------- 2 ping++ return charge , update order false !!!!!!!")
+            self.log.info("----------------------------- FFFFFFF ping++ return charge , update order false !!!!!!! +++%s"  % e.message)
         finally:
-            self.log.info('----------------------------- 3 ping++ return finish !!!!!!!')
+            self.log.info('----------------------------- 2 ping++ return finish !!!!!!!')
         raise tornado.gen.Return('success')
 
     # 新消息列表，包含所有消息数量
