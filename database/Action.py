@@ -3274,8 +3274,8 @@ class Action(object):
                 self.db.close()
                 meet_line = [{'time': Time_Change.string_time(),
                               'info': '付款成功，等待见面',
-                              'extra': ['%s' % expert['mobile'],
-                                        '%s' % expert['email']]
+                              'extra': ['电话：%s' % expert['mobile'],
+                                        '邮箱：%s' % expert['email']]
                               }]
                 sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
                                  % (charge_user, charge_topic, 2)
@@ -3283,8 +3283,8 @@ class Action(object):
                 self.db.close()
                 self.log.info("--------------------select expert(mobile,email) success")
                 json_time_line = json.loads(get_status['time_line'])
-                append_status = json_time_line.append(meet_line)
-                time_line = json.dumps(append_status)
+                json_time_line.append(meet_line)
+                time_line = json.dumps(json_time_line)
                 sql_status = "update qa_reservation set status=%s,time_line=%s,dt_update=%s where id=%s"
                 status_list = [3, time_line, dt, get_status['id']]
                 update_status = self.db.update(sql_status, *status_list)
