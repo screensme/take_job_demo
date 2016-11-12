@@ -3425,6 +3425,13 @@ class Action(object):
                            'time_line': time_line,
                            'metadata': metadata,
                            }
+            # 点击话题详情，消息改为已阅读 is_read=1
+            try:
+                sql_read = "update qa_reservation set is_read=%s where id=%s"
+                update_read = self.db.update(sql_read, 1, message_id)
+                self.db.close()
+            except Exception, e:
+                self.log.info("-------------- Message ERROR , update qa_reservation is_read  fail!")
             result['status'] = 'success'
             result['token'] = token
             result['msg'] = '成功'
