@@ -88,6 +88,10 @@ class EditTopic(object):
             status_little_info = "见面被取消，如需继续，请重新预约"
             status_info = "见面已取消"
             kwargs = {'mobile': '', 'email': ''}
+        elif status == 15:
+            status_little_info = "取消支付，如需继续，请重新预约"
+            status_info = "支付已取消"
+            kwargs = {'mobile': '', 'email': ''}
         metadata = {'status_info': status_info,
                     'status_little_info': status_little_info,
                     'touch_info': kwargs}

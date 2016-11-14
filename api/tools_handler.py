@@ -236,9 +236,9 @@ class CancelUserHandler(BaseHandler):
         status = self.get_argument('status')
         message_id = self.get_argument('message_id')
         if status == '1':
-            cancel = 'reservation'
+            cancel = '取消预约'
         elif status == '2':
-            cancel = 'pay'
+            cancel = '取消付款'
         else:
             result = dict()
             result['status'] = 'fail'
@@ -249,7 +249,6 @@ class CancelUserHandler(BaseHandler):
             self.finish()
             return
 
-        self.log.info('+++++++++++ User cancel %s  +++++++++++' % cancel)
         if re.match(r'\d+', '%s' % token):
             result = yield self.db.user_cancel(cancel, status, message_id, token, cache_flag)
         else:

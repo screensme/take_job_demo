@@ -3062,8 +3062,8 @@ class Action(object):
         self.log.info("----------------- User post evaluate ,update=%s |  Insert evaluate, step 1" % insert_evaluate)
         # 更新状态 4-->10
         meet_line = {'time': Time_Change.string_time(),
-                      'info': '评价成功，完成',
-                      'extra': []
+                     'info': '评价成功，完成',
+                     'extra': []
                      }
 
         json_time_line = json.loads(get_status['time_line'])
@@ -3100,15 +3100,40 @@ class Action(object):
     def user_cancel(self, cancel=str, status=str, message_id=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_expert = "select * from qa_reservation where id =%s" % (message_id,)
+        dt = datetime.datetime.now()
+        sql_reservation = "select * from qa_reservation where id =%s and user_id=%s" % (message_id, token)
+        reservation = self.db.get(sql_reservation)
+        self.db.close()
+        time_line = reservation.get('time_line', None)
 
-        datas = {'expert': '',
-                 'topic': '',
-                 'evaluate': ''}
+        meet_line = {'time': Time_Change.string_time(),
+                     'info': '您已%s' % cancel,
+                     'extra': []
+                     }
+        if time_line is not None:
+            if status == '1':
+                up_status = 11  # 取消预约
+            elif status == '2':
+                up_status = 15  # 取消付款
+            json_time_line = json.loads(time_line)
+            json_time_line.append(meet_line)
+            time_line = json.dumps(json_time_line)
+
+            sql_status = "update qa_reservation set status=%s,is_read=%s,time_line=%s,dt_update=%s where id=%s"
+            status_list = [up_status, 1, time_line, dt, reservation.get('id')]
+            update_status = self.db.update(sql_status, *status_list)
+            self.db.close()
+            self.log.info('+++++++++++ User cancel %s ，update_status=%s +++++++++++' % (cancel, update_status))
+        else:
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '消息id有误'
+            result['data'] = {'errorcode': 100}
+            raise tornado.gen.Return(result)
         result['status'] = 'success'
         result['token'] = token
-        result['msg'] = ''
-        result['data'] = datas
+        result['msg'] = '%s成功' % cancel
+        result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
 
 

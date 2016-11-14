@@ -110,6 +110,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 75.用户自主提问-post：/workplaceQA/question  
+76.取消预约、取消付款：/workplaceQA/cancel  
 ***
 #####简历状态：  
 	
@@ -2808,7 +2809,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   }
 }```  
 
-75.用户自主提问-post：/workplaceQA/question  
+####75.用户自主提问-post：/workplaceQA/question  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2824,3 +2825,28 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "errorcode": 0
   }
 }```
+####76.取消预约、取消付款：/workplaceQA/cancel  
+参数：
+		
+	参数名称		必填	类型		描述
+	token			Y	string		用户id	
+	status			Y	string		状态id（取消预约传1，取消支付传2）
+	message_id		Y	string		消息id
+返回成功：
+```{
+  "status": "success",
+  "msg": "取消预约成功",
+  "token": "12",
+  "data": {
+    "errorcode": 0
+  }
+}```  
+返回失败：
+```{
+  "status": "fail",
+  "msg": "消息id有误",
+  "token": "12",
+  "data": {
+    "errorcode": 100
+  }
+}```  
