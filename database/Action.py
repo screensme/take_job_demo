@@ -3054,15 +3054,17 @@ class Action(object):
         sql_get_status = "select * from qa_reservation where id=%s" % (reservation_id,)
         get_status = self.db.get(sql_get_status)
         self.db.close()
+        # 添加评论
         sql_evaluate = "insert into qa_evaluate(user_id,topic_id,expert_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s,%s)"
-        evaluate_list = [token, get_status['topic_id'], get_status['expert_id'], evaluate, score, dt]
+        evaluate_list = [token, get_status['topic_id'], get_status['expert_id'], evaluate, int(score) + 5, dt]
         insert_evaluate = self.db.insert(sql_evaluate, *evaluate_list)
         self.db.close()
+        self.log.info("----------------- User post evaluate ,update=%s |  Insert evaluate, step 1" % insert_evaluate)
         # 更新状态 4-->10
         meet_line = {'time': Time_Change.string_time(),
                       'info': '评价成功，完成',
                       'extra': []
-                      }
+                     }
 
         json_time_line = json.loads(get_status['time_line'])
         json_time_line.append(meet_line)
@@ -3072,37 +3074,43 @@ class Action(object):
         status_list = [10, time_line, dt, reservation_id]
         update_status = self.db.update(sql_status, *status_list)
         self.db.close()
-        self.log.info("---------------------- evaluate success , finish !!!!!!")
+        self.log.info("----------------- User post evaluate ,update=%s |  Update reservation, step 2" % update_status)
+        # 更新该话题的分数 score
+        sql_score = "select score from qa_evaluate where topic_id=%s" % get_status['topic_id']
+        all_score = self.db.query(sql_score)
+        self.db.close()
+        x = 0
+        for index in all_score:
+            x += float(index['score'])
+        x = round(x / len(all_score), 1)
+
+        sql_up_score = "update qa_expert_topic set score=%s where id=%s"
+        up_score = self.db.update(sql_up_score, x, get_status['topic_id'])
+        self.db.close()
+        self.log.info("---------------------- User post evaluate ,update=%s Update TOPIC score step 3")
 
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = '评价提交成功'
         result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
-    #
-    # # 预约查看，已经不用
-    # @tornado.gen.coroutine
-    # def reservation_get(self, topic_id=str, token=str, cache_flag=int):
-    #
-    #     result = dict()
-    #     # status--> 1-已预约，2-行家已确认，3-已付款，4-已见面，10-完成
-    #     sql_reservation = "select * from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
-    #                       % (topic_id, token)
-    #     search_reservation = self.db.query(sql_reservation)
-    #     self.db.close()
-    #     if search_reservation != []:
-    #
-    #         result['status'] = 'fail'
-    #         result['token'] = token
-    #         result['msg'] = '您已经提交过申请，请不要重复提交'
-    #         result['data'] = {'errorcode': 100}
-    #         raise tornado.gen.Return(result)
-    #
-    #     result['status'] = 'success'
-    #     result['token'] = token
-    #     result['msg'] = '可以提交申请'
-    #     result['data'] = {'errorcode': 0}
-    #     raise tornado.gen.Return(result)
+
+    # 取消接口，取消预约、取消付款
+    @tornado.gen.coroutine
+    def user_cancel(self, cancel=str, status=str, message_id=str, token=str, cache_flag=int):
+
+        result = dict()
+        sql_expert = "select * from qa_reservation where id =%s" % (message_id,)
+
+        datas = {'expert': '',
+                 'topic': '',
+                 'evaluate': ''}
+        result['status'] = 'success'
+        result['token'] = token
+        result['msg'] = ''
+        result['data'] = datas
+        raise tornado.gen.Return(result)
+
 
     # 预约页
     @tornado.gen.coroutine

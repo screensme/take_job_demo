@@ -222,3 +222,43 @@ class QuestionUserHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+
+
+# 取消接口，取消预约、取消付款
+class CancelUserHandler(BaseHandler):
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        self.log.info('+++++++++++ User cancel start  +++++++++++')
+        cache_flag = self.get_cache_flag()
+
+        token = self.get_argument('token')
+        status = self.get_argument('status')
+        message_id = self.get_argument('message_id')
+        if status == '1':
+            cancel = 'reservation'
+        elif status == '2':
+            cancel = 'pay'
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+            self.write(ObjectToString().encode(result))
+            self.finish()
+            return
+
+        self.log.info('+++++++++++ User cancel %s  +++++++++++' % cancel)
+        if re.match(r'\d+', '%s' % token):
+            result = yield self.db.user_cancel(cancel, status, message_id, token, cache_flag)
+        else:
+            result = dict()
+            result['status'] = 'fail'
+            result['token'] = token
+            result['msg'] = '未登录状态'
+            result['data'] = {}
+
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return

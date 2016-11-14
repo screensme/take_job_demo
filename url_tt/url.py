@@ -81,7 +81,8 @@ from api.tools_handler import \
     MessageTopicEvaluateHandler, \
     MessageTopicFinishHandler, \
     MessageFullTopicHandler, \
-    QuestionUserHandler
+    QuestionUserHandler, \
+    CancelUserHandler
 
 from api.workplaceQA_handler import \
     WorkplaceHomeHandler, \
@@ -186,6 +187,7 @@ urls = [
     url(r"/message/topic-finish/page-(\d+)/num-(\d+)/token-(\w+)", MessageTopicFinishHandler),    # 消息-话题已完成
     url(r"/message-full/message-(\w+)/token-(\w+)", MessageFullTopicHandler),    # 消息-详情-话题轴
     url(r"/workplaceQA/question", QuestionUserHandler),    # 用户自主提问接口
+    url(r"/workplaceQA/cancel", CancelUserHandler),    # 取消接口，取消预约、取消付款
     #   @#@#
     url(r"/workplaceQA/pay/result", WorkplacePayResultHandler),    # 支付返回结果，ping++返回结果
     #   ####################################################################################
