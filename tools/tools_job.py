@@ -55,3 +55,12 @@ class EditNone(object):
             elif index['job_type'] == 'unclear':
                 index['job_type'] = '不限'
         return args
+
+    # 修改图片前缀加上self.image
+    @classmethod
+    def edit_image(cls, image, *args):
+        for index in args:
+            image = index.get('image', '')
+            if image != '':
+                index['company_logo'] = "%s" % image + index['company_logo']
+        return args

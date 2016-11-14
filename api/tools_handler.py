@@ -243,7 +243,7 @@ class CancelUserHandler(BaseHandler):
             result = dict()
             result['status'] = 'fail'
             result['token'] = token
-            result['msg'] = '未登录状态'
+            result['msg'] = '状态有误'
             result['data'] = {}
             self.write(ObjectToString().encode(result))
             self.finish()
