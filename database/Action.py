@@ -3087,7 +3087,7 @@ class Action(object):
         sql_up_score = "update qa_expert_topic set score=%s where id=%s"
         up_score = self.db.update(sql_up_score, x, get_status.get('topic_id'))
         self.db.close()
-        self.log.info("---------------------- User post evaluate ,update=%s Update TOPIC score step 3")
+        self.log.info("---------------------- User post evaluate ,update=%s Update TOPIC score step 3" % up_score)
 
         result['status'] = 'success'
         result['token'] = token
@@ -3305,7 +3305,7 @@ class Action(object):
                 sql_expert = "select mobile,email from qa_expert_list where id=%s" % charge_expert
                 expert = self.db.get(sql_expert)
                 self.db.close()
-                meet_line = {'time': Time_Change.string_time(),
+                meet_line = {'time': Time_Change.string_time(dt),
                              'info': '付款成功，等待见面',
                              'extra': ['电话：%s' % expert['mobile'],
                                        '邮箱：%s' % expert['email']]
