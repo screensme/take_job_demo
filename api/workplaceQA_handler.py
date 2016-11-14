@@ -128,10 +128,10 @@ class EvaluateEditHandler(BaseHandler):
         self.log.info(self.get_arguments())
         cache_flag = self.get_cache_flag()
         token = self.get_argument('token')
-        reservation_id = self.get_argument('reservation_id')
+        reservation_id = self.get_argument('reservation_id', '')
         score = self.get_argument('score')
         evaluate = self.get_argument('evaluate')
-        result = yield self.db.evaluate_edit(reservation_id, score, evaluate, token, cache_flag)
+        result = yield self.db.evaluate_edit_post(reservation_id, score, evaluate, token, cache_flag)
 
         self.write(ObjectToString().encode(result))
         self.finish()

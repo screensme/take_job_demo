@@ -3047,16 +3047,16 @@ class Action(object):
 
     # 写评价页post
     @tornado.gen.coroutine
-    def evaluate_edit(self, reservation_id=str, score=str, evaluate=str, token=str, cache_flag=str):
+    def evaluate_edit_post(self, reservation_id=str, score=str, evaluate=str, token=str, cache_flag=str):
 
         result = dict()
         dt = datetime.datetime.now()
-        sql_get_status = "select * from qa_reservation where id=%s" % (reservation_id,)
+        sql_get_status = "select time_line,topic_id,expert_id from qa_reservation where id=%s" % (reservation_id,)
         get_status = self.db.get(sql_get_status)
         self.db.close()
         # 添加评论
         sql_evaluate = "insert into qa_evaluate(user_id,topic_id,expert_id,evaluate,score,create_time) values(%s,%s,%s,%s,%s,%s)"
-        evaluate_list = [token, get_status['topic_id'], get_status['expert_id'], evaluate, int(score) + 5, dt]
+        evaluate_list = [token, get_status.get('topic_id'), get_status.get('expert_id'), evaluate, int(score) + 5, dt]
         insert_evaluate = self.db.insert(sql_evaluate, *evaluate_list)
         self.db.close()
         self.log.info("----------------- User post evaluate ,update=%s |  Insert evaluate, step 1" % insert_evaluate)
@@ -3066,7 +3066,7 @@ class Action(object):
                      'extra': []
                      }
 
-        json_time_line = json.loads(get_status['time_line'])
+        json_time_line = json.loads(get_status.get('time_line'))
         json_time_line.append(meet_line)
         time_line = json.dumps(json_time_line)
 
@@ -3076,7 +3076,7 @@ class Action(object):
         self.db.close()
         self.log.info("----------------- User post evaluate ,update=%s |  Update reservation, step 2" % update_status)
         # 更新该话题的分数 score
-        sql_score = "select score from qa_evaluate where topic_id=%s" % get_status['topic_id']
+        sql_score = "select score from qa_evaluate where topic_id=%s" % get_status.get('topic_id')
         all_score = self.db.query(sql_score)
         self.db.close()
         x = 0
@@ -3085,7 +3085,7 @@ class Action(object):
         x = round(x / len(all_score), 1)
 
         sql_up_score = "update qa_expert_topic set score=%s where id=%s"
-        up_score = self.db.update(sql_up_score, x, get_status['topic_id'])
+        up_score = self.db.update(sql_up_score, x, get_status.get('topic_id'))
         self.db.close()
         self.log.info("---------------------- User post evaluate ,update=%s Update TOPIC score step 3")
 
@@ -3306,10 +3306,10 @@ class Action(object):
                 expert = self.db.get(sql_expert)
                 self.db.close()
                 meet_line = {'time': Time_Change.string_time(),
-                              'info': '付款成功，等待见面',
-                              'extra': ['电话：%s' % expert['mobile'],
-                                        '邮箱：%s' % expert['email']]
-                              }
+                             'info': '付款成功，等待见面',
+                             'extra': ['电话：%s' % expert['mobile'],
+                                       '邮箱：%s' % expert['email']]
+                             }
                 sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
                                  % (charge_user, charge_topic, 2)
                 get_status = self.db.get(sql_get_status)

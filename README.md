@@ -110,7 +110,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 75.用户自主提问-post：/workplaceQA/question  
-76.取消预约、取消付款：/workplaceQA/cancel  
+76.取消预约、取消付款-post：/workplaceQA/cancel  
 ***
 #####简历状态：  
 	
