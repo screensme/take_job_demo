@@ -2937,6 +2937,7 @@ class Action(object):
         search_expert = self.db.query(sql_search)
         self.db.close()
 
+        search_expert = EditNone.edit_image(self.image, *search_expert)
         result['status'] = 'success'
         result['token'] = ''
         result['msg'] = ''
@@ -2957,6 +2958,7 @@ class Action(object):
         search_topic = self.db.query(sql_topic)
         self.db.close()
 
+        search_topic = EditNone.edit_image(self.image, *search_topic)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2982,15 +2984,17 @@ class Action(object):
         evaluate = self.db.query(sql_evaluate)
         self.db.close()
 
+        topic = EditNone.edit_little_image(self.image, *topic)
+        evaluate = EditNone.edit_avatar(self.image, *evaluate)
         # 用户所在话题状态
         for index in topic:
             sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" % (index.get('id'), token)
             status = self.db.get(sql_status)
             self.db.close()
             if status is not None:
-                index['status'] = status.get('status', None)
+                index['status'] = status.get('status', 0)
             else:
-                index['status'] = status
+                index['status'] = 0
 
         datas = {'expert': expert,
                  'topic': topic,
@@ -3013,6 +3017,8 @@ class Action(object):
         sql_reservation = "select status,is_pay from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
                           % (topic, token)
         search_reservation = self.db.get(sql_reservation)
+        search_reservation['little_image'] = self.image + search_reservation['little_image']
+        search_reservation['big_image'] = self.image + search_reservation['big_image']
         self.db.close()
         if search_reservation is not None:
             expert_topic['is_process'] = search_reservation['status']
@@ -3035,6 +3041,7 @@ class Action(object):
         sql_evaluate = "select a.id,a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
                        "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit %s offset %s" % (expert, num, (int(page) * int(num)))
         evaluate = self.db.query(sql_evaluate)
+        evaluate = EditNone.edit_avatar(self.image, *evaluate)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -3046,10 +3053,11 @@ class Action(object):
     def evaluate_edit_get(self, reservation_id=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_topic = "select a.meet_time,a.meet_address,b.little_image,b.title,m.name from qa_reservation as a " \
+        sql_topic = "select a.meet_time,a.meet_address,concat('%s',b.little_image) as little_image,b.title,m.name from qa_reservation as a " \
                     "left join qa_expert_topic as b on a.topic_id=b.id " \
-                    "left join qa_expert_list as m on a.expert_id=m.id where a.id=%s" % (reservation_id,)
+                    "left join qa_expert_list as m on a.expert_id=m.id where a.id=%s" % (self.image, reservation_id,)
         topic_expert_reservation = self.db.get(sql_topic)
+        # topic_expert_reservation['little_image'] = self.image + topic_expert_reservation['little_image']
         self.db.close()
 
         result['status'] = 'success'

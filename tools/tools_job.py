@@ -56,7 +56,7 @@ class EditNone(object):
                 index['job_type'] = '不限'
         return args
 
-    # 修改图片前缀加上self.image
+    # 修改图片 image 前缀加上self.image
     @classmethod
     def edit_image(cls, self_image, *args):
         for index in args:
@@ -64,3 +64,33 @@ class EditNone(object):
             if image != '':
                 index['image'] = "%s" % self_image + image
         return args
+
+    # 修改图片 little_image 前缀加上self.image
+    @classmethod
+    def edit_little_image(cls, self_image, *args):
+        for index in args:
+            image = index.get('little_image', '')
+            if image != '':
+                index['little_image'] = "%s" % self_image + image
+        return args
+
+    # 修改图片 avatar 前缀加上self.image
+    @classmethod
+    def edit_avatar(cls, self_image, *args):
+        for index in args:
+            avatar = index.get('avatar', '')
+            if avatar != '':
+                index['avatar'] = "%s" % self_image + avatar
+        return args
+
+    # 修改图片 little_image,avatar 前缀加上self.image
+    @classmethod
+    def edit_avatar_littleimage(cls, self_image, *args):
+        for index in args:
+            avatar = index.get('avatar', '')
+            little_image = index.get('little_image', '')
+            if avatar != '' and (little_image != ''):
+                index['avatar'] = "%s" % self_image + avatar
+                index['little_image'] = "%s" % self_image + little_image
+        return args
+
