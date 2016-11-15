@@ -2985,6 +2985,7 @@ class Action(object):
         evaluate = self.db.query(sql_evaluate)
         self.db.close()
 
+        expert['image_introduction'] = self.image + expert['image_introduction']
         # topic = EditNone.edit_little_image(self.image, *topic)
         # evaluate = EditNone.edit_avatar(self.image, *evaluate)
         # 用户所在话题状态
