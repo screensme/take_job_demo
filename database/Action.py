@@ -2914,13 +2914,13 @@ class Action(object):
         result = dict()
         if int(num) > 20:
             num = 20
-        sql_search = "select b.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
+        sql_search = "select b.title,a.id as expert_id,a.name,a.tag,a.address,concat('%s',a.image) as image,a.like_num,a.meet_num " \
                      "from qa_expert_list as a left join qa_expert_topic as b on a.id=b.expert_id " \
-                     "where a.is_show!=0 order by b.id desc limit %s offset %s" % (num, (int(page) * int(num)))
+                     "where a.is_show!=0 order by b.id desc limit %s offset %s" % (self.image, num, (int(page) * int(num)))
         search_expert = self.db.query(sql_search)
         self.db.close()
 
-        search_expert = EditNone.edit_image(self.image, *search_expert)
+        # search_expert = EditNone.edit_image(self.image, *search_expert)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2932,12 +2932,12 @@ class Action(object):
     def workplace_home_slide(self, cache_flag=int):
 
         result = dict()
-        sql_search = "select id,image from qa_expert_list where slide=1"
+        sql_search = "select id,concat('%s',image) as image from qa_expert_list where slide=1" % (self.image,)
 
         search_expert = self.db.query(sql_search)
         self.db.close()
 
-        search_expert = EditNone.edit_image(self.image, *search_expert)
+        # search_expert = EditNone.edit_image(self.image, *search_expert)
         result['status'] = 'success'
         result['token'] = ''
         result['msg'] = ''
@@ -2951,14 +2951,14 @@ class Action(object):
         result = dict()
         if int(num) > 20:
             num = 20
-        sql_topic = "select f.create_time,f.title,a.id as expert_id,a.name,a.tag,a.address,a.image,a.like_num,a.meet_num " \
+        sql_topic = "select f.create_time,f.title,a.id as expert_id,a.name,a.tag,a.address,concat('%s',a.image) as image,a.like_num,a.meet_num " \
                     "from qa_expert_list as a left join qa_tag_field as b on b.expert_id=a.id " \
                     "left join qa_expert_topic as f on b.topic_id=f.id " \
-                    "where b.field='%s' limit %s offset %s" % (field, num, (int(page) * int(num)))
+                    "where b.field='%s' limit %s offset %s" % (self.image, field, num, (int(page) * int(num)))
         search_topic = self.db.query(sql_topic)
         self.db.close()
 
-        search_topic = EditNone.edit_image(self.image, *search_topic)
+        # search_topic = EditNone.edit_image(self.image, *search_topic)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2973,10 +2973,10 @@ class Action(object):
         sql_expert = "select * from qa_expert_list where id =%s" % (expert,)
         # sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num from qa_expert_topic as a " \
         #             "left join qa_reservation as b on a.id=b.topic_id where a.expert_id=%s" % (expert,)
-        sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num from qa_expert_topic as a " \
-                    "where a.expert_id=%s" % (expert,)
-        sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
-                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (expert,)
+        sql_topic = "select a.id,a.title,a.money,a.score,concat('%s',a.little_image) as little_image,a.meet_num from qa_expert_topic as a " \
+                    "where a.expert_id=%s" % (self.image, expert,)
+        sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,concat('%s',a.avatar) as avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
+                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (self.image, expert,)
         expert = self.db.get(sql_expert)
         self.db.close()
         topic = self.db.query(sql_topic)
@@ -2984,8 +2984,8 @@ class Action(object):
         evaluate = self.db.query(sql_evaluate)
         self.db.close()
 
-        topic = EditNone.edit_little_image(self.image, *topic)
-        evaluate = EditNone.edit_avatar(self.image, *evaluate)
+        # topic = EditNone.edit_little_image(self.image, *topic)
+        # evaluate = EditNone.edit_avatar(self.image, *evaluate)
         # 用户所在话题状态
         for index in topic:
             sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" % (index.get('id'), token)
@@ -3038,8 +3038,8 @@ class Action(object):
     def evaluate_get(self, page=str, num=str, expert=str, token=str, cache_flag=int):
 
         result = dict()
-        sql_evaluate = "select a.id,a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
-                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit %s offset %s" % (expert, num, (int(page) * int(num)))
+        sql_evaluate = "select a.id,a.evaluate,a.create_time,f.title,b.user_name,concat('%s',b.avatar) as avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
+                       "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit %s offset %s" % (self.image, expert, num, (int(page) * int(num)))
         evaluate = self.db.query(sql_evaluate)
         evaluate = EditNone.edit_avatar(self.image, *evaluate)
         result['status'] = 'success'
@@ -3156,7 +3156,6 @@ class Action(object):
         result['msg'] = '%s成功' % cancel
         result['data'] = {'errorcode': 0}
         raise tornado.gen.Return(result)
-
 
     # 预约页
     @tornado.gen.coroutine
@@ -3384,10 +3383,10 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,concat('%s',m.little_image) as little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s " \
-                            "order by a.dt_update desc limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "order by a.dt_update desc limit %s offset %s" % (self.image, token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3404,10 +3403,10 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,concat('%s',m.little_image) as little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s " \
-                            "order by a.dt_update desc  limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "order by a.dt_update desc  limit %s offset %s" % (self.image, token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3424,10 +3423,10 @@ class Action(object):
 
         result = dict()
 
-        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
+        sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,concat('%s',m.little_image) as little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
                             "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s " \
-                            "order by a.dt_update desc limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "order by a.dt_update desc limit %s offset %s" % (self.image, token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
