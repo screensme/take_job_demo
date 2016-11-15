@@ -2975,7 +2975,7 @@ class Action(object):
         #             "left join qa_reservation as b on a.id=b.topic_id where a.expert_id=%s" % (expert,)
         sql_topic = "select a.id,a.title,a.money,a.score,concat('%s',a.little_image) as little_image,a.meet_num from qa_expert_topic as a " \
                     "where a.expert_id=%s" % (self.image, expert,)
-        sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,concat('%s',a.avatar) as avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
+        sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,concat('%s',a.image) as image from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
                        "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (self.image, expert,)
         expert = self.db.get(sql_expert)
         self.db.close()
