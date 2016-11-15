@@ -79,7 +79,7 @@ class EditNone(object):
     def edit_avatar(cls, self_image, *args):
         for index in args:
             avatar = index.get('avatar', '')
-            if avatar != '':
+            if avatar != '' and (avatar is not None):
                 index['avatar'] = "%s" % self_image + avatar
         return args
 
