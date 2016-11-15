@@ -2984,7 +2984,7 @@ class Action(object):
 
         # 用户所在话题状态
         for index in topic:
-            sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s" % (index.get('id'), token)
+            sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" % (index.get('id'), token)
             status = self.db.get(sql_status)
             self.db.close()
             index['status'] = status
