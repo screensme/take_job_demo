@@ -20,6 +20,7 @@ from common import IF_email
 from common.query_top import QueryEsapi
 import pingpp
 from tools.tools_topic_message import EditTopic
+from tools.tools_job import EditNone
 from tools.time_change import Time_Change
 # import oss2
 
@@ -2919,6 +2920,7 @@ class Action(object):
         search_expert = self.db.query(sql_search)
         self.db.close()
 
+        search_expert = EditNone.edit_image(self.image, *search_expert)
         result['status'] = 'success'
         result['token'] = token
         result['msg'] = ''
@@ -2967,9 +2969,10 @@ class Action(object):
 
         result = dict()
         sql_expert = "select * from qa_expert_list where id =%s" % (expert,)
-        # sql_topic = "select id,title,money,score,little_image,meet_num from qa_expert_topic where expert_id=%s" % (expert,)
-        sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num,b.status from qa_expert_topic as a " \
-                    "left join qa_reservation as b on a.id=b.topic_id where a.expert_id=%s and b.user_id=%s" % (expert, token)
+        # sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num from qa_expert_topic as a " \
+        #             "left join qa_reservation as b on a.id=b.topic_id where a.expert_id=%s" % (expert,)
+        sql_topic = "select a.id,a.title,a.money,a.score,a.little_image,a.meet_num from qa_expert_topic as a " \
+                    "where a.expert_id=%s" % (expert,)
         sql_evaluate = "select a.evaluate,a.create_time,f.title,b.user_name,b.avatar from qa_evaluate as a left join candidate_user as b on a.user_id=b.id " \
                        "left join qa_expert_topic as f on a.topic_id=f.id where a.expert_id=%s limit 2" % (expert,)
         expert = self.db.get(sql_expert)
@@ -2978,6 +2981,13 @@ class Action(object):
         self.db.close()
         evaluate = self.db.query(sql_evaluate)
         self.db.close()
+
+        # 用户所在话题状态
+        for index in topic:
+            sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s" % (index.get('id'), token)
+            status = self.db.get(sql_status)
+            self.db.close()
+            index['status'] = status
 
         datas = {'expert': expert,
                  'topic': topic,
@@ -3365,8 +3375,8 @@ class Action(object):
 
         sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s" \
-                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (1,2,3) and a.user_id=%s " \
+                            "order by a.dt_update desc limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3385,8 +3395,8 @@ class Action(object):
 
         sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s" \
-                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status=4 and a.user_id=%s " \
+                            "order by a.dt_update desc  limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)
@@ -3405,8 +3415,8 @@ class Action(object):
 
         sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,m.little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s" \
-                            " limit %s offset %s" % (token, num, (int(page) * int(num)))
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s " \
+                            "order by a.dt_update desc limit %s offset %s" % (token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
         message = EditTopic.edit_status_process(*topic_message)

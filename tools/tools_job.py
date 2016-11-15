@@ -58,9 +58,9 @@ class EditNone(object):
 
     # 修改图片前缀加上self.image
     @classmethod
-    def edit_image(cls, image, *args):
+    def edit_image(cls, self_image, *args):
         for index in args:
             image = index.get('image', '')
             if image != '':
-                index['company_logo'] = "%s" % image + index['company_logo']
+                index['image'] = "%s" % self_image + image
         return args
