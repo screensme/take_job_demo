@@ -3426,7 +3426,7 @@ class Action(object):
 
         sql_topic_message = "select a.dt_update,a.id,a.is_read,a.is_pay,a.status,p.name,p.tag,m.title,concat('%s',m.little_image) as little_image,m.money " \
                             "from qa_reservation as a left join qa_expert_list as p on a.expert_id=p.id " \
-                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13) and a.user_id=%s " \
+                            "left join qa_expert_topic as m on a.topic_id=m.id where a.status in (10,11,12,13,14,15) and a.user_id=%s " \
                             "order by a.dt_update desc limit %s offset %s" % (self.image, token, num, (int(page) * int(num)))
         topic_message = self.db.query(sql_topic_message)
         self.db.close()
