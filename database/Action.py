@@ -2987,7 +2987,7 @@ class Action(object):
             sql_status = "select status from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" % (index.get('id'), token)
             status = self.db.get(sql_status)
             self.db.close()
-            index['status'] = status
+            index['status'] = status.get('status', None)
 
         datas = {'expert': expert,
                  'topic': topic,
