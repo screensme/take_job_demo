@@ -3020,8 +3020,8 @@ class Action(object):
         sql_reservation = "select status,is_pay from qa_reservation where topic_id=%s and user_id=%s and status in (1,2,3,4)" \
                           % (topic, token)
         search_reservation = self.db.get(sql_reservation)
-        expert_topic['little_image'] = self.image + expert_topic['little_image']
-        expert_topic['big_image'] = self.image + expert_topic['big_image']
+        expert_topic['little_image'] = self.image + expert_topic.get('little_image', '')
+        expert_topic['big_image'] = self.image + expert_topic.get('big_image', '')
         self.db.close()
         if search_reservation is not None:
             expert_topic['is_process'] = search_reservation['status']
