@@ -3312,6 +3312,7 @@ class Action(object):
         charge_topic = charge['data']['object']['metadata']['topic']
         charge_user = charge['data']['object']['metadata']['user']
         charge_expert = charge['data']['object']['metadata']['expert']
+        order_no = charge['data']['object']['order_no']
         try:
             # 更新订单
             if charge['type'] == 'charge.succeeded':
@@ -3341,8 +3342,8 @@ class Action(object):
                 json_time_line = json.loads(get_status['time_line'])
                 json_time_line.append(meet_line)
                 time_line = json.dumps(json_time_line)
-                sql_status = "update qa_reservation set status=%s,is_pay=%s,time_line=%s,dt_update=%s where id=%s"
-                status_list = [3, 1, time_line, dt, get_status['id']]
+                sql_status = "update qa_reservation set status=%s,is_pay=%s,order_no=%s,time_line=%s,dt_update=%s where id=%s"
+                status_list = [3, 1, order_no, time_line, dt, get_status['id']]
                 update_status = self.db.update(sql_status, *status_list)
                 self.db.close()
                 self.log.info("--------------------update reservation success")
