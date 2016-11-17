@@ -3331,8 +3331,9 @@ class Action(object):
                 self.db.close()
                 meet_line = {'time': Time_Change.string_time(dt),
                              'info': '付款成功，等待见面',
-                             'extra': ['电话：%s' % expert['mobile'],
-                                       '邮箱：%s' % expert['email']]
+                             # 'extra': ['电话：%s' % expert['mobile'],
+                             #           '邮箱：%s' % expert['email']]
+                             'extra': []
                              }
                 sql_get_status = "select * from qa_reservation where user_id=%s and topic_id=%s and status=%s" \
                                  % (charge_user, charge_topic, 2)

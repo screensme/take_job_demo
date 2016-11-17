@@ -40,6 +40,10 @@ class EditTopic(object):
                 index['status'] = '已过期'
             elif index['status'] == 13:
                 index['status'] = '未同意'
+            elif index['status'] == 14:
+                index['status'] = '未见面'
+            elif index['status'] == 15:
+                index['status'] = '取消付款'
         return args
 
     # 在消息中根据status，添加文字
