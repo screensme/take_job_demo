@@ -2932,7 +2932,7 @@ class Action(object):
     def workplace_home_slide(self, cache_flag=int):
 
         result = dict()
-        sql_search = "select id,concat('%s',image) as image from qa_expert_list where slide=1" % (self.image,)
+        sql_search = "select id,concat('%s',image_introduction) as image_introduction from qa_expert_list where slide=1" % (self.image,)
 
         search_expert = self.db.query(sql_search)
         self.db.close()
