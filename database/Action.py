@@ -3232,22 +3232,9 @@ class Action(object):
         # len(order_no) = 32
         order_no = str(uuid.uuid1()).replace('-', '')
         app = pingpp_app_key
-        metadata = json.dumps({'topic': topic['id'],
-                    'expert': topic['expert_id'],
-                    'user': token})
-        # metadata = {'topic': topic['id'],
-        #             'expert': topic['expert_id'],
-        #             'user': token}
-        sql_order = "insert into qa_order(amount,amount_refunded,amount_settle,app,body," \
-                     "channel,client_ip,created,credential,currency,description,extra,failure_code," \
-                     "failure_msg,_id,livemode,metadata,object,order_no,paid,refunded,refunds,subject," \
-                     "time_expire,time_paid,time_settle,transaction_no,dt_create) " \
-                     "values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        order_list = [price, 0, price, app, topic['title'], pay_type, ip, 0, "{}", 'cny', None, "{}",
-                      None, None, 0, 0, metadata, 'charge', order_no, 0, 0, "{}", topic['name'], 0,
-                      None, None, None, datetime.datetime.now()]
-        insert_order = self.db.insert(sql_order, *order_list)
-        self.log.info("-------------------User pay step 1, insert order success")
+        # metadata = json.dumps({'topic': topic['id'],
+        #                        'expert': topic['expert_id'],
+        #                        'user': token})
 
         # 提交订单到，ping++
         form = dict()
@@ -3264,13 +3251,50 @@ class Action(object):
                             'user': token}
         try:
             pay_QA = pingpp.Charge.create(api_key=pingxx_secret_key, **form)
-            self.log.info("-----------------------User pay step 2, post ping++ success")
+            self.log.info("-----------------------User pay step 1, post ping++ success")
         except Exception, e:
             result['status'] = 'fail'
             result['token'] = token
             result['msg'] = '支付错误' + e.message
             result['data'] = {'errorcode': 40}
             raise tornado.gen.Return(result)
+
+        amount_refunded = pay_QA.get('amount_refunded')
+        amount_settle = pay_QA.get('amount_settle')
+        body = pay_QA.get('body')
+        channel = pay_QA.get('channel')
+        client_ip = pay_QA.get('client_ip')
+        created = pay_QA.get('created')
+        credential = pay_QA.get('credential')
+        currency = pay_QA.get('currency')
+        description = pay_QA.get('description')
+        extra = pay_QA.get('extra')
+        failure_code = pay_QA.get('failure_code')
+        failure_msg = pay_QA.get('failure_msg')
+        _id = pay_QA.get('id')
+        livemode = pay_QA.get('livemode')
+        metadata = pay_QA.get('metadata')
+        _object = pay_QA.get('object')
+        paid = pay_QA.get('paid')
+        refunded = pay_QA.get('refunded')
+        subject = pay_QA.get('subject')
+        refunds = pay_QA.get('refunds')
+        time_expire = pay_QA.get('time_expire')
+        time_paid = pay_QA.get('time_paid')
+        time_settle = pay_QA.get('time_settle')
+        transaction_no = pay_QA.get('transaction_no')
+        dt_create = datetime.datetime.now()
+        sql_order = "insert into qa_order(amount,amount_refunded,amount_settle,app,body," \
+                     "channel,client_ip,created,credential,currency,description,extra,failure_code," \
+                     "failure_msg,_id,livemode,metadata,object,order_no,paid,refunded,refunds,subject," \
+                     "time_expire,time_paid,time_settle,transaction_no,dt_create) " \
+                     "values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        order_list = [price, amount_refunded, amount_settle, app, body, channel, client_ip, created, credential,
+                      currency, description, extra,  failure_code, failure_msg, _id, livemode, metadata, _object,
+                      order_no, paid, refunded, refunds, subject, time_expire, time_paid, time_settle, transaction_no,
+                      dt_create]
+        insert_order = self.db.insert(sql_order, *order_list)
+        self.log.info("-------------------User pay step 2, insert order success, insert order=%s" % insert_order)
 
         # sql_update_res = "update qa_reservation set status=%s where topic_id=%s and user_id=%s"
         # update_reservation = self.db.update(sql_update_res, 3, topic_id, token)
