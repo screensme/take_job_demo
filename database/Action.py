@@ -3637,6 +3637,36 @@ class Action(object):
                 raise tornado.gen.Return(result)
 
         raise tornado.gen.Return(result)
+    # 添加数据，慎用
+    @tornado.gen.coroutine
+    def Insert_datebase(self, code=str, cache_flag=int):
+        dt = datetime.datetime.now()
+
+        import os
+        abp = os.path.abspath(sys.argv[0])
+        file_path = os.path.dirname(abp)
+        with open(file_path+'/helpers/major.json') as f:
+            major_job_list = json.load(f)
+
+        result = dict()
+        for major in major_job_list:
+            try:
+                sql_cv = "insert into chnstone_evaluation.evaluation_major_job_category" \
+                         "(major_name, eval_job_id, dt_create, dt_update) values(%s,%s,%s,%s)"
+                insert_list = [major, random.randint(76, 108), dt, dt]
+                se_cv = self.db.insert(sql_cv, *insert_list)
+                self.db.close()
+            except Exception, e:
+                search_status = self.log.info('ERROR is %s' % e)
+
+                result['status'] = 'fail'
+                result['token'] = major
+                result['msg'] = '数据修改失败'
+                result['data'] = search_status
+                raise tornado.gen.Return(result)
+
+        raise tornado.gen.Return(result)
+
 # ########################################################################
     # 心跳线
     @tornado.gen.coroutine

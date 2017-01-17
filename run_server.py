@@ -17,30 +17,30 @@ define("esapi", default='neiwang', help="run on the test or pro")
 define("redis", default='local', help="run on the test or pro")
 define("sms", default='no', help="true=yes,false=no(send:111111)")
 define("image", default='neiwang', help="run on the test or pro")
-
-abp = os.path.abspath(sys.argv[0])
-file_path = os.path.dirname(abp) + '/json_txt'
-
-settings = {
-    "static_path": os.path.join(os.path.dirname(__file__), "static"),
-    "cookie_secret": "XjC20zUNROW+EKe/wpeYCyRD1AuntU8cqdyBNQSPfT8=",
-    "login_url": "/login/",
-    "xsrf_cookies": False,
-    "debug": True,
-    "siteDomain": "/HUUO/",
-    "siteURL": "",
-    "staticURL": "",
-    "siteName": "",
-    'file_path': file_path,
-    # "ui_modules": ui_modules,
-    # "db": db,
-    # 'server': my_server,
-    # "cache": cache,
-    # "scriptlist": scriptlist,
-    # "scriptsha":  scriptsha,
-    # "gulipaTime": datetime.datetime(2015, 2, 14),
-    # "log": log
-}
+#
+# abp = os.path.abspath(sys.argv[0])
+# file_path = os.path.dirname(abp) + '/json_txt'
+#
+# settings = {
+#     "static_path": os.path.join(os.path.dirname(__file__), "static"),
+#     "cookie_secret": "XjC20zUNROW+EKe/wpeYCyRD1AuntU8cqdyBNQSPfT8=",
+#     "login_url": "/login/",
+#     "xsrf_cookies": False,
+#     "debug": True,
+#     "siteDomain": "/HUUO/",
+#     "siteURL": "",
+#     "staticURL": "",
+#     "siteName": "",
+#     'file_path': file_path,
+#     # "ui_modules": ui_modules,
+#     # "db": db,
+#     # 'server': my_server,
+#     # "cache": cache,
+#     # "scriptlist": scriptlist,
+#     # "scriptsha":  scriptsha,
+#     # "gulipaTime": datetime.datetime(2015, 2, 14),
+#     # "log": log
+# }
 
 class Application(tornado.web.Application):
     def __init__(self):

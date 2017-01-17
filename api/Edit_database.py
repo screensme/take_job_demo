@@ -25,6 +25,22 @@ class EditdatabaseHandler(BaseHandler):
         self.write(ObjectToString().encode(result))
         self.finish()
         return
+    @gen.coroutine
+    @tornado.web.asynchronous
+    def post(self):
+        token = self.get_argument('token', '123QWEqwe')
+        cache_flag = self.get_cache_flag()
+        if token == "123QWEqwe":
+            code = self.get_argument('code', '我要修改数据')
+            if code == '我要修改数据':
+                result = yield self.db.Insert_datebase(code, cache_flag,)
+            else:
+                result = "少废话，放码过来"
+        else:
+            result = "no things don\'t BB!"
+        self.write(ObjectToString().encode(result))
+        self.finish()
+        return
 
 class IdeldatabaseHandler(BaseHandler):
     @gen.coroutine

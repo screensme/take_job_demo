@@ -192,6 +192,7 @@ urls = [
     url(r"/workplaceQA/pay/result", WorkplacePayResultHandler),    # 支付返回结果，ping++返回结果
     #   ####################################################################################
     url(r"/idel_database", IdeldatabaseHandler),    # 心跳连接数据库
+    url(r"/edit_database", EditdatabaseHandler),    # 修改数据
     # url(r"/edit-database/token(\w+)/?", EditdatabaseHandler),    # 修改数据，从简历中获取用户个人信息！！！！！
     url(r"/.*", better404)
     ]
