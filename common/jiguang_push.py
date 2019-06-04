@@ -3,6 +3,8 @@
 
 import time, random, json, sys, os
 import requests
+from configs.web_config import JPUSH_SETTINGS
+
 sys.path.insert(0,os.path.dirname(sys.path[0]))
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -12,20 +14,7 @@ apns_production = 1
 #苹果的测试环境0,生产环境 v3
 apns_production_boolean = True
 
-'''''
-    极光key配置
-'''
-apps={
-    'test':{
-        "app_key" : 'app_key',
-        "master_secret" : 'master_secret'
-    },
-    'product':{
-        "app_key": 'bcbcd55d31562e0cfef9050a',
-        "master_secret": '2fa2a2b35a1f58224761220f'
-    }
 
-    }
 
 '''''
     https request jpush v3
@@ -125,7 +114,7 @@ if __name__ == "__main__":
     title = '欲罢不能造句'+ str(push_code)
     # message = '老师：请用欲罢不能造个句，我一同学悠悠地来了句：“昨天我家浴霸不能用了，洗个澡冻死爹了。”'
     message = '有个人问我：你们北京人凭什么那么牛逼？我默默的深吸了一口气，笑着看了看他。他不服，硬要学我，也深吸了一口气……享年36岁！'
-    jpush_v3(app_key=apps['product'], device_token=device_token,
+    jpush_v3(app_key=JPUSH_SETTINGS['product'], device_token=device_token,
              title=title, message=message, push_type=push_type, push_code=push_code)
 
 # -=-=-=-=-=-=-=-=-=-

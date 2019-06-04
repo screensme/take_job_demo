@@ -1,35 +1,16 @@
 ###APP后端API接口文档  
 OPEN API接口地址:http://xxx.xxx.xxx:8889/  
 测试内网:192.168.12.146  
-测试外网:182.92.99.38  
+测试外网:192.168.12.146  
 支持格式:json
 
 ##操作记录：
-<div>
-    <table border="0">
-      <tr>
-        <th>时间</th>
-        <th>状态</th>
-		<th>动作</th>
-      </tr>
+| 时间 | 状态 | 动作 |
+| :------| ------ | :------ |
+| 9.7-9.12 | 增-改 | 注册、登陆增加了umeng_id和jiguang_id。新建-公司详情的3个接口。新建修改个人头像和简历头像的两个接口 |
+| 9.27 | 增-改 | 1.修改了登陆返回的结果，新增umeng_id,jiguang_id,mobile_type,mobile_version,app_version字段，在急速入职中显示佣金根据是否为校园代理proxy_user判断；2.新增，职为我来接口；3.新增，申请成为校园代理接口。 |
+|10.13|增|1.增加了活动接口，活动中公司列表 或者 活动中职位列表 的接口|
 
-	<tr>
-        <td>9.7-9.12</td>
-        <td>增-改</td>
-		<td>注册、登陆增加了umeng_id和jiguang_id。新建-公司详情的3个接口。新建修改个人头像和简历头像的两个接口</td>
-	</tr>
-	<tr>
-        <td>9.27</td>
-        <td>增-改</td>
-		<td>1.修改了登陆返回的结果，新增umeng_id,jiguang_id,mobile_type,mobile_version,app_version字段，在急速入职中显示佣金根据是否为校园代理proxy_user判断；2.新增，职为我来接口；3.新增，申请成为校园代理接口。</td>
-	</tr>
-	<tr>
-        <td>10.13</td>
-        <td>增</td>
-		<td>1.增加了活动接口，活动中公司列表 或者 活动中职位列表 的接口</td>
-	</tr>
-    </table>
-</div>
 
 ##url
 1.首页get：/home/page-{page}/num-{num}/token-{token}  
@@ -112,7 +93,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 75.用户自主提问-post：/workplaceQA/question  
 76.取消预约、取消付款-post：/workplaceQA/cancel  
 ***
-#####简历状态：  
+##### 简历状态：  
 	
 	名称					状态
 	'post'				发送
@@ -122,14 +103,14 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	'deny'				不合适	
 
 ***
-#####收藏状态：  
+##### 收藏状态：  
 	
 	名称					状态
 	取消收藏				0
 	已收藏/收藏成功			1
 	收藏失败				2	
 ***
-#####推送自定义返回值：  
+##### 推送自定义返回值：  
 	
 	名称								状态
 	系统消息(push_type)				10
@@ -140,8 +121,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	面试(push_code)					23
 	不合适(push_code)				24
 ***
-##接口介绍
-####1.首页get：/home/page-{page}/num-{num}/token-{token}  
+## 接口介绍
+#### 1.首页get：/home/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -192,7 +173,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }
 ```  
-####2.登录post：/auth/login
+#### 2.登录post：/auth/login
 参数：
 		
 	参数名称	必填	类型		描述
@@ -206,7 +187,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "登录手机号有误，请重新输入",
   "token": "",
   "data": {}
-}```  
+}
+```
 返回成功：
 ```{
   "status": "success",
@@ -226,8 +208,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "id": 230,
     "avatar": ""			(头像)
   }
-}```  
-####3.登出get：/auth/logout/token-{token}
+}
+```  
+
+#### 3.登出get：/auth/logout/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -238,14 +222,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "成功退出登录",
   "token": "123456",
   "data": {}
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
   "msg": "没有此用户!",
   "token": ""
-}```  
-####4.注册post：/auth/register  
+}
+```  
+#### 4.注册post：/auth/register  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -262,22 +248,25 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "token": 183
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
   "msg": "登录手机号有误，请重新输入",
   "token": "",
   "data": {}
-}```  
+}
+```  
 返回失败2：
 ```{
   "status": "fail",
   "msg": "手机号已经被注册",
   "token": 183,
   "data": {}
-}```  
-####5.修改密码post：/auth/editpwd  
+}
+```  
+#### 5.修改密码post：/auth/editpwd  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -290,15 +279,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "修改密码成功",
   "token": "",
   "data": {}
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
   "msg": "输入的密码不能为空",
   "token": "",
   "data": {}
-}```  
-####6.搜索页post：/search  
+}
+```  
+#### 6.搜索页post：/search  
 参数：(可传很多参数，根据参数查询，至少写一个条件)
 		
 	参数名称			必填	类型			描述
@@ -372,7 +363,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   ]
 }
 ```  
-####7.消息页get：/message/resume/token-{token}  
+#### 7.消息页get：/message/resume/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -383,8 +374,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "123",
   "data": 4
-}```  
-####8.消息(简历状态)get(全部)：/message/resume-allstatus/page-{page}/num-{num}/token-{token}  
+}
+```  
+#### 8.消息(简历状态)get(全部)：/message/resume-allstatus/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -428,8 +420,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-08-19T19:03:08"
     }
   ]
-}```  
-####9.消息(简历状态)get(被查看)：/message/resume-viewed/page-{page}/num-{num}/token-{token}  
+}
+```  
+#### 9.消息(简历状态)get(被查看)：/message/resume-viewed/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -437,7 +430,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页显示数量
 
-####10.消息(简历状态)get(已通知)：/message/resume-communicated/page-{page}/num-{num}/token-{token}  
+#### 10.消息(简历状态)get(已通知)：/message/resume-communicated/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -445,7 +438,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页显示数量
 
-####11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
+#### 11.消息(简历状态)get(面试通过)：/message/resume-passed/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -453,7 +446,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页显示数量
 
-####12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
+#### 12.消息(简历状态)get(不合适)：/message/resume-improper/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -461,7 +454,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页显示数量
  
-####13.职位详情get：/position-full/job-{job_id}/token-{token}
+#### 13.职位详情get：/position-full/job-{job_id}/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -493,8 +486,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "job_name": "软件工程师",
     "dt_update": "2016-04-26T00:00:00"
   }
-}```  
-####14.公司详情get：/company-full/company-{company_id}/token-{token}
+}
+```  
+#### 14.公司详情get：/company-full/company-{company_id}/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -521,8 +515,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "id": 123909,
     "dt_update": "2016-03-29T10:44:19"
   }
-}```  
-####15.个人信息页get(基本信息)：/me/token-{token}  
+}
+```  
+#### 15.个人信息页get(基本信息)：/me/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -542,8 +537,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "edu": "本科",
     "id": 116
   }
-}```  
-####16.简历查看get：/resume-view/token-{token}
+}
+```  
+#### 16.简历查看get：/resume-view/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -716,8 +712,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "edu": "中专",
     "id": 161
   }
-}```  
-####17.简历编辑-基本信息post：/resume-edit-basic  
+}
+```  
+#### 17.简历编辑-基本信息post：/resume-edit-basic  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -735,15 +732,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "email":"15638367126@163.com",
         "avatar":"avatar_7.png",
         "marital_status":"未婚"
-    }```  
+    }
+```  
 返回成功：
 ```{
     "status":"success",
     "msg":"",
     "token":"177",
     "data":167
-}```  
-####18.简历编辑-教育经历post：/resume-edit-education  
+}
+```  
+#### 18.简历编辑-教育经历post：/resume-edit-education  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -761,8 +760,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 ]
 ```  
 返回成功：
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
-####19.简历编辑-职业意向post：/resume-edit-expect  
+```
+{"status": "success", "msg": "", "token": "177", "data": 167}
+```  
+#### 19.简历编辑-职业意向post：/resume-edit-expect  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -775,10 +776,13 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "area":"朔州",
         "status":"全职",
         "expect_salary":"500000"
-    }```  
+    }
+```  
 返回成功：
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
-####20.简历编辑-实习经历post：/resume-edit-career  
+```
+{"status": "success", "msg": "", "token": "177", "data": 167}
+```  
+#### 20.简历编辑-实习经历post：/resume-edit-career  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -805,18 +809,23 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
         "end_time":"2015.02",
         "company":"万科"
     }
-]```  
+]
+```  
 返回成功：
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
-####21.简历编辑-自我评价post：/resume-edit-evaluation  
+```
+{"status": "success", "msg": "", "token": "177", "data": 167}
+```  
+#### 21.简历编辑-自我评价post：/resume-edit-evaluation  
 参数：
 		
 	参数名称	必填	类型		描述
 	token		Y	string		用户id	
 	description	Y	string		用户的自我评价
 返回成功：
-```{"status": "success", "msg": "", "token": "177", "data": 167}```  
-####22.意见反馈post：/feedback  
+```
+{"status": "success", "msg": "", "token": "177", "data": 167}
+```  
+#### 22.意见反馈post：/feedback  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -832,7 +841,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -841,8 +851,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 1000
   }
-}```
-####23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
+}
+```
+#### 23.查看收藏get：/view_collect/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -894,8 +905,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-04-26T00:00:00"
     }
   ]
-}```  
-####24.增加和删除收藏post：/add_or_del_collect  
+}
+```  
+#### 24.增加和删除收藏post：/add_or_del_collect  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -907,15 +919,17 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "已收藏",
   "token": "1",
   "data": 1
-}```  
+}
+```  
 返回取消收藏成功：
 ```{
   "status": "success",
   "msg": "已取消收藏",
   "token": "1",
   "data": 1
-}```  
-####25.热门搜索职位列表get：/hot_job/token-{token}
+}
+```  
+#### 25.热门搜索职位列表get：/hot_job/token-{token}
 参数：
 		
 	参数名称	必填	类型		描述
@@ -937,8 +951,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "C++",
     "python"
   ]
-}```  
-####26.热门搜索城市列表get：/hot_city/token-{token}  
+}
+```  
+#### 26.热门搜索城市列表get：/hot_city/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -956,8 +971,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "深圳"
     ]
   }
-}```  
-####27.简历投递post：/post-resume  
+}
+```  
+#### 27.简历投递post：/post-resume  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -975,7 +991,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "投递成功",
   "token": "1",
   "data": 1399
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -984,8 +1001,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
 	'errorcode':10
 	}
-}```  
-####28.忘记，找回密码post：/auth/forgetpwd  
+}
+```  
+#### 28.忘记，找回密码post：/auth/forgetpwd  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1003,7 +1021,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "id": 170,
     "avatar": ""
   }
-}```  
+}
+```  
 返回失败：  
 ```{
   "status": "fail",
@@ -1012,8 +1031,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "token": ""
   }
-}```  
-####29.短信发送接口post：/sendsms  
+}
+```  
+#### 29.短信发送接口post：/sendsms  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1025,14 +1045,16 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "短信发送成功",
   "token": "",
   "data": "111111"
-}```  
+}
+```  
 返回失败：  
 ```{
   "status": "fail",
   "msg": "短信发送失败",
   "token": "",
-  "data": {}}```  
-####30.推荐职位post：/recommend-job  
+  "data": {}}
+  ```  
+#### 30.推荐职位post：/recommend-job  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1078,8 +1100,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-07-29T00:00:00"
     }
   ]
-}```
-####31.消息详情get：/message-full/job-{job_id}/token-{token}  
+}
+```
+#### 31.消息详情get：/message-full/job-{job_id}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1120,8 +1143,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "subject": "php"		（职位标题）
     }
   ]
-}```  
-####32.修改个人信息post：/user-info/edit  
+}
+```  
+#### 32.修改个人信息post：/user-info/edit  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1135,8 +1159,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "170",
   "data": 1
-}```  
-####33.修改个人头像post：/user-info/avatar  
+}
+```  
+#### 33.修改个人头像post：/user-info/avatar  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1148,8 +1173,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "修改个人头像成功",
   "token": "238",
   "data": {}
-}```  
-####34.修改简历头像post：/resume-edit-avatar  
+}
+```  
+#### 34.修改简历头像post：/resume-edit-avatar  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1161,8 +1187,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "修改简历头像成功",
   "token": "238",
   "data": {}
-}```  
-####35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
+}
+```  
+#### 35.公司详情-公司信息get：/company-full/info/company-{company_id}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1181,7 +1208,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "company_site": "",
     "company_trade": ""
   }
-}```  
+}
+```  
 返回错误:
 ```{
   "status": "fail",
@@ -1190,8 +1218,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 1001
   }
-}```  
-####36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
+}
+```  
+#### 36.公司详情-企业详情get(公司介绍，大事记)：/company-full/company/company-{company_id}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1210,7 +1239,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "company_des": "北京后盾计算机技术培训有限责任公司是专注于培养中国互联网优秀的程序语言专业人才的专业型培训机构。后盾网是一个致力于互联网领域建设的资深开发型团队，现多个成员在担任外资集团、企事业单位的网络顾问职务。团队还曾多次为国内外上市集团、政府机关的大型项目提供技术支持，其中包括新浪、搜狐、腾讯、保洁公司、联想、丰田、北京工商银行、FLUCK、ANSYS、长安汽车、新思路模特、中国一汽等众多大众所熟知的知名企业。从团队建设至今，我们积累了大量的团队协",
     "events": ""
   }
-}```  
+}
+```  
 返回错误:
 ```{
   "status": "fail",
@@ -1219,8 +1249,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 1001
   }
-}```  
-####37.公司详情-所有职位post：/company-full/job  
+}
+```  
+#### 37.公司详情-所有职位post：/company-full/job  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -1270,7 +1301,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
+}
+```  
 返回错误:
 ```{
   "status": "fail",
@@ -1279,8 +1311,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 1001
   }
-}```  
-####38.急速招聘post：/speed-job   
+}
+```  
+#### 38.急速招聘post：/speed-job   
 参数：
 		
 	参数名称		必填	类型		描述
@@ -1333,7 +1366,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-09-12T00:00:00"
     }
   ]
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -1341,7 +1375,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "token": "123",
   "data": []
 ```
-####39.搜索公司名post：/search-company  
+#### 39.搜索公司名post：/search-company  
 		
 	参数名称			必填	类型			描述
 	token				Y	string		用户id
@@ -1399,8 +1433,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2015-11-26T00:00:00"
     }
   ]
-}```  
-####40.获取版本,自动更新post（仅Android）：/get-version  
+}
+```  
+#### 40.获取版本,自动更新post（仅Android）：/get-version  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -1416,7 +1451,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	'version': "1.0.9"
     "isupdate": 1		（1表示需要更新，0表示不需要更新）
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -1428,8 +1464,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	'version': '',
     "isupdate": 0
   }
-}```  
-####41.500强公司get：/job_500company/page-{page}/num-{num}/token-{token}  
+}
+```  
+#### 41.500强公司get：/job_500company/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -1457,8 +1494,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "logo_mobile": "http://imgtest.zhaopintt.com/job_500company_logo_55.png"
     }
   ]
-}```  
-####42.简历编辑-项目社会实践post：/resume-edit-experience  
+}
+```  
+#### 42.简历编辑-项目社会实践post：/resume-edit-experience  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1483,8 +1521,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
-####43.简历编辑-校内职务post：/resume-edit-school_job  
+}
+```  
+#### 43.简历编辑-校内职务post：/resume-edit-school_job  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1515,8 +1554,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
-####44.简历编辑-校内奖励post：/resume-edit-school_rewards  
+}
+```  
+#### 44.简历编辑-校内奖励post：/resume-edit-school_rewards  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1548,8 +1588,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
-####45.简历编辑-获得证书(post,put,delete)：/resume-edit-certificate  
+}
+```  
+#### 45.简历编辑-获得证书(post,put,delete)：/resume-edit-certificate  
 
 简历编辑-新建获得证书post：/resume-edit-certificate  
 参数：
@@ -1584,8 +1625,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```
-####46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
+}
+```
+#### 46.简历查看V1 get：/resume-view/v1/cv-{cv_id}/token-{token}  
 参数：
 		
 	参数名称			必填	类型		描述
@@ -1726,8 +1768,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "dt_create": "2016-08-25T14:26:21",
     "id": 167						(简历的id，会用到字段名称cv_id)
   }
-}```  
-####47.职为我来post：/job-for-me  
+}
+```  
+#### 47.职为我来post：/job-for-me  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1735,7 +1778,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	page		Y	string		页数
 	num			Y	string		每页数量（num>=20，显示20）
 返回结果数据结构同首页  
-####48.申请成为校园代理get：/application-proxy-user/token-{token}  
+#### 48.申请成为校园代理get：/application-proxy-user/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1748,7 +1791,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0		(10=没有此用户,20=重复提交,50=简历不完整,1000=服务器错误)
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -1757,8 +1801,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 20		(10=没有此用户,20=重复提交,50=简历不完整,1000=服务器错误)
   }
-}```  
-####49.活动列表get：/activity-list  
+}
+```  
+#### 49.活动列表get：/activity-list  
 返回成功：
 ```{
   "status": "success",
@@ -1792,8 +1837,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-10-11T12:08:27"
     }
   ]
-}```
-####50.活动详情post(显示公司/显示职位)：/activity  
+}
+```
+#### 50.活动详情post(显示公司/显示职位)：/activity  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1820,7 +1866,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "company_trade": "互联网/电子商务"
     }
   ]
-}```
+}
+```
 
 返回职位列表：
 ```{
@@ -1842,7 +1889,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "Python"
     }
   ]
-}```
+}
+```
 
 点击公司查看职位列表：
 ```
@@ -1865,9 +1913,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "Python"
     }
   ]
-}```  
+}
+```  
 
-####51.工资走势图-post：/salary_trend_list  (暂时不用)
+#### 51.工资走势图-post：/salary_trend_list  (暂时不用)
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1931,9 +1980,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     ],
     "search": "python"
   }
-}```  
+}
+```  
 
-####52.工资区间图-post：/salary_tantile_list  
+#### 52.工资区间图-post：/salary_tantile_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -1994,9 +2044,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
+}
+```  
 
-####53.学历分布图-post：/edu_tantile_list  
+#### 53.学历分布图-post：/edu_tantile_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2032,9 +2083,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
+}
+```  
 
-####54.工作年限分布图-post：/exp_tantile_list  
+#### 54.工作年限分布图-post：/exp_tantile_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2071,9 +2123,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
+}
+```  
 
-####55.职业导航首页-post：/Pro-navigation  
+#### 55.职业导航首页-post：/Pro-navigation  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2108,7 +2161,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "success",
@@ -2151,8 +2205,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
-####56.行业职位排行榜-post：/ranking-trade  
+}
+```  
+#### 56.行业职位排行榜-post：/ranking-trade  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2177,8 +2232,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "出纳"
     }
   ]
-}```  
-####57.高薪职位排行榜-post：/ranking-highsalary  
+}
+```  
+#### 57.高薪职位排行榜-post：/ranking-highsalary  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2207,8 +2263,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "生产技工"
     }
   ]
-}```  
-####58.热门职位排行榜-post：/ranking-hotjob  
+}
+```  
+#### 58.热门职位排行榜-post：/ranking-hotjob  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2241,8 +2298,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "job_name": "招聘专员"
     }
   ]
-}```  
-####59.高薪行业排行榜图-post：/trade_salary_list  
+}
+```  
+#### 59.高薪行业排行榜图-post：/trade_salary_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2278,8 +2336,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     ]
   }
-}```  
-####60.职场问答首页-get：/workplaceQA/page-(\d+)/num-(\d+)/token-(\w+)  
+}
+```  
+#### 60.职场问答首页-get：/workplaceQA/page-(\d+)/num-(\d+)/token-(\w+)  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2313,9 +2372,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "address": "北京2"
     }
   ]
-}```  
+}
+```  
 
-####61.职场问答首页轮播图-get：/workplaceQA-slide  
+#### 61.职场问答首页轮播图-get：/workplaceQA-slide  
 返回成功：
 ```{
   "status": "success",
@@ -2331,9 +2391,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "id": 4
     }
   ]
-}```  
+}
+```  
 
-####62.话题列表-post：/workplaceQA/topic_list  
+#### 62.话题列表-post：/workplaceQA/topic_list  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2384,9 +2445,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "topic_id": 17
     }
   ]
-}```  
+}
+```  
 
-####63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
+#### 63.专家详情页-get：/workplaceQA/expert-{expert}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2439,9 +2501,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "dt_update": "2016-11-11T10:53:42"
     }
   }
-}```  
+}
+```  
 
-####64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
+#### 64.话题详情页-get：/workplaceQA/topic-{topic}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2469,9 +2532,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "time_long": "1.5小时",
     "desc": "为了缓解小编们买不起棉裤的尴尬气氛，北京市城市管理委供热办相关负责人前两天表示：准备召开第二次气象会商，对7号前后的冷空气进行研制，如果在15号正常供暖前连续五天平均气温低于5℃，就有可能提前供暖。"
   }
-}```  
+}
+```  
 
-####65.对专家的评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
+#### 65.对专家的评价列表-get：/workplaceQA/evaluate/page-{page}/num-{num}/expert-{expert}/token-{token}  
 参数：
 		
 	参数名称	必填	类型		描述
@@ -2502,9 +2566,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "id": 2
     }
   ]
-}```  
+}
+```  
 
-####66-1.写评价页-get：/workplaceQA/evaluate?token={token}&reservation_id={reservation_id}  
+#### 66-1.写评价页-get：/workplaceQA/evaluate?token={token}&reservation_id={reservation_id}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2522,9 +2587,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "little_image": "image01.png",
     "title": "你离成为人生赢家只差两副小丁丁"
   }
-}```  
+}
+```  
 
-####66-2.写评价页-post：/workplaceQA/evaluate  
+#### 66-2.写评价页-post：/workplaceQA/evaluate  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2540,9 +2606,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
+}
+```  
 
-####67.预约页-post：/workplaceQA/reservation  
+#### 67.预约页-post：/workplaceQA/reservation  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2560,9 +2627,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
+}
+```  
 
-####68.付款页-post：/workplaceQA/pay  
+#### 68.付款页-post：/workplaceQA/pay  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2626,9 +2694,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       "amount": 60000
     }
   }
-}```  
+}
+```  
 
-####69.付款成功页-get：/workplaceQA/pay-success/message-{message_id}/token-{token}  
+#### 69.付款成功页-get：/workplaceQA/pay-success/message-{message_id}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2640,9 +2709,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "msg": "",
   "token": "12",
   "data": "请你于46589765\n在None\n与张岩老师见面\n联系电话：18301656040\n"
-}```
+}
+```
 
-####70.新消息列表-get：/message/token-{token}  
+#### 70.新消息列表-get：/message/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2656,9 +2726,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
     "topic_message": 5,		(话题消息未读数量)
     "resume_message": 0		(简历相关消息未读数量)
   }
-}```  
+}
+```  
 
-####71.消息-话题进行中-get：/message/topic-processing/page-{page}/num-{num}/token-{token}  
+#### 71.消息-话题进行中-get：/message/topic-processing/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2716,9 +2787,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	  "id": 4
     }
   ]
-}```  
+}
+```  
 
-####72.消息-话题待评价-get：/message/topic-evaluated/page-{page}/num-{num}/token-{token}  
+#### 72.消息-话题待评价-get：/message/topic-evaluated/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2743,9 +2815,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	  "id": 5
     }
   ]
-}```  
+}
+```  
 
-####73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
+#### 73.消息-话题已完成-get：/message/topic-finish/page-{page}/num-{num}/token-{token}  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2770,8 +2843,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 	  "id": 6
     }
   ]
-}```  
-####74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
+}
+```  
+#### 74.消息-详情-get：/message-full/message-{message_id}/token-{token}  
 状态码：
 		
 		1-->已预约,待同意，
@@ -2822,9 +2896,10 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
       }
     }
   }
-}```  
+}
+```  
 
-####75.用户自主提问-post：/workplaceQA/question  
+#### 75.用户自主提问-post：/workplaceQA/question  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2839,8 +2914,9 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
-####76.取消预约、取消付款：/workplaceQA/cancel  
+}
+```  
+#### 76.取消预约、取消付款：/workplaceQA/cancel  
 参数：
 		
 	参数名称		必填	类型		描述
@@ -2855,7 +2931,8 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 0
   }
-}```  
+}
+```  
 返回失败：
 ```{
   "status": "fail",
@@ -2864,4 +2941,5 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
   "data": {
     "errorcode": 100
   }
-}```  
+}
+```  

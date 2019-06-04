@@ -110,3 +110,28 @@ BASE_URL = {
 FCGI_SETTIGNS = {
     'fcgi_port': 1024,
 }
+
+API_KEY = 'a6a724c40f5c908e9a44f93d46dad99e'
+
+'''
+    极光key配置
+'''
+JPUSH_SETTINGS = {
+    'test':{
+        "app_key" : 'app_key',
+        "master_secret" : 'master_secret'
+    },
+    'product':{
+        "app_key": 'bcbcd55d31562e0cfef9050a',
+        "master_secret": '2fa2a2b35a1f58224761220f'
+    }
+
+    }
+
+# ping++ id
+Test_Secret_Key = "sk_test_jPK4GKWLOCW94av5i5nTmrjL"
+Live_Secret_Key = "sk_live_X9ajj1TCa1u15Si94ObzLWDS"
+
+pingpp_app_key = "app_eTiLm1mvTGe5O4mv"
+pingpp_api_key = {'test_test': Test_Secret_Key,
+                  'true_true': Live_Secret_Key}

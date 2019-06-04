@@ -1,0 +1,13 @@
+.vscode/
+*.pyc
+__pycache__/
+.DS_Store
+.idea/
+instance/*
+*.log
+*.log*
+*.swp
+*.pid
+upload/
+configs/web_config.py
+*.conf

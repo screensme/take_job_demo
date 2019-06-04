@@ -55,7 +55,7 @@ class Action(object):
         foo_uuid = str(uuid.uuid1())
         hash_pass = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
 
-        user_info = self.db.get('SELECT * FROM candidate_user where phonenum=%s' % mobile)
+        user_info = self.db.get('select * from candidate_user where phonenum=%s' % mobile)
         self.db.close()
         if user_info != None:
             result['status'] = 'fail'
@@ -91,9 +91,9 @@ class Action(object):
                     sex = ""
                     dt_created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     dt_updated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    sqll = "INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    self.log.info("INSERT INTO candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) "
-                                  "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (mobile, hash_pass, active, authenticated,
+                    sqll = "insert into candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    self.log.info("insert into candidate_user(phonenum, password, active, authenticated, post_status, tag, dt_create, dt_update, user_uuid, user_name, avatar, sex, jiguang_id, umeng_id) "
+                                  "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" % (mobile, hash_pass, active, authenticated,
                                                                                     post_status, tag, dt_created, dt_updated, foo_uuid,
                                                                                     user_name, avatar, sex, jiguang_id, umeng_id))
                     user_write = self.db.insert(sqll,
@@ -193,7 +193,7 @@ class Action(object):
     @tornado.gen.coroutine
     def User_logout(self, token=str):
 
-        sql = "SELECT * FROM candidate_user WHERE id=%s" % token
+        sql = "select * from candidate_user WHERE id=%s" % token
         search_user = self.db.get(sql)
         self.db.close()
         result = dict()
@@ -272,7 +272,7 @@ class Action(object):
     @tornado.gen.coroutine
     def User_updatepwd(self, token=str, oldpwd=str, pwd=str, cache_flag=int):
 
-        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        sql = "select * from candidate_user WHERE id='%s'" % token
         search_user = self.db.get(sql)
         self.db.close()
         if (search_user['password'] != bcrypt.hashpw(oldpwd.encode('utf-8'), search_user['password'].encode('utf-8'))) \
@@ -376,7 +376,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Home_user(self, token=str, cache_flag=int):
 
-        sql = "SELECT %s FROM candidate_cv WHERE user_id='%s'" \
+        sql = "select %s from candidate_cv WHERE user_id='%s'" \
             % ("id, user_id, username, sex, age, edu, school, major", token)
         search_user = self.db.get(sql)
         self.db.close()
@@ -457,8 +457,8 @@ class Action(object):
             result['data'] = []
             raise tornado.gen.Return(result)
 
-        sql_job = "SELECT id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num " \
-                  "FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc " % args
+        sql_job = "select id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num " \
+                  "from jobs_hot_es_test WHERE id IN (%s) order by dt_update desc " % args
 
         search_job = self.db.query(sql_job)
         self.db.close()
@@ -530,7 +530,7 @@ class Action(object):
                 contect_id = sorted(json.loads(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
-                    search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                    search_job = self.db.query("select %s from jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                     self.db.close()
                     for index in search_job:
@@ -604,7 +604,7 @@ class Action(object):
                 contect_id = sorted(json.loads(contect)['id_list'])
                 args = ','.join(str(x) for x in contect_id)
                 if args != '':
-                    search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                    search_job = self.db.query("select %s from jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                              %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                     self.db.close()
                     for index in search_job:
@@ -698,7 +698,7 @@ class Action(object):
                 contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
-                search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)"
+                search_job = self.db.query("select %s from jobs_hot_es_test WHERE id IN (%s)"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num' ,args))
                 self.db.close()
                 for index in search_job:
@@ -766,17 +766,17 @@ class Action(object):
                     search_proxy = self.db.get(is_proxy_user)
                     if search_proxy['proxy_user'] == 1:
                         select_type = 'j.id,j.job_name,j.job_type,j.company_name,j.job_city,j.education_str,j.work_years_str,j.salary_start,j.salary_end,j.boon,j.dt_update,j.scale_str,j.trade,j.company_logo,j.need_num,d.commission,d.commission_type'
-                        query_sql = "SELECT %s FROM jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
+                        query_sql = "select %s from jobs_hot_es_test as j left join company_jd as d on j.id=d.es_id WHERE j.id IN (%s) order by dt_update desc"\
                                     % (select_type, args)
                         search_job = self.db.query(query_sql)
                     else:
                         select_type = 'id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num'
-                        query_sql = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
+                        query_sql = "select %s from jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
                         search_job = self.db.query(query_sql)
                     self.db.close()
                 else:
                     select_type = 'id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num'
-                    query_sql = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
+                    query_sql = "select %s from jobs_hot_es_test WHERE id IN (%s)" % (select_type, args)
                     search_job = self.db.query(query_sql)
                     self.db.close()
                 for n, index in enumerate(search_job):
@@ -845,7 +845,7 @@ class Action(object):
             contect_id = sorted(json.loads(contect)['id_list'])
             args = ','.join(str(x) for x in contect_id)
             if args != '':
-                search_job = self.db.query("SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
+                search_job = self.db.query("select %s from jobs_hot_es_test WHERE id IN (%s) order by dt_update desc"
                                          %('id,job_name,job_type,company_name,job_city,education_str,work_years_str,salary_start,salary_end,boon,dt_update,scale_str,trade,company_logo,need_num',args))
                 self.db.close()
                 for n, index in enumerate(search_job):
@@ -1161,7 +1161,7 @@ class Action(object):
                 search_job = []
             else:
                 args = ','.join(str(x) for x in contect_id)
-                sql_job = "SELECT %s FROM jobs_hot_es_test WHERE id IN (%s) order by dt_update desc" \
+                sql_job = "select %s from jobs_hot_es_test WHERE id IN (%s) order by dt_update desc" \
                           %('id,job_name,job_type,job_city,education_str,salary_start,salary_end,dt_update,need_num',args)
                 search_job = self.db.query(sql_job)
                 self.db.close()
@@ -1396,13 +1396,13 @@ class Action(object):
     @tornado.gen.coroutine
     def Job_message(self, token=str, cache_flag=int):
 
-        sql = "SELECT * FROM candidate_user WHERE id='%s'" % token
+        sql = "select * from candidate_user WHERE id='%s'" % token
         search_user = self.db.get(sql)
         self.db.close()
         if search_user == None:
             boss_profile = 0
         else:
-            sqll = "SELECT * FROM message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
+            sqll = "select * from message WHERE receiver_user_id='%s' and status='unread'" % search_user['id']
             boss_profile = self.db.execute_rowcount(sqll)
 
         result = dict()
@@ -1644,7 +1644,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_view(self, token=str, cache_flag=int):
 
-        sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        sql_resume = "select id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv from candidate_cv WHERE user_id=%s" % token
         search_resume = self.db.get(sql_resume)
         self.db.close()
         try:
@@ -1669,12 +1669,12 @@ class Action(object):
     def Resume_V1_view(self, cv_id=str, token=str, cache_flag=int):
 
         if cv_id == 'Noneid':
-            sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+            sql_resume = "select id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv from candidate_cv WHERE user_id=%s" % token
             search_resume = self.db.get(sql_resume)
             self.db.close()
             self.log.info("resume v1 -Noneid--- step 1")
         else:
-            sql_resume = "SELECT id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv FROM candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
+            sql_resume = "select id,user_id,openlevel,userclass,allow_post,dt_create,dt_update,candidate_cv from candidate_cv WHERE user_id=%s and id=%s" % (token, cv_id)
             search_resume = self.db.get(sql_resume)
             self.db.close()
             self.log.info("resume v1 -Haveid--- step 1+++")
@@ -1727,7 +1727,7 @@ class Action(object):
     @tornado.gen.coroutine
     def Resume_Avatar(self, token=str, avatar=str, cache_flag=int):
 
-        sql_resume = "SELECT id,candidate_cv FROM candidate_cv WHERE user_id=%s" % token
+        sql_resume = "select id,candidate_cv from candidate_cv WHERE user_id=%s" % token
         search_resume = self.db.get(sql_resume)
         self.db.close()
         if search_resume == None:
@@ -2757,7 +2757,7 @@ class Action(object):
 
         result = dict()
         sql = "select count(userid) from view_user_collections where userid =%s and jobid=%s " % (token, job_id)
-        sql_ins = "INSERT INTO candidate_collection(user_id, job_id, status, dt_create, dt_update) VALUES (%s,%s,%s,%s,%s)"
+        sql_ins = "insert into candidate_collection(user_id, job_id, status, dt_create, dt_update) values (%s,%s,%s,%s,%s)"
         sql_up = "update candidate_collection set status=%s, dt_update=%s" \
                  " where user_id=%s and job_id=%s"
 
@@ -3083,7 +3083,7 @@ class Action(object):
         evaluate_list = [token, get_status.get('topic_id'), get_status.get('expert_id'), evaluate, int(score) + 5, dt]
         insert_evaluate = self.db.insert(sql_evaluate, *evaluate_list)
         self.db.close()
-        self.log.info("----------------- User post evaluate ,update=%s |  Insert evaluate, step 1" % insert_evaluate)
+        self.log.info("----------------- User post evaluate ,update=%s |  insert evaluate, step 1" % insert_evaluate)
         # 更新状态 4-->10
         meet_line = {'time': Time_Change.string_time(),
                      'info': '评价成功，完成',
@@ -3639,7 +3639,7 @@ class Action(object):
         raise tornado.gen.Return(result)
     # 添加数据，慎用
     @tornado.gen.coroutine
-    def Insert_datebase(self, code=str, cache_flag=int):
+    def insert_datebase(self, code=str, cache_flag=int):
         dt = datetime.datetime.now()
 
         import os

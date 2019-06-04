@@ -3,6 +3,7 @@
 
 import requests
 from urllib import urlencode
+from configs.web_config import API_KEY
 
 class SmsApi(object):
 
@@ -11,7 +12,7 @@ class SmsApi(object):
             'Content-type': 'application/x-www-form-urlencoded',
             'Accept': 'text/plain'
         }
-        self.apikey = 'a6a724c40f5c908e9a44f93d46dad99e'
+        self.apikey = API_KEY
         # self.logger = init_log(debug=app.config.get('DEBUG', True))
 
     # 注册接口

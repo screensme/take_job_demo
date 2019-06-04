@@ -6,14 +6,7 @@ import tornado
 from common.tools import args404, ObjectToString
 import re
 import json
-
-# ping++ id
-Test_Secret_Key = "sk_test_jPK4GKWLOCW94av5i5nTmrjL"
-Live_Secret_Key = "sk_live_X9ajj1TCa1u15Si94ObzLWDS"
-
-pingpp_app_key = "app_eTiLm1mvTGe5O4mv"
-pingpp_api_key = {'test_test': Test_Secret_Key,
-                  'true_true': Live_Secret_Key}
+from configs.web_config import Test_Secret_Key, Live_Secret_Key, pingpp_app_key, pingpp_api_key
 
 
 # 问答首页

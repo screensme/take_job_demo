@@ -8,7 +8,7 @@ from tornado.options import options, define
 import os, sys
 from url_tt.url import urls
 from common import web_log
-from common.web_config import MY_SQL, ES_API, REDIS, IMAGE_URL
+from configs.web_config import MY_SQL, ES_API, REDIS, IMAGE_URL
 from database import Action
 from common import query_top
 define("port", default=8889, help="run on the given port", type=int)
