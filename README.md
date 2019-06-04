@@ -1,10 +1,10 @@
-###APP后端API接口文档  
+### APP后端API接口文档  
 OPEN API接口地址:http://xxx.xxx.xxx:8889/  
 测试内网:192.168.12.146  
 测试外网:192.168.12.146  
 支持格式:json
 
-##操作记录：
+## 操作记录：
 | 时间 | 状态 | 动作 |
 | :------| ------ | :------ |
 | 9.7-9.12 | 增-改 | 注册、登陆增加了umeng_id和jiguang_id。新建-公司详情的3个接口。新建修改个人头像和简历头像的两个接口 |
@@ -12,7 +12,7 @@ OPEN API接口地址:http://xxx.xxx.xxx:8889/
 |10.13|增|1.增加了活动接口，活动中公司列表 或者 活动中职位列表 的接口|
 
 
-##url
+## url
 1.首页get：/home/page-{page}/num-{num}/token-{token}  
 2.登录post：/auth/login  
 3.登出get：/auth/logout/token-{token}  
