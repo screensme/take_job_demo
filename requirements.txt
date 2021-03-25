@@ -37,7 +37,7 @@ pymongo==2.8
 PyMySQL==0.7.2
 python-dateutil==2.5.3
 python-editor==1.0
-PyYAML==3.11
+PyYAML==5.4
 redis==2.10.5
 requests==2.9.1
 singledispatch==3.4.0.3
