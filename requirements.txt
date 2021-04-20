@@ -48,4 +48,4 @@ tornado-redis==2.4.18
 torndb==0.3
 ua-parser==0.7.1
 user-agents==1.0.1
-Werkzeug==0.11.4
+Werkzeug==0.15.3
